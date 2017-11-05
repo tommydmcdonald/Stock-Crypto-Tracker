@@ -1,4 +1,4 @@
-# Install nodemon
+# Install nodemon command
 
 npm install -g nodemon
 
