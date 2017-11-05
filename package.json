@@ -18,5 +18,9 @@
    "dependencies": {
       "concurrently": "^3.5.0",
       "express": "^4.16.2"
+   },
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/tommydmcdonald/Stock-Crypto-Tracker"
    }
 }
