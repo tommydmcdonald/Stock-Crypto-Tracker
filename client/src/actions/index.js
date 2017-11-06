@@ -9,7 +9,7 @@ const ROOT_URL = `https://www.alphavantage.co/query?apikey=${API_KEY}`;
 
 export const FETCH_TRACKER = 'FETCH_TRACKER';
 
-export function fetchTicker(ticker) {
+export function fetchTracker(ticker) {
 
   const url = `${ROOT_URL}&function=${FUNCTIONKEY}&symbol=${ticker}&interval=${INTERVAL}`;
   const request = axios.get(url);
@@ -17,7 +17,7 @@ export function fetchTicker(ticker) {
   console.log(request);
 
   return {
-    type: FETCH_TICKER,
+    type: FETCH_TRACKER,
     payload: request
   };
 }
