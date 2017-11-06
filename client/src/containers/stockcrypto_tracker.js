@@ -4,7 +4,11 @@ import { connect } from 'react-redux';
 class StockCryptoTracker extends Component {
 
    render() {
-      console.log
+      return (
+         <div>
+            Tracker
+         </div>
+      )
    }
 }
 

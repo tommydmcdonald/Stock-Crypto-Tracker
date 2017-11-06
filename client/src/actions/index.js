@@ -14,8 +14,6 @@ export function fetchTracker(ticker) {
   const url = `${ROOT_URL}&function=${FUNCTIONKEY}&symbol=${ticker}&interval=${INTERVAL}`;
   const request = axios.get(url);
 
-  console.log(request);
-
   return {
     type: FETCH_TRACKER,
     payload: request
