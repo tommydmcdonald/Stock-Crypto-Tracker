@@ -13,6 +13,8 @@ export function fetchData(ticker) {
   const url = `${ROOT_URL}&function=${FUNCTIONKEY}&symbol=${ticker}`
   const request = axios.get(url);
 
+  console.log(request);
+
   return {
     type: FETCH_DATA,
     payload: request
