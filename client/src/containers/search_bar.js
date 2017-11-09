@@ -20,6 +20,7 @@ class SearchBar extends Component {
    onFormSubmit(event) {
       event.preventDefault();
 
+      // Fetch tracker info
       this.props.fetchTracker(this.state.tracker);
       this.setState({ tracker: '' });
    }
