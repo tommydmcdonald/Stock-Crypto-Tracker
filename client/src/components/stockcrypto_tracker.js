@@ -5,7 +5,7 @@ export default (props) => {
 
   return (
      <div>
-        Tracker info: {props.data}
+        <ul data={props.data} />
      </div>
   );
 }

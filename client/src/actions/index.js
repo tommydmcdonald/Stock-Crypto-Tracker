@@ -1,4 +1,6 @@
 import axios from 'axios';
+import alphavantage from 'alphavantage';
+
 
 // Key to access Alphavantage API
 const API_KEY = 'BIYQYMYZ9KIBXS9V';
@@ -12,12 +14,15 @@ export const FETCH_TRACKER = 'FETCH_TRACKER';
 export function fetchTracker(ticker) {
 
   const url = `${ROOT_URL}&function=${FUNCTIONKEY}&symbol=${ticker}&interval=${INTERVAL}`;
-  const request = axios.get(url);
+//  const request = axios.get(url);
+  const alpha = require('alphavantage')({ key: 'BIYQYMYZ9KIBXS9V' });
 
-  console.log('Request: ', request);
+  alpha.data.intraday(ticker).then(data => {
+    console.log('Request: ', data);
+  });
 
   return {
     type: FETCH_TRACKER,
-    payload: request
+    payload: alpha.data.intraday(ticker)
   };
 }
