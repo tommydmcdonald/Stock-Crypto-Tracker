@@ -5,7 +5,7 @@ export default (props) => {
 
   return (
      <div>
-        <ul data={props.data} />
+        {props.data}
      </div>
   );
 }

@@ -23,6 +23,10 @@ class StockCryptoList extends Component {
          <thead>
            <tr>
              <th>Ticker</th>
+             <th>Price</th>
+             <th></th>
+             <th></th>
+             <th></th>
            </tr>
          </thead>
          <tbody>
