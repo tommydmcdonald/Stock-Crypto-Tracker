@@ -5,15 +5,14 @@ import { connect } from 'react-redux';
 class StockCryptoList extends Component {
 
    renderTracker (tracker) {
-      const stockName = tracker["Meta Data"]["2. Symbol"];
-      console.log('StockName: ', stockName);
+      const stockName = tracker["Meta Data"]["2. Symbol"].toUpperCase();
+
+      const priceData = tracker["Time Series (1min)"]
+      const currentPriceKey = Object.keys( priceData )[0];
+      const currentPrice = priceData[ currentPriceKey ]["4. close"]
 
       return (
-        <tr key={stockName}>
-          <td>
-            <StockCryptoTracker data={stockName}/>
-          </td>
-        </tr>
+            <StockCryptoTracker key={stockName} stockName={stockName} currentPrice={currentPrice}/>
       )
    }
 
@@ -30,15 +29,15 @@ class StockCryptoList extends Component {
            </tr>
          </thead>
          <tbody>
-           {this.props.tracker.map(this.renderTracker)}
+           {this.props.trackerList.map(this.renderTracker)}
          </tbody>
      </table>
       );
    }
 }
 
-function mapStateToProps({ tracker }){
-   return { tracker };
+function mapStateToProps({ trackerList }){
+   return { trackerList };
 }
 
 export default connect(mapStateToProps)(StockCryptoList);

@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 export default (props) => {
 
   return (
-     <div>
-        {props.data}
-     </div>
+     <tr>
+        <th scope="row">{props.stockName}</th>
+        <td>{props.currentPrice}</td>
+     </tr>
   );
 }
