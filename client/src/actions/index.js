@@ -7,10 +7,16 @@ export function fetchTracker(ticker) {
 
   const alpha = require('alphavantage')({ key: 'BIYQYMYZ9KIBXS9V' });
 
-  alpha.data.intraday(ticker);
+  alpha.data.intraday(ticker).then( apiCall => {
 
-  return {
-    type: FETCH_TRACKER,
-    payload: alpha.data.intraday(ticker)
-  };
+     const stockName = apiCall["Meta Data"]["2. Symbol"].toUpperCase();
+
+     const priceData = apiCall["Time Series (1min)"]
+     const currentPriceKey = Object.keys( priceData )[0];
+     const currentPrice = priceData[ currentPriceKey ]["4. close"]
+     return {
+        type: FETCH_TRACKER,
+        payload: {"stockName": stockName, "currentPrice": currentPrice}
+     };
+  });
 }
