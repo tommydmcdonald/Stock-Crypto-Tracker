@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-export default (props) => {
+export default class StockCryptoTracker extends Component {
+   componentDidMount() {
+      this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
+   }
 
-  return (
-     <tr>
-        <th scope="row">{props.stockName}</th>
-        <td>{props.currentPrice}</td>
-     </tr>
-  );
+   componentWillUnmount() {
+      clearInterval(this.interval);
+   }
+
+
+   render() {
+      return (
+         <tr>
+            <th scope="row">{this.props.stockName}</th>
+            <td>{this.props.currentPrice}</td>
+         </tr>
+      );
+   }
 }

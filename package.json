@@ -24,6 +24,8 @@
       "express": "^4.16.2",
       "lodash": "^4.17.4",
       "materialize-css": "^0.100.2",
+      "react": "^16.1.1",
+      "react-interval": "^2.0.2",
       "react-redux": "^5.0.6",
       "react-router-dom": "^4.2.2",
       "redux": "^3.7.2",
