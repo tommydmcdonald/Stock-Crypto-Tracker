@@ -1,15 +1,15 @@
-const express                 = require('express');
-const mongoose                = require('mongoose');
-const passport                = require('passport');
-const bodyParser              = require('bodyParser');
-const LocalStrategy           = require('LocalStrategy');
-const passportLocalMongoose   = require('passportLocalMongoose');
+const express = require('express');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const app = express();
 
-app.get('/', (req, res) => {
-   res.send('Node.js server');
-});
+passport.use(new GoogleStrategy());
+
+
+//app.get('/', (req, res) => {
+//   res.send('Node.js server');
+//});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
