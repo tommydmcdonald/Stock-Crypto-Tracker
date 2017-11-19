@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StockCryptoTracker from '../components/stockcrypto_tracker.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker } from '../actions/index';
+import { addTicker, getTickerData } from '../actions/index';
 
 import ReactInterval from 'react-interval';
 
@@ -16,9 +16,18 @@ class StockCryptoList extends Component {
    }
 
    renderTracker (ticker) {
+      console.log("renderTracker ");
+
+      let currentPrice = 0.00;
+      if (this.props.dataList[ticker]) {
+         currentPrice = this.props.dataList[ticker]["Time Series (1min)"][Object.keys(this.props.dataList)[0]];
+      }
+
       return (
-            <StockCryptoTracker key={ticker} stockName={ticker} />
-      )
+            <StockCryptoTracker key={ticker} trackerName={ticker} currentPrice={currentPrice} />
+         // currentPrice={currentPrice}
+      );
+
    }
 
    renderTrackerList () {
@@ -51,7 +60,8 @@ class StockCryptoList extends Component {
 
 function mapStateToProps(state){
    return {
-      tickerList: state.tickerList
+      tickerList: state.tickerList,
+      dataList: state.dataList
    }
 }
 

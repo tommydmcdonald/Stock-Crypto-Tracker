@@ -16,6 +16,7 @@ export function addTicker(ticker) {
 }
 
 export function getTickerData(ticker) {
+   console.log("gettickerdata");
    return {
       type: GET_TICKER_DATA,
       payload: alpha.data.intraday(ticker),

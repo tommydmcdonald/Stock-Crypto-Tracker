@@ -8,7 +8,8 @@ import promise from 'redux-promise';
 import reducers from './reducers';
 import App from './components/App';
 
-const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
+// const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
+const store = createStore(reducers, null, composedEnhancers)
 
 ReactDOM.render( //most specific routes first in <Switch>
   <Provider store={createStoreWithMiddleware(reducers)}>

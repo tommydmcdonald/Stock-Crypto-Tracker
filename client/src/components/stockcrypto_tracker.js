@@ -14,7 +14,7 @@ export default class StockCryptoTracker extends Component {
    render() {
       return (
          <tr>
-            <th scope="row">{this.props.stockName}</th>
+            <th scope="row">{this.props.trackerName}</th>
             <td>{this.props.currentPrice}</td>
          </tr>
       );
