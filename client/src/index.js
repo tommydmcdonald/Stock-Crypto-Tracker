@@ -11,7 +11,7 @@ import Home from './components/home';
 import Login from './components/login';
 
 
-// const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
+const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 const middlewares = [promise];
 const middlewareEnhancer = applyMiddleware(...middlewares);
 
