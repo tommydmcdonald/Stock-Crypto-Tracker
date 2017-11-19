@@ -21,8 +21,9 @@ class SearchBar extends Component {
       event.preventDefault();
 
       // Fetch tracker info
-      this.props.addTicker(this.state.ticker);
-      this.props.getTickerData(this.state.ticker)
+      const tickerFormatted = this.state.ticker.toUpperCase();
+      this.props.addTicker(tickerFormatted);
+      this.props.getTickerData(tickerFormatted)
       this.setState({ ticker: '' });
    }
 

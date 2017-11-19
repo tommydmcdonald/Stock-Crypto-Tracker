@@ -11,7 +11,7 @@ export function addTicker(ticker) {
 
    return {
       type: ADD_TICKER,
-      payload: ticker.toUpperCase()
+      payload: ticker
     };
 }
 

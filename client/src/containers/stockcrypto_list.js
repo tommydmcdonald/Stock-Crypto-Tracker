@@ -13,19 +13,19 @@ class StockCryptoList extends Component {
 
       this.renderTrackerList = this.renderTrackerList.bind(this);
       this.renderTracker = this.renderTracker.bind(this);
+      this.updateTrackerData = this.updateTrackerData.bind(this);
    }
 
    renderTracker (ticker) {
       console.log("renderTracker ");
-
-      let currentPrice = 0.00;
+      console.log("ticker = " + ticker);
+      let currentPrice = '';
       if (this.props.dataList[ticker]) {
-         currentPrice = this.props.dataList[ticker]["Time Series (1min)"][Object.keys(this.props.dataList)[0]];
+         currentPrice = this.props.dataList[ticker]["Time Series (1min)"]["2017-11-17 16:00:00"]["4. close"];
       }
 
       return (
             <StockCryptoTracker key={ticker} trackerName={ticker} currentPrice={currentPrice} />
-         // currentPrice={currentPrice}
       );
 
    }
@@ -36,12 +36,16 @@ class StockCryptoList extends Component {
          );
    }
 
+   updateTrackerData () {
+      this.props.tickerList.forEach( ticker => getTickerData(ticker) );
+   }
+
    render () {
       return (
          <div>
-            {/* <ReactInterval timeout={2000} enabled={true}
-            callback={}
-            /> */}
+            <ReactInterval timeout={2000} enabled={true}
+            callback={this.updateTrackerData}
+            />
             <table className="table table-hover">
                <thead>
                   <tr>
@@ -65,4 +69,8 @@ function mapStateToProps(state){
    }
 }
 
-export default connect(mapStateToProps)(StockCryptoList);
+function mapDispatchToProps(dispatch) {
+   return bindActionCreators({ getTickerData }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StockCryptoList);
