@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchTracker } from '../actions/index';
+import { addTicker } from '../actions/index';
 
 class SearchBar extends Component {
    constructor(props) {
@@ -21,7 +21,7 @@ class SearchBar extends Component {
       event.preventDefault();
 
       // Fetch tracker info
-      this.props.fetchTracker(this.state.tracker);
+      this.props.addTicker(this.state.tracker);
       this.setState({ tracker: '' });
    }
 
@@ -49,7 +49,7 @@ class SearchBar extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ fetchTracker }, dispatch);
+   return bindActionCreators({ addTicker }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(SearchBar);

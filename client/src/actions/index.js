@@ -1,14 +1,24 @@
 import axios from 'axios';
 import alphavantage from 'alphavantage';
 
-export const FETCH_TRACKER = 'FETCH_TRACKER';
+export const ADD_TICKER = 'ADD_TICKER';
+export const GET_TICKER_DATA = 'GET_TICKER_DATA';
 
-export function fetchTracker(ticker) {
+const API_KEY = 'BIYQYMYZ9KIBXS9V';
+const alpha = require('alphavantage')({ key: API_KEY });
 
-  const alpha = require('alphavantage')({ key: 'BIYQYMYZ9KIBXS9V' });
+export function addTicker(ticker) {
 
-  return {
-    type: FETCH_TRACKER,
-    payload: alpha.data.intraday(ticker)
-  };
+   return {
+      type: ADD_TICKER,
+      payload: ticker.toUpperCase()
+    };
+}
+
+export function getTickerData(ticker) {
+   return {
+      type: GET_TICKER_DATA,
+      payload: alpha.data.intraday(ticker),
+      meta: ticker
+   }
 }
