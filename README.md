@@ -1,15 +1,15 @@
-# Install nodemon command
+# To setup
 
-npm install -g nodemon
+1. Go to desired development directory `mkdir server`, then `cd server`
 
-# Install npm concurrently package
+2. To download, while in server, run `git clone https://github.com/tommydmcdonald/Stock-Crypto-Tracker.git`
 
-npm install -g concurrently
+3. All node modules should have downloaded, but doesn't hurt to run `npm install` to double check
 
-# Install npm react-scripts
-
-npm install -g react-scripts
-
-# To start both servers
+# To start both React and Express server
 
 Run in server directory `npm run dev`
+
+React Server route `localhost://3000`
+
+Express server route `localhost://5000`
