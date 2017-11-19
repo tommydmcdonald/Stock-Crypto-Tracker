@@ -7,11 +7,9 @@ import promise from 'redux-promise';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
 import reducers from './reducers';
-import Home from './components/home';
-import Login from './components/login';
+import App from './components/App';
 
-
-const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
+// const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 const middlewares = [promise];
 const middlewareEnhancer = applyMiddleware(...middlewares);
 
@@ -22,14 +20,7 @@ const composedEnhancer = composeWithDevTools(...storeEnhancers);
 const store = createStore(reducers, composedEnhancer)
 
 ReactDOM.render( //most specific routes first in <Switch>
-  <Provider store={createStoreWithMiddleware(reducers)}>
-     <BrowserRouter>
-       <div>
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/" component={Home} />
-         </Switch>
-       </div>
-     </BrowserRouter>
+  <Provider store={store}>
+     <App />
  </Provider>
 , document.querySelector('#root'));

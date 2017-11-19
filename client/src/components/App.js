@@ -3,7 +3,7 @@ import StockCryptoList from '../containers/stockcrypto_list';
 import SearchBar from '../containers/search_bar';
 import '../style/style.css';
 
-export default class Home extends Component {
+export default class App extends Component {
    render () {
       return (
          <div>
