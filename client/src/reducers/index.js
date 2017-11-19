@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import TrackerReducer from './reducer_tracker';
+import tickerReducer from './reducer_ticker';
+import dataReducer from './reducer_data';
 
 const rootReducer = combineReducers({
-  trackerList: TrackerReducer
+  tickerList: tickerReducer,
+  dataList: dataReducer
 });
 
 export default rootReducer;
