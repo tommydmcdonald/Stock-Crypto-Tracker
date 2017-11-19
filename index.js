@@ -1,4 +1,10 @@
-const express = require('express');
+const express                 = require('express');
+const mongoose                = require('mongoose');
+const passport                = require('passport');
+const bodyParser              = require('bodyParser');
+const LocalStrategy           = require('LocalStrategy');
+const passportLocalMongoose   = require('passportLocalMongoose');
+
 const app = express();
 
 app.get('/', (req, res) => {
