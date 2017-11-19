@@ -21,7 +21,12 @@ class StockCryptoList extends Component {
       console.log("ticker = " + ticker);
       let currentPrice = '';
       if (this.props.dataList[ticker]) {
-         currentPrice = this.props.dataList[ticker]["Time Series (1min)"]["2017-11-17 16:00:00"]["4. close"];
+         // currentPrice = this.props.dataList[ticker]["Time Series (1min)"]["2017-11-17 16:00:00"]["4. close"];
+         const timeSeries = this.props.dataList[ticker]["Time Series (1min)"];
+         const latestTime = Object.keys(timeSeries)[0]
+         const whichTime = "4. close"
+         
+         currentPrice = timeSeries[latestTime][whichTime];
       }
 
       return (
@@ -41,9 +46,12 @@ class StockCryptoList extends Component {
    }
 
    render () {
+      const refreshRateSeconds = 30;
+      const timeout = refreshRateSeconds * 1000;
+
       return (
          <div>
-            <ReactInterval timeout={2000} enabled={true}
+            <ReactInterval timeout={timeout} enabled={true}
             callback={this.updateTrackerData}
             />
             <table className="table table-hover">
