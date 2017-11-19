@@ -13,7 +13,3 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
-
-//app.get("/secret", function(req, res) {
-//  res.render("secret");
-//});
