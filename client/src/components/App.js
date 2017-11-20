@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
-import StockCryptoList from '../containers/stockcrypto_list';
-import SearchBar from '../containers/search_bar';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
 import '../style/style.css';
+
+import Home from './Home';
+import Login from './Login';
 
 export default class App extends Component {
    render () {
       return (
-         <div>
-           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossOrigin="anonymous" />
-            <SearchBar />
-            <StockCryptoList />
-         </div>
+         <BrowserRouter>
+           <div>
+           <Switch>
+              <Route path="/login" component={Login} />
+              <Route path="/" component={Home} />
+             </Switch>
+           </div>
+         </BrowserRouter>
       );
    }
 }
