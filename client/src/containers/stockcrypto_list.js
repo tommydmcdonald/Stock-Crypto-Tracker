@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addTicker, getTickerData } from '../actions/index';
 import { TYPE } from '../actions/index';
+import _ from 'lodash';
 
 import ReactInterval from 'react-interval';
 
@@ -23,22 +24,27 @@ class StockCryptoList extends Component {
       let timeSeries, latestTime, whichTime, currentPrice;
 
       if (this.props.dataList[name]) {
-         // console.log("name = ", name, " this.props.dataList[name] ", this.props.dataList[name]);
          const { data } = this.props.dataList[name];
+         console.log("data= ",data);
 
-         if (type == TYPE.STOCK) {
-            timeSeries = data["Time Series (1min)"];
-            console.log("timeSeries ", timeSeries);
-            latestTime = Object.keys(timeSeries)[0];
-            whichTime = "4. close";
-         }
-         else if (type == TYPE.CRYPTO) {
-            timeSeries = data["Time Series (Digital Currency Intraday)"];
-            latestTime = Object.keys(timeSeries)[0];
-            whichTime = "1a. price (USD)";
+         if( !_.isEmpty(data) ) {
+            if (type == TYPE.STOCK) {
+               timeSeries = data["Time Series (1min)"];
+               console.log("timeSeries ", timeSeries);
+               latestTime = Object.keys(timeSeries)[0];
+               console.log("latest time =", latestTime);
+               whichTime = "4. close";
+            }
+            else if (type == TYPE.CRYPTO) {
+               timeSeries = data["Time Series (Digital Currency Intraday)"];
+               latestTime = Object.keys(timeSeries)[0];
+               whichTime = "1a. price (USD)";
+            }
+
+            currentPrice = timeSeries[latestTime][whichTime];
          }
 
-         currentPrice = timeSeries[latestTime][whichTime];
+
       }
 
       return (
@@ -55,11 +61,11 @@ class StockCryptoList extends Component {
    }
 
    updateTrackerData () {
-      this.props.tickerList.forEach( ticker => getTickerData(ticker) );
+      this.props.tickerList.forEach( ticker => this.props.getTickerData(ticker) );
    }
 
    render () {
-      const refreshRateSeconds = 30;
+      const refreshRateSeconds = 25;
       const timeout = refreshRateSeconds * 1000;
 
       return (
