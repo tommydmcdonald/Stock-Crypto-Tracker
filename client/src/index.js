@@ -7,7 +7,7 @@ import promise from 'redux-promise';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
 import reducers from './reducers';
-import Home from './components/home';
+import App from './components/App';
 import Login from './components/login';
 
 const middlewares = [promise];
@@ -25,7 +25,7 @@ ReactDOM.render( //most specific routes first in <Switch>
        <div>
         <Switch>
           <Route path="/login" component={Login} />
-          <Route path="/" component={Home} />
+          <Route path="/" component={App} />
          </Switch>
        </div>
      </BrowserRouter>
