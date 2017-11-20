@@ -3,6 +3,7 @@ import StockCryptoTracker from '../components/stockcrypto_tracker.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addTicker, getTickerData } from '../actions/index';
+import { TYPE } from '../actions/index';
 
 import ReactInterval from 'react-interval';
 
@@ -17,25 +18,37 @@ class StockCryptoList extends Component {
    }
 
    renderTracker (ticker) {
-      console.log("renderTracker ");
-      console.log("ticker = " + ticker);
-      let currentPrice = '';
-      if (this.props.dataList[ticker]) {
-         // currentPrice = this.props.dataList[ticker]["Time Series (1min)"]["2017-11-17 16:00:00"]["4. close"];
-         const timeSeries = this.props.dataList[ticker]["Time Series (1min)"];
-         const latestTime = Object.keys(timeSeries)[0]
-         const whichTime = "4. close"
-         
+      const { name, type } = ticker;
+
+      let timeSeries, latestTime, whichTime, currentPrice;
+
+      if (this.props.dataList[name]) {
+         // console.log("name = ", name, " this.props.dataList[name] ", this.props.dataList[name]);
+         const { data } = this.props.dataList[name];
+
+         if (type == TYPE.STOCK) {
+            timeSeries = data["Time Series (1min)"];
+            console.log("timeSeries ", timeSeries);
+            latestTime = Object.keys(timeSeries)[0];
+            whichTime = "4. close";
+         }
+         else if (type == TYPE.CRYPTO) {
+            timeSeries = data["Time Series (Digital Currency Intraday)"];
+            latestTime = Object.keys(timeSeries)[0];
+            whichTime = "1a. price (USD)";
+         }
+
          currentPrice = timeSeries[latestTime][whichTime];
       }
 
       return (
-            <StockCryptoTracker key={ticker} trackerName={ticker} currentPrice={currentPrice} />
+            <StockCryptoTracker key={name} trackerName={name} currentPrice={currentPrice} />
       );
 
    }
 
    renderTrackerList () {
+         console.log("renderTrackerList");
          return (
             this.props.tickerList.map(this.renderTracker)
          );
@@ -70,10 +83,10 @@ class StockCryptoList extends Component {
    }
 }
 
-function mapStateToProps(state){
+function mapStateToProps({tickerList, dataList}){
    return {
-      tickerList: state.tickerList,
-      dataList: state.dataList
+      tickerList, // [ {name, type}, ...]
+      dataList // {name: data}
    }
 }
 
