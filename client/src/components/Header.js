@@ -19,7 +19,7 @@ class Header extends Component {
          <nav>
             <div className="nav-wrapper">
                <Link
-                  to="/"
+                  to={this.props.auth ? '/' : '/landing'}
                   className="brand-logo" id="logo"
                   >
                   StockCrypto List

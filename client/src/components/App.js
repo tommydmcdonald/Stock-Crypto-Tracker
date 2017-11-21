@@ -22,7 +22,7 @@ class App extends Component {
             <BrowserRouter>
                <div>
                   <Header />
-                  <Route exact path="/" component={Home} />
+                  <Route exact path={"/"} component={this.props.auth ? Home : Landing} />
                   <Route exact path="/login" component={Login} />
                   <Route path="/landing" component={Landing} />
                </div>
@@ -32,4 +32,8 @@ class App extends Component {
    }
 }
 
-export default connect(null, actions)(App); //guessint no mapdispatchtoprops cause no need to bind aciton creators causing using redux-thunk?
+function mapStateToProps({ auth }) {
+   return { auth };
+}
+
+export default connect(mapStateToProps, actions)(App); //guessint no mapdispatchtoprops cause no need to bind aciton creators causing using redux-thunk?
