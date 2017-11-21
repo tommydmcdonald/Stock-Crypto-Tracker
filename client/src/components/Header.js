@@ -20,8 +20,7 @@ class Header extends Component {
             <div className="nav-wrapper">
                <Link
                   to={this.props.auth ? '/' : '/landing'}
-                  className="brand-logo" id="logo"
-                  >
+                  className="brand-logo" id="logo">
                   StockCrypto List
                </Link>
                <ul className="right">
