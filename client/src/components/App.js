@@ -7,6 +7,7 @@ import '../style/style.css';
 import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
 
 import Home from './Home';
+import Landing from './Landing'
 import Login from './Login';
 import Header from './Header';
 
@@ -23,6 +24,7 @@ class App extends Component {
                   <Header />
                   <Route exact path="/" component={Home} />
                   <Route exact path="/login" component={Login} />
+                  <Route path="/landing" component={Landing} />
                </div>
             </BrowserRouter>
          </div>
