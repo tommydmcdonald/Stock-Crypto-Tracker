@@ -4,11 +4,12 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import promise from 'redux-promise';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
+import reduxThunk from 'redux-thunk';
 
 import reducers from './reducers';
 import App from './components/App';
 
-const middlewares = [promise];
+const middlewares = [promise, reduxThunk];
 const middlewareEnhancer = applyMiddleware(...middlewares);
 
 const storeEnhancers = [middlewareEnhancer];

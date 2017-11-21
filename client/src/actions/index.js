@@ -1,9 +1,6 @@
 import axios from 'axios';
+import { FETCH_USER, GET_TICKER_DATA, ADD_TICKER, TYPE} from './types';
 
-export const ADD_TICKER = 'ADD_TICKER';
-export const GET_TICKER_DATA = 'GET_TICKER_DATA';
-
-export const TYPE = {STOCK: 'STOCK', CRYPTO: 'CRYPTO'};
 
 const API_KEY = 'BIYQYMYZ9KIBXS9V';
 const BASE_URL = `https://www.alphavantage.co/query?apikey=${API_KEY}&`;
@@ -32,12 +29,19 @@ export function getTickerData(ticker = {name: '', type: ''}) {
       URL = `${CRYPTO_URL}${name}`;
    }
 
-   // const request =
-
    console.log("GET_TICKER_DATA " + ticker.name);
    return {
       type: GET_TICKER_DATA,
       payload: axios.get(URL),
       meta: ticker.name
    }
+}
+
+export const fetchUser = () => {
+   return function(dispatch) {
+      axios
+         .get('/api/current_user')
+         .then(res => dispatch({ type: FETCH_USER, payload: res}));
+   }
+
 }

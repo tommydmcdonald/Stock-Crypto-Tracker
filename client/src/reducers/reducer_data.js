@@ -1,4 +1,4 @@
-import { GET_TICKER_DATA } from '../actions/index';
+import { GET_TICKER_DATA } from '../actions/types';
 
 export default function(state = {}, action) {
   switch (action.type) {

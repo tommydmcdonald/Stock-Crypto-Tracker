@@ -3,7 +3,7 @@ import StockCryptoTracker from '../components/stockcrypto_tracker.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addTicker, getTickerData } from '../actions/index';
-import { TYPE } from '../actions/index';
+import { TYPE } from '../actions/types';
 import _ from 'lodash';
 
 import ReactInterval from 'react-interval';

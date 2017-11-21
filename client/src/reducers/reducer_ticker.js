@@ -1,4 +1,4 @@
-import { ADD_TICKER } from '../actions/index';
+import { ADD_TICKER } from '../actions/types';
 
 export default function(state = [], action) {
    switch (action.type) {
