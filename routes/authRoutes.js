@@ -1,4 +1,5 @@
 const passport = require('passport');
+const _ = require('lodash');
 
 module.exports = app => {
   app.get(
@@ -22,6 +23,12 @@ module.exports = app => {
   });
 
   app.get('/api/current_user', (req, res) => {
-    res.send(req.user);
+     if (req.user)
+     {
+       const userInfo = _.pick(req.user, ['_id', 'googleId', '__v']);
+       res.send( _.pick(req.user, ['_id', 'googleId', '__v']) ); //send user back without tickerlist
+     }
+
+     res.send();
   });
 };

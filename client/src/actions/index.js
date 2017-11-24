@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER, GET_TICKER_DATA, ADD_TICKER, TYPE} from './types';
+import { FETCH_USER, GET_TICKER_DATA, ADD_TICKER, TYPE, LOAD_TICKER_LIST } from './types';
 
 
 const API_KEY = 'BIYQYMYZ9KIBXS9V';
@@ -8,13 +8,10 @@ const BASE_URL = `https://www.alphavantage.co/query?apikey=${API_KEY}&`;
 const STOCK_URL = `${BASE_URL}function=TIME_SERIES_INTRADAY&interval=1min&symbol=`;
 const CRYPTO_URL = `${BASE_URL}function=DIGITAL_CURRENCY_INTRADAY&market=USD&symbol=`;
 
-export function addTicker(ticker, type) {
-
-   return {
-      type: ADD_TICKER,
-      payload: ticker,
-      meta: type
-    };
+export const addTicker = (name, type) => async dispatch => {
+   const newTicker = { name: name, type: type};
+   const res = await axios.post('/api/ticker', newTicker);
+   dispatch({ type: FETCH_USER, payload: res.data });
 }
 
 export function getTickerData(ticker = {name: '', type: ''}) {
@@ -29,7 +26,6 @@ export function getTickerData(ticker = {name: '', type: ''}) {
       URL = `${CRYPTO_URL}${name}`;
    }
 
-   console.log("GET_TICKER_DATA " + ticker.name);
    return {
       type: GET_TICKER_DATA,
       payload: axios.get(URL),
@@ -40,4 +36,11 @@ export function getTickerData(ticker = {name: '', type: ''}) {
 export const fetchUser = () => async dispatch => {
    const res = await axios.get('/api/current_user');
    dispatch({ type: FETCH_USER, payload: res.data});
+}
+
+export const loadTickerList = () => async dispatch => {
+   console.log('load ticker list action');
+   const res = await axios.get('/api/ticker_list');
+   console.log("res.data= ", res.data);
+   dispatch({ type: LOAD_TICKER_LIST, payload: res.data});
 }

@@ -3,22 +3,27 @@ const User = mongoose.model('users');
 
 module.exports = app => {
 
-   app.post('/api/ticker/', (req, res) => {
+   app.post('/api/ticker/', (req, res) => { //add error checking
 
-      const { ticker } = req.body;
+      const newTicker = req.body;
       const { _id } = req.user;
 
-      User.findByIdAndUpdate( _id,
-         { $push: {"tickerList": ticker}},
-         function(err, user) {
-            if (err) next(err)
-            res.sendStatus(200);
+      const options = {new: true};
+      const update = { $push: { tickerList: newTicker } };
+
+      User.findByIdAndUpdate( _id, update, options,
+         (err, user) => {
+         if (err) {
+            console.log("error: ", err);
+         }
+         else {
+            res.send(newTicker);
+         }
       });
 
    });
 
-   app.post('/api/test', (req, res) => {
-      console.log(req.body);
-      res.send();
+   app.get('/api/ticker_list', (req, res) => {
+      res.send(req.user.tickerList);
    });
 }

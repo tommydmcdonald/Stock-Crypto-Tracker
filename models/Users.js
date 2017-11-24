@@ -6,7 +6,7 @@ const TYPE = ['STOCK', 'CRYPTO'];
 const userSchema = new Schema({
   googleId: String,
   tickerList: [ {
-     ticker: String,
+     name: String,
      type: { type: String, enum: [...TYPE] }
   } ]
 });
