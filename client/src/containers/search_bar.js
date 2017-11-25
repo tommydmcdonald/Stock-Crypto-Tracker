@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker, getTickerData } from '../actions/index';
+import { addTicker } from '../actions/index';
 
 import { TYPE } from '../actions/types';
 
@@ -75,7 +75,7 @@ class SearchBar extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ addTicker, getTickerData }, dispatch);
+   return bindActionCreators({ addTicker }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(SearchBar);

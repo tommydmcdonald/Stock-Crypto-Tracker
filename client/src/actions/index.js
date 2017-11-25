@@ -14,25 +14,6 @@ export const addTicker = (name, type) => async dispatch => {
    dispatch({ type: FETCH_USER, payload: res.data });
 }
 
-export function getTickerData(ticker = {name: '', type: ''}) {
-   const { name, type } = ticker
-   let URL;
-
-   if (ticker.type == TYPE.STOCK) {
-      URL = `${STOCK_URL}${name}`;
-      console.log("URL ", URL);
-   }
-   else if (ticker.type == TYPE.CRYPTO) {
-      URL = `${CRYPTO_URL}${name}`;
-   }
-
-   return {
-      type: GET_TICKER_DATA,
-      payload: axios.get(URL),
-      meta: ticker.name
-   }
-}
-
 export const fetchUser = () => async dispatch => {
    const res = await axios.get('/api/current_user');
    dispatch({ type: FETCH_USER, payload: res.data});
