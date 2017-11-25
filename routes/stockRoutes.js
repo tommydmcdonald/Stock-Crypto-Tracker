@@ -40,28 +40,26 @@ module.exports = app => {
          });
 
       //check if ticker is already in User's tickerlist
-      const checkUser = { _id, tickerList: newTicker}
+      //{ field: { $in: [<value1>, <value2>, ... <valueN> ] } }
+      const checkUser = { _id, tickerList: { $elemMatch: newTicker } }
       let userHasTicker;
       User.findOne( checkUser,
-         (err, ticker) => {
-            if (ticker) {
-               console.log('Ticker exists. ticker = ', ticker);
-            }
-            else {
-               console.log('Ticker does not exist, ticker = ', newTicker);
+         (err, user) => {
+            if (!user) { //if user does not contain ticker in their list, add it to their tickerList
+               User.findByIdAndUpdate( _id, update, options,
+                  (err, user) => {
+                  if (err) {
+                     console.log("error: ", err);
+                  }
+                  else {
+                     res.send(newTicker);
+                  }
+               });
             }
       });
 
       //adding ticker to user's tickerList
-      User.findByIdAndUpdate( _id, update, options,
-         (err, user) => {
-         if (err) {
-            console.log("error: ", err);
-         }
-         else {
-            res.send(newTicker);
-         }
-      });
+
 
    });
 
