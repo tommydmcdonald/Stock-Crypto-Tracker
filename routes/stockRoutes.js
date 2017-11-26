@@ -6,7 +6,7 @@ const Ticker = mongoose.model('tickers');
 const TYPE = {STOCK: 'STOCK', CRYPTO: 'CRYPTO'};
 
 const API_KEY = 'BIYQYMYZ9KIBXS9V';
-const BASE_URL = `https://www.alphavantage.co/query?apikey=${API_KEY}&`;
+const BASE_URL = `https://www.alphavantage.co/query?apikey=${API_KEY}&function=`;
 
 const STOCK_URL = `${BASE_URL}function=TIME_SERIES_INTRADAY&interval=1min&symbol=`;
 const CRYPTO_URL = `${BASE_URL}function=DIGITAL_CURRENCY_INTRADAY&market=USD&symbol=`;
@@ -37,10 +37,12 @@ const replaceKeys = (data) => { //removes . from keys of data object. '.' are no
 
 const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
 
-   const { name } = newTicker;
+   const { name, type } = newTicker;
 
-   const URL = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=1min&apikey=BIYQYMYZ9KIBXS9V'; //ticker.type == TYPE.STOCK ? `${STOCK_URL}${name}` : `${CRYPTO_URL}${name}`; //if stock, url = 1st, if not, url = 2nd
+   const FUNCTION_TYPE = (type == TYPE.STOCK) ? 'TIME_SERIES_INTRADAY&interval=1min&' : 'DIGITAL_CURRENCY_INTRADAY&market=USD&'
+   const URL = `${BASE_URL}${FUNCTION_TYPE}symbol=${name}`;
 
+   console.log('URL = ', URL);
    let { data } = await axios.get(URL);
    data = replaceKeys(data);
 
@@ -112,6 +114,6 @@ module.exports = app => {
 
    });
 
-   
+
 
 }
