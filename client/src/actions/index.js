@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER, GET_TICKER_DATA, ADD_TICKER, TYPE, LOAD_TICKER_LIST } from './types';
+import { TYPE, FETCH_USER, LOAD_TICKERS, LOAD_TICKER_PRICES } from './types';
 
 
 const API_KEY = 'BIYQYMYZ9KIBXS9V';
@@ -19,9 +19,14 @@ export const fetchUser = () => async dispatch => {
    dispatch({ type: FETCH_USER, payload: res.data});
 }
 
-export const loadTickerList = () => async dispatch => {
-   console.log('load ticker list action');
+export const loadTickerList = () => async dispatch => { //used to load initial tickers when page is loaded
    const res = await axios.get('/api/tickers');
-   console.log("res.data= ", res.data);
-   dispatch({ type: LOAD_TICKER_LIST, payload: res.data});
+   dispatch({ type: LOAD_TICKERS, payload: res.data});
 }
+
+export const loadTickerPrices = () => async dispatch => { //used to load initial ticker prices when page is loaded
+   const res = await axios.get('/api/tickers/current_prices');
+   dispatch({ type: LOAD_TICKER_PRICES, payload: res.data});
+}
+
+// export const fetchTickerPrice //used to fetch one ticker price, when initially added to tickerList

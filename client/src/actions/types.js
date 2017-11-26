@@ -1,7 +1,8 @@
 module.exports = {
    ADD_TICKER: 'add_ticker',
    FETCH_USER: 'fetch_user',
-   LOAD_TICKER_LIST: 'load_ticker_list',
+   LOAD_TICKERS: 'load_tickers',
+   LOAD_TICKER_PRICES: 'load_ticker_prices',
    TYPE: {STOCK: 'STOCK', CRYPTO: 'CRYPTO'}
 }
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StockCryptoTracker from '../components/stockcrypto_tracker.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker, loadTickerList } from '../actions/index';
+import { addTicker, loadTickerList, loadTickerPrices } from '../actions/index';
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
 
@@ -17,33 +17,16 @@ class StockCryptoList extends Component {
       this.renderTracker = this.renderTracker.bind(this);
       this.updateTrackerData = this.updateTrackerData.bind(this);
 
-      this.props.loadTickerList();
+   }
 
+   componentDidMount() {
+      this.props.loadTickerList();
+      this.props.loadTickerPrices();
    }
 
    renderTracker (tickerItem) {
       const { name, type } = tickerItem;
-
-      let timeSeries, latestTime, whichTime, currentPrice;
-
-      if (this.props.dataList[name]) {
-         const { data } = this.props.dataList[name];
-
-         if( !_.isEmpty(data) ) {
-            if (type == TYPE.STOCK) {
-               timeSeries = data["Time Series (1min)"];
-               latestTime = Object.keys(timeSeries)[0];
-               whichTime = "4. close";
-            }
-            else if (type == TYPE.CRYPTO) {
-               timeSeries = data["Time Series (Digital Currency Intraday)"];
-               latestTime = Object.keys(timeSeries)[0];
-               whichTime = "1a. price (USD)";
-            }
-
-            currentPrice = timeSeries[latestTime][whichTime];
-         }
-      }
+      let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
 
       return (
             <StockCryptoTracker key={name} trackerName={name} currentPrice={currentPrice} />
@@ -52,8 +35,6 @@ class StockCryptoList extends Component {
    }
 
    renderTrackerList () {
-      console.log("renderTrackerList");
-
       return (
          this.props.tickerList.map(this.renderTracker)
       );
@@ -88,15 +69,15 @@ class StockCryptoList extends Component {
    }
 }
 
-function mapStateToProps({tickerList, dataList}){
+function mapStateToProps({tickerList, priceList}){
    return {
       tickerList, // [ {name, type}, ...]
-      dataList // {name: data}
+      priceList // { STOCK: { name: price, ...} , CRYPTO: { name: price, ...} }
    }
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ loadTickerList }, dispatch);
+   return bindActionCreators({ loadTickerList, loadTickerPrices }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StockCryptoList);
