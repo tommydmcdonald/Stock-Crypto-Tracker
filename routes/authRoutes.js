@@ -32,4 +32,5 @@ module.exports = app => {
 
      res.send(req.user);
   });
+  
 };
