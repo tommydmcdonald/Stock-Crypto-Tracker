@@ -10,7 +10,7 @@ const CRYPTO_URL = `${BASE_URL}function=DIGITAL_CURRENCY_INTRADAY&market=USD&sym
 
 export const addTicker = (name, type) => async dispatch => {
    const newTicker = { name: name, type: type};
-   const res = await axios.post('/api/ticker', newTicker);
+   const res = await axios.post('/api/tickers', newTicker);
    dispatch({ type: FETCH_USER, payload: res.data });
 }
 
@@ -21,7 +21,7 @@ export const fetchUser = () => async dispatch => {
 
 export const loadTickerList = () => async dispatch => {
    console.log('load ticker list action');
-   const res = await axios.get('/api/ticker_list');
+   const res = await axios.get('/api/tickers');
    console.log("res.data= ", res.data);
    dispatch({ type: LOAD_TICKER_LIST, payload: res.data});
 }

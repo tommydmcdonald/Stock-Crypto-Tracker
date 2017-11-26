@@ -53,7 +53,7 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
 
 module.exports = app => {
 
-   app.post('/api/ticker/', async (req, res) => { //add error checking
+   app.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
 
       try {
          const newTicker = req.body;
@@ -79,8 +79,45 @@ module.exports = app => {
 
    });
 
-   app.get('/api/ticker_list', (req, res) => {
+   app.get('/api/tickers', (req, res) => { //get list of tickers
       res.send(req.user.tickerList);
+   });
+
+   app.get('/api/tickers/current_prices', (req, res) => { //return list of all current prices
+      const currentPriceList = { STOCK: {}, CRYPTO: {} };
+
+      try {
+         console.log(req.user.tickerList);
+         req.user.tickerList.forEach( tic => {
+            const { type, name } = tic;
+
+            // let tickerData = await Ticker.findOne( { name, type } );
+
+            await Ticker.findOne( { name, type }, function (err, ticker) {
+               if (ticker) {
+                  console.log('found ticker' + ticker);
+                  const timeSeries = ticker['data']['data']['Time Series (1min)'];
+                  console.log('timeSeries = ', timeSeries);
+                  const seriesKey = Object.keys(timeSeries).sort()[0]
+                  console.log('seriesKey = ', seriesKey);
+                  const currentPrice = timeSeries[seriesKey]['4_ close'];
+                  console.log('currentPrice = ', currentPrice);
+
+                  currentPriceList[type][name] = currentPrice;
+                  console.log('currentPriceList = ', currentPriceList);
+               }
+            });
+         });
+         console.log('post');
+         console.log(' after forEach, currentPriceList = ', currentPriceList);
+         res.send(currentPriceList);
+
+      } catch(err) {
+         console.log('err');
+         return res.status(500).send(err);
+      }
+
+
    });
 
 }
