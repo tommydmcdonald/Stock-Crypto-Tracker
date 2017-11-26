@@ -8,9 +8,6 @@ const TYPE = {STOCK: 'STOCK', CRYPTO: 'CRYPTO'};
 const API_KEY = 'BIYQYMYZ9KIBXS9V';
 const BASE_URL = `https://www.alphavantage.co/query?apikey=${API_KEY}&function=`;
 
-const STOCK_URL = `${BASE_URL}function=TIME_SERIES_INTRADAY&interval=1min&symbol=`;
-const CRYPTO_URL = `${BASE_URL}function=DIGITAL_CURRENCY_INTRADAY&market=USD&symbol=`;
-
 const replaceKeys = (data) => { //removes . from keys of data object. '.' are not valid keys in mongodb
    data = _.mapKeys(data, (value, key) => {
       return key.replace('.', '_');
