@@ -64,11 +64,10 @@ module.exports = app => {
          if (!queryTicker)
             addTickerToTickers(newTicker); //if not found, add to Ticker collection
 
-         const queryUser = await User.findOne( { _id, tickerList: { $elemMatch: newTicker } } );
-
+         const queryUser = await User.findOne( { _id, tickerList: { $elemMatch: newTicker } } ); //refactor with update
 
          if (!queryUser) { //if user does not contain ticker in their list, add it to their tickerList
-            await User.findByIdAndUpdate( _id, { $push: { tickerList: newTicker } } );
+            await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } } ); //$addToSet =  add a value to an array only if the value is not already present
             res.send(newTicker);
          }
       } catch(err) {

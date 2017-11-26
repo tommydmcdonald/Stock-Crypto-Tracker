@@ -11,4 +11,8 @@ const userSchema = new Schema({
   } ]
 });
 
+// userSchema.index( {tickerList.name: 1, tickerList.type: 1}, { unique: true});
+
+// person.index({ firstName: 1, lastName: 1}, { unique: true });
+
 mongoose.model('users', userSchema);
