@@ -91,6 +91,7 @@ module.exports = app => {
    });
 
    app.get('/api/tickers', (req, res) => { //get list of tickers
+      console.log('req.user', req.user);
       res.send(req.user.tickerList);
    });
 
@@ -128,6 +129,11 @@ module.exports = app => {
       }
 
    })
+
+   // app.delete('/api/tickers/:type/:name', (req, res) => { //delete ticker from user's tickerList
+   //    //db.coll.update({<cond to identify document}, {$pull: {'comments': {'name': <name>}}} )
+   //    User.update()
+   // })
 
 
 

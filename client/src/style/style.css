@@ -1,3 +1,18 @@
 #logo {
    padding-left: 15px;
+   font-weight: 200;
+   color: #64FFDA;
+
+}
+#header-bar {
+  background-color: #BDBDBD;
+}
+
+#searchandbuttons {
+  padding-top: 25px;
+}
+
+#butt {
+  background-color: #78909C
+
 }

@@ -49,25 +49,24 @@ class SearchBar extends Component {
 
    render() {
       return (
-         <div className="container search-bar">
-            <form onSubmit={this.onFormSubmit} className="input-group">
-               <input
-                  placeholder="Add a stock or cryptocurrency to your portfolio"
-                  className="form-control"
-                  value={this.state.ticker}
-                  onChange={this.onInputChange}
-               />
-               <span className="input-group-btn">
-                  <button id={TYPE.STOCK} type="submit" className="btn btn-secondary" onClick={this.onButtonClick}>
-                     Add Stock
-                  </button>
-                  <div>   </div>
-                  <button id={TYPE.CRYPTO} type="submit" className="btn btn-secondary" onClick={this.onButtonClick}>
-                     Add Crypto
-                  </button>
-               </span>
-            </form>
-         </div>
+        <div className="container search-bar">
+          <form id="searchandbuttons" onSubmit={this.onFormSubmit} className="input-group row">
+             <input
+                placeholder="Add a stock or cryptocurrency to your portfolio"
+                className="form-control col s7"
+                value={this.state.ticker}
+                onChange={this.onInputChange}
+             />
+           <span id="search-buttons"  className="input-group-btn col s5">
+                <button id={TYPE.STOCK} id="butt" type="submit" className="btn col s6 hoverable" onClick={this.onButtonClick}>
+                   Add Stock
+                </button>
+                <button id={TYPE.CRYPTO} id="butt" type="submit" className="btn col s6 hoverable" onClick={this.onButtonClick}>
+                   Add Crypto
+                </button>
+             </span>
+          </form>
+        </div>
 
       );
 
