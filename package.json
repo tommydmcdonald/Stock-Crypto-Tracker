@@ -47,6 +47,7 @@
       "redux": "^3.7.2",
       "redux-devtools-extension": "^2.13.2",
       "redux-promise": "^0.5.3",
+      "redux-thunk": "^2.2.0",
       "validator": "^9.1.1"
    },
    "repository": {
