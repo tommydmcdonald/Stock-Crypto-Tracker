@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
 const _ = require('lodash');
+const sleep = require('sleep').msleep; //in ms
 const User = mongoose.model('users');
 const Ticker = mongoose.model('tickers');
 const TYPE = {STOCK: 'STOCK', CRYPTO: 'CRYPTO'};
@@ -115,19 +116,28 @@ module.exports = app => {
 
    });
 
-   app.get('/api/tickers/current_prices/:type/:name', async (req, res) => {
+   app.get('/api/tickers/current_prices/:type/:name', async (req, res) => { //get one stock's price
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
-      try {
-         const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
-         res.send( { name, type, price } );
-      }
-      catch (err) {
-         return res.status(500).send(err);
+      let found = false;
+      let count = 0;
+
+      //waits for data to be added to Ticker from Alpha Vantage API
+      while (!found && count < 50) {
+         try {
+            const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
+             found = true;
+            res.send( { name, type, price } );
+         }
+         catch (err) {
+            count++;
+            sleep(300);
+         }
       }
 
-   }) //get one stock's price
+      return res.sendStatus(404);
+   })
 
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const name = req.params.name.toUpperCase();

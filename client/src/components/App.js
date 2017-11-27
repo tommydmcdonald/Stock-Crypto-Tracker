@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 import '../style/style.css';
-import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
+// import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
 
 import Home from './Home';
 import Landing from './Landing'
