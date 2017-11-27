@@ -120,8 +120,8 @@ module.exports = app => {
       const type = req.params.type.toUpperCase();
 
       try {
-         const currentPrice = findCurrentPrice( await Ticker.findOne( { name, type }) );
-         res.send( { [type]: { [name]: currentPrice} } );
+         const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
+         res.send( { name, type, price } );
       }
       catch (err) {
          return res.status(500).send(err);

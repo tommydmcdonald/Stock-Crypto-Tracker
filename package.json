@@ -17,6 +17,7 @@
    "license": "ISC",
    "dependencies": {
       "axios": "^0.17.1",
+      "axios-retry": "^3.0.1",
       "bcrypt": "^1.0.3",
       "bluebird": "^3.5.1",
       "body-parser": "^1.18.2",
