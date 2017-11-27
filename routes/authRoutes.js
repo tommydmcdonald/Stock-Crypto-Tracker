@@ -1,4 +1,5 @@
 const passport = require('passport');
+const _ = require('lodash');
 
 module.exports = app => {
   app.get(
@@ -8,14 +9,28 @@ module.exports = app => {
     })
   );
 
-  app.get('/auth/google/callback', passport.authenticate('google'));
+  app.get(
+     '/auth/google/callback',
+     passport.authenticate('google'),
+     (req, res) => { //what happens after user logins
+        res.redirect("/");
+     }
+  );
 
   app.get('/api/logout', (req, res) => {
     req.logout();
-    res.send(req.user);
+    res.redirect("/")
   });
 
   app.get('/api/current_user', (req, res) => {
-    res.send(req.user);
+     if (req.user)
+     {
+        const userInfo = _.pick(req.user, ['_id', 'googleId', '__v']);
+        res.send( _.pick(req.user, ['_id', 'googleId', '__v']) ); //send user back without tickerlist
+        return;
+     }
+
+     res.send(req.user);
   });
+  
 };

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker, getTickerData } from '../actions/index';
+import { addTicker } from '../actions/index';
 
-import { TYPE } from '../actions/index';
+import { TYPE } from '../actions/types';
 
 const API_KEY = 'BIYQYMYZ9KIBXS9V';
 
@@ -33,8 +33,8 @@ class SearchBar extends Component {
       // Fetch tracker info
       const tickerFormatted = this.state.ticker.toUpperCase();
 
+      console.log("addTicker in search_bar. tickerFormatted = ", tickerFormatted, "type = ", this.state.type);
       this.props.addTicker(tickerFormatted, this.state.type);
-      this.props.getTickerData({name: tickerFormatted, type: this.state.type});
 
       this.setDefaultState();
    }
@@ -74,14 +74,8 @@ class SearchBar extends Component {
    }
 }
 
-function mapStateToProps({tickerList, dataList}){
-   return {
-      tickerList // [ {name, type}, ...]
-   }
-}
-
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ addTicker, getTickerData }, dispatch);
+   return bindActionCreators({ addTicker }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
+export default connect(null, mapDispatchToProps)(SearchBar);

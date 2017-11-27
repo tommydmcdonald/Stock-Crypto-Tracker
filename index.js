@@ -1,9 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser  = require("body-parser");
 const keys = require('./config/keys');
 require('./models/Users');
+require('./models/Tickers');
 require('./services/passport');
 
 mongoose.connect(keys.mongoURI);
@@ -20,7 +23,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+
 require('./routes/authRoutes')(app);
+require('./routes/stockRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);

@@ -1,16 +1,39 @@
 import React, { Component } from 'react';
-import StockCryptoList from '../containers/stockcrypto_list';
-import SearchBar from '../containers/search_bar';
-import '../style/style.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
-export default class App extends Component {
-   render () {
+import '../style/style.css';
+import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
+
+import Home from './Home';
+import Landing from './Landing'
+import Login from './Login';
+import Header from './Header';
+
+class App extends Component {
+   componentDidMount() {
+      this.props.fetchUser();
+   }
+
+   render() {
       return (
-         <div>
-           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossOrigin="anonymous" />
-            <SearchBar />
-            <StockCryptoList />
+         <div className="container">
+            <BrowserRouter>
+               <div>
+                  <Header />
+                  <Route exact path={"/"} component={this.props.auth ? Home : Landing} />
+                  <Route exact path="/login" component={Login} />
+                  <Route path="/landing" component={Landing} />
+               </div>
+            </BrowserRouter>
          </div>
       );
    }
 }
+
+function mapStateToProps({ auth }) {
+   return { auth };
+}
+
+export default connect(mapStateToProps, actions)(App); //guessint no mapdispatchtoprops cause no need to bind aciton creators causing using redux-thunk?

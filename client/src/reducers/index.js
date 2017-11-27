@@ -1,10 +1,13 @@
 import { combineReducers } from 'redux';
+
+import authReducer from './authReducer';
 import tickerReducer from './reducer_ticker';
-import dataReducer from './reducer_data';
+import priceReducer from './reducer_price';
 
 const rootReducer = combineReducers({
-  tickerList: tickerReducer,
-  dataList: dataReducer
+   auth: authReducer,
+   tickerList: tickerReducer,
+   priceList: priceReducer
 });
 
 export default rootReducer;

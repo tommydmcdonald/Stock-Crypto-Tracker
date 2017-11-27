@@ -1,6 +1,6 @@
 module.exports = {
-    googleClientID: '40482564741-olu7i45f8cmdcl9ip21mdss0ve30lujf.apps.googleusercontent.com',
-    googleClientSecret: 'ffyOv8Oi9S8Wsfo_7PyB2t0E',
+    googleClientID: '156973344271-p5c10jndejmmdv6ok4ig4d1tb08t3df7.apps.googleusercontent.com',
+    googleClientSecret: 'Xm1pPnl3iHgNGoAY5aRv_TV4',
     mongoURI: 'mongodb://ric:CEN4020@ds163301.mlab.com:63301/stock-crypto-tracker',
     cookieKey: 'hsdrtyedsrvewredfgbsdtrwsdfgsdewki'
  };

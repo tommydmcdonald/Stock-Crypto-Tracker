@@ -1,13 +1,13 @@
-import { ADD_TICKER } from '../actions/index';
+import { ADD_TICKER, LOAD_TICKERS } from '../actions/types';
 
 export default function(state = [], action) {
    switch (action.type) {
    case ADD_TICKER:
-      const name = action.payload;
-      const type = action.meta;
-
-      return [ {name, type}, ...state ];
+      return [ ...state, action.payload ];
+   case LOAD_TICKERS:
+      return action.payload;
+   default:
+      return state;
   }
 
-  return state;
 }
