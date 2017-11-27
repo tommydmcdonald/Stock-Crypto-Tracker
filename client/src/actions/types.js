@@ -3,6 +3,7 @@ module.exports = {
    FETCH_USER: 'fetch_user',
    LOAD_TICKERS: 'load_tickers',
    LOAD_TICKER_PRICES: 'load_ticker_prices',
+   FETCH_TICKER_PRICE: 'fetch_ticker_price',
    TYPE: {STOCK: 'STOCK', CRYPTO: 'CRYPTO'}
 }
 

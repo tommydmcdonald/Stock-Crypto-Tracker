@@ -50,6 +50,19 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
 
 }
 
+const findCurrentPrice = (ticker) => {
+   const { name, type } = ticker;
+   if ( type == TYPE.STOCK ) {
+      const timeSeries = ticker['data']['data']['Time Series (1min)'];
+      const seriesKey = Object.keys(timeSeries).sort()[0]
+      const currentPrice = timeSeries[seriesKey]['4_ close'];
+      return currentPrice;
+   }
+   else if ( type == TYPE.CRYPTO ) {
+
+   }
+}
+
 module.exports = app => {
 
    app.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
@@ -90,17 +103,9 @@ module.exports = app => {
          for (let i = 0; i < tickerList.length; i++) {
 
             const { type, name } = tickerList[i];
-            console.log('type = ', type, ' name = ', name);
             const ticker = await Ticker.findOne( { name, type });
 
-            if (ticker) {
-               const timeSeries = ticker['data']['data']['Time Series (1min)'];
-               const seriesKey = Object.keys(timeSeries).sort()[0]
-               const currentPrice = timeSeries[seriesKey]['4_ close'];
-
-               currentPriceList[type][name] = currentPrice;
-            }
-
+            currentPriceList[type][name] = findCurrentPrice(ticker);
          }
          res.send(currentPriceList);
 
@@ -109,6 +114,20 @@ module.exports = app => {
       }
 
    });
+
+   app.get('/api/tickers/current_prices/:type/:name', async (req, res) => {
+      const name = req.params.name.toUpperCase();
+      const type = req.params.type.toUpperCase();
+
+      try {
+         const currentPrice = findCurrentPrice( await Ticker.findOne( { name, type }) );
+         res.send( { [type]: { [name]: currentPrice} } );
+      }
+      catch (err) {
+         return res.status(500).send(err);
+      }
+
+   })
 
 
 
