@@ -63,11 +63,11 @@ class StockCryptoList extends Component {
                <thead>
                   <tr>
                      <th>Ticker</th>
-                     <th>Price</th>
+                     <th>Price (USD)</th>
                   </tr>
                </thead>
                <tbody>
-                  {this.renderTrackerList()}
+                {this.renderTrackerList()}
                </tbody>
             </table>
          </div>
