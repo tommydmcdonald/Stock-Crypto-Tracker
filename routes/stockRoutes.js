@@ -54,18 +54,14 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
 
 const findCurrentPrice = (ticker) => {
    const { name, type } = ticker;
-   if ( type == TYPE.STOCK ) {
-      const timeSeries = ticker['data']['data']['Time Series (1min)'];
-      const seriesKey = Object.keys(timeSeries).reverse()[0];
-      const currentPrice = timeSeries[seriesKey]['4_ close'];
-      return currentPrice;
-   }
-   else if ( type == TYPE.CRYPTO ) {
-      const timeSeries = ticker['data']['data']['Time Series (Digital Currency Intraday)'];
-      const seriesKey = Object.keys(timeSeries).reverse()[0];
-      const currentPrice = timeSeries[seriesKey]['1b_ price (USD)'];
-      return currentPrice;
-   }
+   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+
+   const timeSeries = ticker.data.data[timeSeriesType];
+   const seriesKey = Object.keys(timeSeries).reverse()[0];
+   const currentPrice = timeSeries[seriesKey][priceInterval];
+
+   return currentPrice;
 }
 
 module.exports = app => {
