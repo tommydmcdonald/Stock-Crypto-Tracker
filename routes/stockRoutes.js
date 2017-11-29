@@ -156,14 +156,17 @@ module.exports = app => {
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
+      const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+      const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+
       try {
          const queryTicker = await Ticker.findOne( { name, type } );
-         const timeSeries = queryTicker.data.data['Time Series (1min)']
+         const timeSeries = queryTicker.data.data[timeSeriesType]
 
          //add crypto support
          const prices = {};
          for (const key in timeSeries) {
-            prices[key] = timeSeries[key]['4_ close'];
+            prices[key] = timeSeries[key][priceInterval];
          }
 
          res.send(prices);
