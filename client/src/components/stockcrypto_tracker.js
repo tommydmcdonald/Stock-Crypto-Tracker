@@ -8,10 +8,11 @@ export default class StockCryptoTracker extends Component {
          <tr>
             <th scope="row">{this.props.trackerName}</th>
             <td>{this.props.currentPrice}</td>
-            <td><a className="waves-effect waves-light btn">button</a></td>
+            <td><a className="waves-effect waves-teal btn-flat" onClick={ () => this.props.onClick(this.props._id)}>Remove</a></td>
          </tr>
       );
    }
 }
 
 //<i className="material-icons">remove_circle</i>
+//

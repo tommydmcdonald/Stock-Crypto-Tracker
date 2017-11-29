@@ -58,11 +58,10 @@ class SearchBar extends Component {
                   onChange={this.onInputChange}
                />
                <span className="input-group-btn">
-                  <button id={TYPE.STOCK} type="submit" className="btn btn-secondary" onClick={this.onButtonClick}>
+                  <button id={TYPE.STOCK} type="submit" className="waves-effect waves-light btn teal lighten-2" onClick={this.onButtonClick}>
                      Add Stock
                   </button>
-                  <div>   </div>
-                  <button id={TYPE.CRYPTO} type="submit" className="btn btn-secondary" onClick={this.onButtonClick}>
+                  <button id={TYPE.CRYPTO} type="submit" className="waves-effect waves-light btn teal lighten-2" onClick={this.onButtonClick}>
                      Add Crypto
                   </button>
                </span>

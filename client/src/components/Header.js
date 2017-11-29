@@ -17,7 +17,7 @@ class Header extends Component {
    render() {
       return (
          <nav>
-            <div className="nav-wrapper">
+            <div className="nav-wrapper grey lighten-1">
                <Link
                   to={this.props.auth ? '/' : '/landing'}
                   className="brand-logo" id="logo">
