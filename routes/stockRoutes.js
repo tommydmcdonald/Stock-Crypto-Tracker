@@ -62,7 +62,7 @@ const findCurrentPrice = (ticker) => {
    }
    else if ( type == TYPE.CRYPTO ) {
       const timeSeries = ticker['data']['data']['Time Series (Digital Currency Intraday)'];
-      const seriesKey = Object.keys(timeSeries).sort()[0];
+      const seriesKey = Object.keys(timeSeries).sort()[922];
       const currentPrice = timeSeries[seriesKey]['1b_ price (USD)'];
       return currentPrice;
    }
@@ -166,6 +166,7 @@ module.exports = app => {
 
          for (key in timeSeries) {
             prices.push( timeSeries[key]['4_ close'] );
+            console.log(timeSeries);
          }
       }
       else if ( type == TYPE.CRYPTO ) {
