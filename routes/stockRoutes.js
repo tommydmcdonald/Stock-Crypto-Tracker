@@ -62,7 +62,7 @@ const findCurrentPrice = (ticker) => {
    }
    else if ( type == TYPE.CRYPTO ) {
       const timeSeries = ticker['data']['data']['Time Series (Digital Currency Intraday)'];
-      const seriesKey = Object.keys(timeSeries).sort()[0];
+      const seriesKey = Object.keys(timeSeries)[0];
       const currentPrice = timeSeries[seriesKey]['1b_ price (USD)'];
       return currentPrice;
    }
@@ -158,24 +158,18 @@ module.exports = app => {
 
       try {
          const queryTicker = await Ticker.findOne( { name, type } );
-         const timeSeries = queryTicker.data.data['Time Series (1min)'];
+         const timeSeries = queryTicker.data.data['Time Series (1min)']
 
-         const prices = []
-
-         if ( type == TYPE.STOCK ) {
-            const timeSeries = ticker['data']['data']['Time Series (1min)'];
-
-            for (key in timeSeries) {
-               prices.push( timeSeries[key]['4_ close'] );
-            }
+         const prices = {};
+         for (const key in timeSeries) {
+            prices[key] = timeSeries[key]['4_ close'];
          }
-         else if ( type == TYPE.CRYPTO ) {
 
-         }
+         res.send(prices);
+      } catch (err) {
+         console.log(err);
       }
 
-
-      res.send(prices);
-   })
+   });
 
 }
