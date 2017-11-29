@@ -166,7 +166,6 @@ module.exports = app => {
 
          for (key in timeSeries) {
             prices.push( timeSeries[key]['4_ close'] );
-            console.log(timeSeries);
          }
       }
       else if ( type == TYPE.CRYPTO ) {
