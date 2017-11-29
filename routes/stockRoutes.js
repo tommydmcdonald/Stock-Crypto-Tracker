@@ -160,6 +160,7 @@ module.exports = app => {
          const queryTicker = await Ticker.findOne( { name, type } );
          const timeSeries = queryTicker.data.data['Time Series (1min)']
 
+         //add crypto support
          const prices = {};
          for (const key in timeSeries) {
             prices[key] = timeSeries[key]['4_ close'];
@@ -169,8 +170,6 @@ module.exports = app => {
       } catch (err) {
          console.log(err);
       }
-      else if ( type == TYPE.CRYPTO ) {
-
    });
 
 }
