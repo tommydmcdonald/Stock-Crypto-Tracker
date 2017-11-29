@@ -169,6 +169,7 @@ module.exports = app => {
       } catch (err) {
          console.log(err);
       }
+      else if ( type == TYPE.CRYPTO ) {
 
    });
 
