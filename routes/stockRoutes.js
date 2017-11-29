@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
 const _ = require('lodash');
-const sleep = require('sleep').msleep; //in ms
+//const sleep = require('sleep').msleep; //in ms
+const delay = require('delay');
 const User = mongoose.model('users');
 const Ticker = mongoose.model('tickers');
 const TYPE = {STOCK: 'STOCK', CRYPTO: 'CRYPTO'};
@@ -129,14 +130,15 @@ module.exports = app => {
             const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
              found = true;
             res.send( { name, type, price } );
+            return;
          }
          catch (err) {
             count++;
-            sleep(300);
+            delay(300);
          }
       }
 
-      return res.sendStatus(404);
+      res.sendStatus(404);
    })
 
    app.delete('/api/tickers/:_id', async (req, res) => { //delete a ticker in user's tickerList

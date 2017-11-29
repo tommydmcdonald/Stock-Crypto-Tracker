@@ -23,6 +23,7 @@
       "body-parser": "^1.18.2",
       "bootstrap": "^4.0.0-beta.2",
       "cookie-session": "^2.0.0-beta.3",
+      "delay": "^2.0.0",
       "dotenv": "^4.0.0",
       "ejs": "^2.5.7",
       "express": "^4.16.2",
@@ -49,7 +50,6 @@
       "redux-devtools-extension": "^2.13.2",
       "redux-promise": "^0.5.3",
       "redux-thunk": "^2.2.0",
-      "sleep": "^5.1.1",
       "validator": "^9.1.1"
    },
    "repository": {
