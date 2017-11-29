@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StockCryptoTracker from '../components/stockcrypto_tracker.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker, loadTickerList, loadTickerPrices } from '../actions/index';
+import { addTicker, loadTickerList, loadTickerPrices, removeTicker } from '../actions/index';
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
 
@@ -16,7 +16,7 @@ class StockCryptoList extends Component {
       this.renderTrackerList = this.renderTrackerList.bind(this);
       this.renderTracker = this.renderTracker.bind(this);
       this.updateTrackerData = this.updateTrackerData.bind(this);
-
+      this.handleRemoveClick = this.handleRemoveClick.bind(this);
    }
 
    componentDidMount() {
@@ -24,12 +24,18 @@ class StockCryptoList extends Component {
       this.props.loadTickerPrices();
    }
 
+   handleRemoveClick( _id ) {
+      this.props.removeTicker(_id);
+   }
+
    renderTracker (tickerItem) {
       const { name, type } = tickerItem;
+      const _id = tickerItem._id != null ? tickerItem._id : name;
+      console.log('tickerItem = ', tickerItem);
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
 
       return (
-            <StockCryptoTracker key={name} trackerName={name} currentPrice={currentPrice} />
+            <StockCryptoTracker key={_id} _id={_id} trackerName={name} currentPrice={currentPrice} onClick={this.handleRemoveClick.bind(this)} />
       );
 
    }
@@ -77,7 +83,7 @@ function mapStateToProps({tickerList, priceList}){
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ loadTickerList, loadTickerPrices }, dispatch);
+   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StockCryptoList);

@@ -139,11 +139,10 @@ module.exports = app => {
       return res.sendStatus(404);
    })
 
-   app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
-      const name = req.params.name.toUpperCase();
-      const type = req.params.type.toUpperCase();
+   app.delete('/api/tickers/:_id', async (req, res) => { //delete a ticker in user's tickerList
+      const { _id } = req.params;
 
-      const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
+      const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { _id } }}, { new: true } );
 
       res.send(200);
    });
