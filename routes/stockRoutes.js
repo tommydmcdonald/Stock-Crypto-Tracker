@@ -56,11 +56,12 @@ const findCurrentPrice = (ticker) => {
    const { name, type } = ticker;
    if ( type == TYPE.STOCK ) {
       const timeSeries = ticker['data']['data']['Time Series (1min)'];
-      const seriesKey = Object.keys(timeSeries).sort()[0]
+      const seriesKey = Object.keys(timeSeries).sort()[0];
       const currentPrice = timeSeries[seriesKey]['4_ close'];
       return currentPrice;
    }
    else if ( type == TYPE.CRYPTO ) {
+      // const timeSeries = ticker[]
 
    }
 }
@@ -149,5 +150,30 @@ module.exports = app => {
       res.send(200);
    });
 
+   app.get('/api/stock_chart/:type/:name', async (req, res) => {
+      const name = req.params.name.toUpperCase();
+      const type = req.params.type.toUpperCase();
+
+      try {
+         const queryTicker = await Ticker.findOne( { name, type } );
+         const timeSeries = queryTicker.data.data['Time Series (1min)'];
+
+         const prices = []
+
+         if ( type == TYPE.STOCK ) {
+            const timeSeries = ticker['data']['data']['Time Series (1min)'];
+
+            for (key in timeSeries) {
+               prices.push( timeSeries[key]['4_ close'] );
+            }
+         }
+         else if ( type == TYPE.CRYPTO ) {
+
+         }
+      }
+
+
+      res.send(prices);
+   })
 
 }
