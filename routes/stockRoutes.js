@@ -64,6 +64,8 @@ const findCurrentPrice = (ticker) => {
    return currentPrice;
 }
 
+//const updatePriceData
+
 module.exports = app => {
 
    app.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
@@ -159,13 +161,17 @@ module.exports = app => {
          const queryTicker = await Ticker.findOne( { name, type } );
          const timeSeries = queryTicker.data.data[timeSeriesType]
 
-         //add crypto support
-         const prices = {};
+         const chartData = { prices: [], times: [] };
+
          for (const key in timeSeries) {
-            prices[key] = timeSeries[key][priceInterval];
+            const price = timeSeries[key][priceInterval];
+            const time = key.slice(11,16);
+
+            chartData.prices.push(price);
+            chartData.times.push(time);
          }
 
-         res.send(prices);
+         res.send(chartData);
       } catch (err) {
          console.log(err);
       }
