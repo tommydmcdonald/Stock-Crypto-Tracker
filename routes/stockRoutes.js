@@ -1,38 +1,11 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
 const _ = require('lodash');
-//const sleep = require('sleep').msleep; //in ms
 const delay = require('delay');
 const User = mongoose.model('users');
 const Ticker = mongoose.model('tickers');
-const TYPE = {STOCK: 'STOCK', CRYPTO: 'CRYPTO'};
-
-const API_KEY = 'BIYQYMYZ9KIBXS9V';
-const BASE_URL = `https://www.alphavantage.co/query?apikey=${API_KEY}&function=`;
-
-const replaceKeys = (data) => { //removes . from keys of data object. '.' are not valid keys in mongodb
-   data = _.mapKeys(data, (value, key) => {
-      return key.replace('.', '_');
-   })
-
-   for (let key in data) {
-      if ( typeof data[key] == 'object') {
-         for (let subkey in data[key]) {
-            if (typeof data[key][subkey] == 'object') {
-               data[key][subkey] = _.mapKeys(data[key][subkey], (value, key) => {
-                  return key.replace('.', '_');
-               })
-            }
-         }
-
-         data[key] = _.mapKeys(data[key], (value, key) => {
-            return key.replace('.', '_');
-         })
-      }
-   }
-
-   return data;
-}
+const { replaceKeys } = require('./index');
+const { BASE_URL, TYPE } = require('../config/keys');
 
 const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
 
@@ -41,7 +14,6 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
    const FUNCTION_TYPE = (type == TYPE.STOCK) ? 'TIME_SERIES_INTRADAY&interval=1min&' : 'DIGITAL_CURRENCY_INTRADAY&market=USD&'
    const URL = `${BASE_URL}${FUNCTION_TYPE}symbol=${name}`;
 
-   console.log('URL = ', URL);
    let { data } = await axios.get(URL);
    data = replaceKeys(data);
 
@@ -54,15 +26,14 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
 
 const findCurrentPrice = (ticker) => {
    const { name, type } = ticker;
-   if ( type == TYPE.STOCK ) {
-      const timeSeries = ticker['data']['data']['Time Series (1min)'];
-      const seriesKey = Object.keys(timeSeries).sort()[0]
-      const currentPrice = timeSeries[seriesKey]['4_ close'];
-      return currentPrice;
-   }
-   else if ( type == TYPE.CRYPTO ) {
+   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
 
-   }
+   const timeSeries = ticker.data.data[timeSeriesType];
+   const seriesKey = Object.keys(timeSeries).reverse()[0];
+   const currentPrice = timeSeries[seriesKey][priceInterval];
+
+   return currentPrice;
 }
 
 module.exports = app => {
@@ -134,7 +105,7 @@ module.exports = app => {
          }
          catch (err) {
             count++;
-            delay(300);
+            await delay(250);
          }
       }
 
@@ -149,5 +120,31 @@ module.exports = app => {
       res.send(200);
    });
 
+   app.get('/api/stock_chart/:type/:name', async (req, res) => {
+      const name = req.params.name.toUpperCase();
+      const type = req.params.type.toUpperCase();
+
+      const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+      const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+
+      try {
+         const queryTicker = await Ticker.findOne( { name, type } );
+         const timeSeries = queryTicker.data.data[timeSeriesType]
+
+         const chartData = { prices: [], times: [] };
+
+         for (const key in timeSeries) {
+            const price = timeSeries[key][priceInterval];
+            const time = key.slice(11,16);
+
+            chartData.prices.push(price);
+            chartData.times.push(time);
+         }
+
+         res.send(chartData);
+      } catch (err) {
+         console.log(err);
+      }
+   });
 
 }
