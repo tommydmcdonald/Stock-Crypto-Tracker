@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const Ticker = mongoose.model('tickers');
 
 exports.updateTickerData = (intervalMS) => {
-   setInterval( async () => {
+   const updateTickerDataCall = async () => {
       try {
          console.log('updating data');
          const tickerList = await Ticker.find({}).select('name type');
@@ -39,7 +39,7 @@ exports.updateTickerData = (intervalMS) => {
       } catch(err) {
          console.log(err);
       }
-
-
-   }, intervalMS);
+   }
+   updateTickerDataCall();
+   setInterval(updateTickerDataCall, intervalMS);
 }
