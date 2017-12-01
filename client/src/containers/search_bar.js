@@ -33,8 +33,8 @@ class SearchBar extends Component {
       // Fetch tracker info
       const tickerFormatted = this.state.ticker.toUpperCase();
 
-      console.log("addTicker in search_bar. tickerFormatted = ", tickerFormatted, "type = ", this.state.type);
-      this.props.addTicker(tickerFormatted, this.state.type);
+      if (tickerFormatted != '') //only add if not empty string
+         this.props.addTicker(tickerFormatted, this.state.type);
 
       this.setDefaultState();
    }
