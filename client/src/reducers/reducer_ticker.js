@@ -5,7 +5,17 @@ export default function(state = [], action) {
    case ADD_TICKER:
       return [ ...state, action.payload ];
    case REMOVE_TICKER:
-      return state.filter( ticker => ticker._id != action.payload && ticker.name != action.payload); //action.payload = _id
+      return state.filter( ticker => {
+         const { name, type } = action.payload;
+         if (ticker.name != name) {
+            return true;
+         }
+         else if (ticker.type != action.payload.type) { //if name is same but type is different
+            return true;
+         }
+
+         return false;
+      }); //action.payload = _id
    case LOAD_TICKERS:
       return action.payload;
    default:

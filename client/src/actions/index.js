@@ -13,10 +13,10 @@ export const addTicker = (name, type) => async dispatch => { //adds new ticker t
    dispatch({ type: FETCH_TICKER_PRICE, payload: result.data })
 }
 
-export const removeTicker = ( _id ) => dispatch => {
-   console.log('actions - removeTicker. _id=', _id);
-   axios.delete(`/api/tickers/${_id}`);
-   dispatch({type: REMOVE_TICKER, payload: _id });
+export const removeTicker = ( name, type ) => dispatch => {
+   console.log('removeTicker. name = ', name, ' type = ', type);
+   axios.delete(`/api/tickers/${type}/${name}`);
+   dispatch({type: REMOVE_TICKER, payload: { type, name } });
 }
 
 export const fetchUser = () => async dispatch => { //get user information for who is logged in

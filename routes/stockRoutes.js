@@ -112,20 +112,12 @@ module.exports = app => {
       res.sendStatus(404);
    })
 
-   app.delete('/api/tickers/:_id', async (req, res) => { //delete a ticker in user's tickerList
-      const { _id } = req.params;
-
-      let remove = null;
-      if ( _id.length > 15) { // checks if true _id, not name
-         remove = { $pull: { tickerList: { _id } }}
-      }
-      else {
-         remove = { $pull: { tickerList: { name: _id } }}
-      }
-
-      const updatedUser = await User.findByIdAndUpdate( req.user._id, remove, { new: true } );
-
-      res.send(200);
+   app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
+      const { type, name } = req.params;
+      console.log('name = ', name, ' type= ', type);
+      const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
+      console.log('updatedUser = ', updatedUser);
+      res.sendStatus(200);
    });
 
    app.get('/api/stock_chart/:type/:name', async (req, res) => {

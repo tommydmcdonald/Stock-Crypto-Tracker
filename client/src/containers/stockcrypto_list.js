@@ -16,7 +16,7 @@ class StockCryptoList extends Component {
       this.renderTrackerList = this.renderTrackerList.bind(this);
       this.renderTracker = this.renderTracker.bind(this);
       this.updateTrackerData = this.updateTrackerData.bind(this);
-      this.handleRemoveClick = this.handleRemoveClick.bind(this);
+      // this.handleRemoveClick = this.handleRemoveClick.bind(this);
    }
 
    componentDidMount() {
@@ -24,18 +24,19 @@ class StockCryptoList extends Component {
       this.props.loadTickerPrices();
    }
 
-   handleRemoveClick( _id ) {
-      this.props.removeTicker(_id);
-   }
+   // handleRemoveClick( _id ) {
+   //    this.props.removeTicker(_id);
+   // }
 
    renderTracker (tickerItem) {
       const { name, type } = tickerItem;
+      console.log('renderTracker. name = ', name, ' type= ', type);
       const _id = tickerItem._id != null ? tickerItem._id : name;
       console.log('tickerItem = ', tickerItem);
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
 
       return (
-            <StockCryptoTracker key={_id} _id={_id} trackerName={name} currentPrice={currentPrice} onClick={this.handleRemoveClick} />
+            <StockCryptoTracker key={_id} _id={_id} trackerName={name} trackerType={type} currentPrice={currentPrice} onClick={this.props.removeTicker} />
       );
 
    }
