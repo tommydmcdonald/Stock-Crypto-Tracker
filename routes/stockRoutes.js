@@ -115,7 +115,15 @@ module.exports = app => {
    app.delete('/api/tickers/:_id', async (req, res) => { //delete a ticker in user's tickerList
       const { _id } = req.params;
 
-      const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { _id } }}, { new: true } );
+      let remove = null;
+      if ( _id.length > 15) { // checks if true _id, not name
+         remove = { $pull: { tickerList: { _id } }}
+      }
+      else {
+         remove = { $pull: { tickerList: { name: _id } }}
+      }
+
+      const updatedUser = await User.findByIdAndUpdate( req.user._id, remove, { new: true } );
 
       res.send(200);
    });

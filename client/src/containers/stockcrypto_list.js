@@ -35,7 +35,7 @@ class StockCryptoList extends Component {
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
 
       return (
-            <StockCryptoTracker key={_id} _id={_id} trackerName={name} currentPrice={currentPrice} onClick={this.handleRemoveClick.bind(this)} />
+            <StockCryptoTracker key={_id} _id={_id} trackerName={name} currentPrice={currentPrice} onClick={this.handleRemoveClick} />
       );
 
    }

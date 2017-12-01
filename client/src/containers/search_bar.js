@@ -15,12 +15,7 @@ class SearchBar extends Component {
 
       this.onInputChange = this.onInputChange.bind(this);
       this.onFormSubmit = this.onFormSubmit.bind(this);
-      this.setDefaultState = this.setDefaultState.bind(this);
       this.onButtonClick = this.onButtonClick.bind(this);
-   }
-
-   setDefaultState() {
-      this.setState( { ticker: '', type: ''} );
    }
 
    onInputChange(event) {
@@ -29,22 +24,18 @@ class SearchBar extends Component {
 
    onFormSubmit(event) {
       event.preventDefault();
-
       // Fetch tracker info
       const tickerFormatted = this.state.ticker.toUpperCase();
 
       if (tickerFormatted != '') //only add if not empty string
          this.props.addTicker(tickerFormatted, this.state.type);
 
-      this.setDefaultState();
+      this.setState( { ticker: '', type: ''} ); //sets default state
    }
 
    onButtonClick(event) {
       const { id } = event.target;
-
       this.setState( {type: id} );
-
-      console.log("this.state.type =" + id);
    }
 
    render() {
