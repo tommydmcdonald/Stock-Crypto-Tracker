@@ -30,6 +30,7 @@ export const loadTickerList = () => async dispatch => { //used to load initial t
 }
 
 export const loadTickerPrices = () => async dispatch => { //used to load initial ticker prices when page is loaded
+   console.log('ltp');
    const res = await axios.get('/api/tickers/current_prices');
    dispatch({ type: LOAD_TICKER_PRICES, payload: res.data});
 }

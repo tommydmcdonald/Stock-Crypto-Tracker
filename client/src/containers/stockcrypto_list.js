@@ -15,8 +15,7 @@ class StockCryptoList extends Component {
 
       this.renderTrackerList = this.renderTrackerList.bind(this);
       this.renderTracker = this.renderTracker.bind(this);
-      this.updateTrackerData = this.updateTrackerData.bind(this);
-      // this.handleRemoveClick = this.handleRemoveClick.bind(this);
+      // this.loadTickerPrices = this.loadTickerPrices.bind(this);
    }
 
    componentDidMount() {
@@ -47,18 +46,20 @@ class StockCryptoList extends Component {
       );
    }
 
-   updateTrackerData () {
-      // this.props.tickerList.forEach( ticker => this.props.getTickerData(ticker) );
+   loadTickerPrices() {
+      console.log('list ltp');
+      this.props.loadTickerPrices();
    }
 
    render () {
-      const refreshRateSeconds = 25;
+      console.log('type of loadTickerPrices = ', typeof this.props.loadTickerPrices);
+      const refreshRateSeconds = 15;
       const timeout = refreshRateSeconds * 1000;
 
       return (
          <div>
             <ReactInterval timeout={timeout} enabled={true}
-            callback={this.updateTrackerData}
+            callback={this.loadTickerPrices.bind(this)}
             />
             <table className="table table-hover">
                <thead>
