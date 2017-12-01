@@ -33,6 +33,9 @@ class StockCryptoList extends Component {
       const _id = tickerItem._id != null ? tickerItem._id : name;
       console.log('tickerItem = ', tickerItem);
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
+      if (currentPrice != '-')
+         currentPrice = Number(currentPrice).toFixed(2);
+      currentPrice = '$' + currentPrice;
 
       return (
             <StockCryptoTracker key={_id} _id={_id} trackerName={name} trackerType={type} currentPrice={currentPrice} onClick={this.props.removeTicker} />
