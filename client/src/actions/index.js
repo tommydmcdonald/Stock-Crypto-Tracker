@@ -2,6 +2,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 // import retry from 'async/retry';
 import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES } from './types';
+import { FETCH_CHART_DATA } from './chart_data';
 
 export const addTicker = (name, type) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    const newTicker = { name, type };
@@ -32,4 +33,11 @@ export const loadTickerList = () => async dispatch => { //used to load initial t
 export const loadTickerPrices = () => async dispatch => { //used to load initial ticker prices when page is loaded
    const res = await axios.get('/api/tickers/current_prices');
    dispatch({ type: LOAD_TICKER_PRICES, payload: res.data});
+}
+
+export const fetchChartData = (name, type) => async dispatch => {
+  const newChart = { name, type };
+
+  const res = await axios.get()('/api/stock_chart/${type}/${name}')   // Object that contains two array of past price and times of those prices
+  dispatch({ type: FETCH_CHART_DATA, payload: res.data});
 }

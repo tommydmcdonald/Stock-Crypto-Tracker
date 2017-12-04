@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StockCryptoTracker from '../components/stockcrypto_tracker.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker, loadTickerList, loadTickerPrices, removeTicker } from '../actions/index';
+import { addTicker, loadTickerList, loadTickerPrices, removeTicker, fetchChartData } from '../actions/index';
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
 
@@ -40,6 +40,7 @@ class StockCryptoList extends Component {
 
    }
 
+
    renderTrackerList () {
       return (
          this.props.tickerList.map(this.renderTracker)
@@ -75,7 +76,7 @@ class StockCryptoList extends Component {
    }
 }
 
-function mapStateToProps({tickerList, priceList}){
+function mapStateToProps({tickerList, priceList, }){
    return {
       tickerList, // [ {name, type}, ...]
       priceList // { STOCK: { name: price, ...} , CRYPTO: { name: price, ...} }

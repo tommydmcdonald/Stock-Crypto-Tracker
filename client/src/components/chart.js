@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {Line} from 'react-chartjs-2';
+import { FETCH_CHART_DATA } from '../actions/chart_data';
+
 
 const data = {
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   datasets: [
     {
-      label: 'My First dataset',
+      label: 'Price Chart',
       fill: false,
       lineTension: 0.1,
       backgroundColor: 'rgba(75,192,192,0.4)',
@@ -23,9 +27,16 @@ const data = {
       pointHoverBorderWidth: 2,
       pointRadius: 1,
       pointHitRadius: 10,
-      data: [65, 59, 80, 81, 56, 55, 40]
+      data: [65, 59, 80, 81, 56, 55, 40], // this.props.chartData.prices
+      console.log(props.chartData.prices);
     }
   ]
 };
 
-export default React.createClass({displayName: 'LineExample'});
+export default (props) => {
+  return (
+    <div className="container">
+      <Line data={data} width={50} height={300} options={{maintainAspectRatio: false}} ></Line>
+    </div>
+  );
+}
