@@ -1,11 +1,12 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-// import retry from 'async/retry';
+import _ from 'lodash';
 import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, ADD_TICKER_PRICE, LOAD_TICKER_PRICES } from './types';
 
-export const addTicker = (name, type) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
+export const addTicker = (newTicker) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    //initial ticker add before checking if it is valid
-   const newTicker = { name, type };
+   const { name, type } = newTicker;
+
    dispatch({ type: ADD_TICKER, payload: newTicker });
 
    const res = await axios.post('/api/tickers', newTicker);
@@ -16,7 +17,6 @@ export const addTicker = (name, type) => async dispatch => { //adds new ticker t
    else { //add ticker price
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, data: res.data } });
    }
-
 }
 
 export const removeTicker = ( name, type ) => dispatch => {

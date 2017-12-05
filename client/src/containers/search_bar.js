@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { addTicker } from '../actions/index';
 import { Row, Autocomplete, Button, Col, Input } from 'react-materialize';
 import axios from 'axios';
+import _ from 'lodash';
 
 import { TYPE } from '../actions/types';
 
@@ -42,10 +43,10 @@ class SearchBar extends Component {
 
    onFormSubmit() {
       // Fetch tracker info
-      const tickerFormatted = this.state.ticker.toUpperCase();
+      const newTicker = { name: this.state.ticker.toUpperCase(), type: this.state.type };
 
-      if (tickerFormatted != '') {//only add if not empty string
-         this.props.addTicker(tickerFormatted, this.state.type);
+      if ( newTicker.name !== '' && !_.matches(this.props.tickerList, newTicker) ) { //only add if not empty string and ticker doesn't exist in redux tickerList
+         this.props.addTicker(newTicker);
       }
 
       this.setState( { ticker: '', type: ''} ); //sets default state

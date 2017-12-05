@@ -8,7 +8,8 @@ const userSchema = new Schema({
   tickerList: [ {
      name: String,
      type: { type: String, enum: [...TYPE] },
-     quantity: Number
+     quantity: Number,
+     _id: false
   } ]
 });
 

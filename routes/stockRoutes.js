@@ -64,7 +64,7 @@ module.exports = app => {
          res.send( { price } );
 
          //Adding ticker to User's tickerList
-         const updatedUser = await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
+         await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
 
       } catch(err) {
          res.send(err);
