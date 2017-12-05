@@ -36,6 +36,26 @@ const findCurrentPrice = (ticker) => {
    return currentPrice;
 }
 
+const findChartData = async (name, type) => {
+   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+
+   const queryTicker = await Ticker.findOne( { name, type } );
+   const timeSeries = queryTicker.data.data[timeSeriesType]
+
+   const chartData = { prices: [], times: [] };
+
+   for (const key in timeSeries) {
+      const price = timeSeries[key][priceInterval];
+      const time = key.slice(11,16);
+
+      chartData.prices.push(price);
+      chartData.times.push(time);
+   }
+
+   return chartData;
+}
+
 module.exports = app => {
 
    app.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
@@ -120,31 +140,24 @@ module.exports = app => {
       res.send(200);
    });
 
-   app.get('/api/stock_chart/:type/:name', async (req, res) => {
+   app.get('/api/stock_charts', async (req, res) => {
+      const tickerList = await User.findById( req.user._id, 'tickerList');
+
+      const allChartData = [];
+
+      tickerList.forEach( async ({name, type}) => {
+         const chartData = await findChartData(name, type);
+         allChartData.push(chartData)
+      });
+
+      return allChartData;
+   });
+
+   app.get('/api/stock_charts/:type/:name', async (req, res) => {
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
-      const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
-      const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
-
-      try {
-         const queryTicker = await Ticker.findOne( { name, type } );
-         const timeSeries = queryTicker.data.data[timeSeriesType]
-
-         const chartData = { prices: [], times: [] };
-
-         for (const key in timeSeries) {
-            const price = timeSeries[key][priceInterval];
-            const time = key.slice(11,16);
-
-            chartData.prices.push(price);
-            chartData.times.push(time);
-         }
-
-         res.send(chartData);
-      } catch (err) {
-         console.log(err);
-      }
+      res.send( await findChartData(name, type) );
    });
 
 }
