@@ -4,17 +4,13 @@ import { connect } from 'react-redux';
 export default class StockCryptoTracker extends Component {
 
    render() {
-      const { trackerName, trackerType } = this.props;
-      console.log('trackerType = ', trackerType);
+      const { name, type } = this.props;
       return (
          <tr>
-            <th scope="row">{this.props.trackerName}</th>
+            <th scope="row">{this.props.name}</th>
             <td>{this.props.currentPrice}</td>
-            <td><a className="waves-effect waves-teal btn-flat" onClick={ () => this.props.onClick(trackerName, trackerType)}>Remove</a></td>
+            <td><a className="waves-effect waves-teal btn-flat" onClick={ () => this.props.onClick(name, type)}>Remove</a></td>
          </tr>
       );
    }
 }
-
-//<i className="material-icons">remove_circle</i>
-//

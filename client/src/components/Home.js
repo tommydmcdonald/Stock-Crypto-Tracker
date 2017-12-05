@@ -5,7 +5,7 @@ import SearchBar from '../containers/search_bar';
 
 const Home = () => {
    return (
-      <div>
+      <div className='container'>
          <SearchBar />
          <StockCryptoList />
       </div>

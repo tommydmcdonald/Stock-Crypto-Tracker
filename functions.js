@@ -10,7 +10,6 @@ const Ticker = mongoose.model('tickers');
 exports.updateTickerData = (intervalMS) => {
    const updateTickerDataCall = async () => {
       try {
-         console.log('updating data');
          const tickerList = await Ticker.find({}).select('name type');
 
          const urls = tickerList.map( ticker => {
@@ -32,9 +31,7 @@ exports.updateTickerData = (intervalMS) => {
             const queryTic = await Ticker.findOne( {name, type} );
             const newTic = await Ticker.findOneAndUpdate( {name, type}, { $set: { 'data.data': data} }, { new: true });
          });
-      } catch(err) {
-         console.log(err);
-      }
+      } catch(err) {}
    }
    updateTickerDataCall();
    setInterval(updateTickerDataCall, intervalMS);
