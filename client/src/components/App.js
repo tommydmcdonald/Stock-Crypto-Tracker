@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as actions from '../actions';
+import { bindActionCreators } from 'redux';
+import { fetchUser } from '../actions'
 
 import '../style/style.css';
 // import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
@@ -36,4 +37,8 @@ function mapStateToProps({ auth }) {
    return { auth };
 }
 
-export default connect(mapStateToProps, actions)(App); //guessint no mapdispatchtoprops cause no need to bind aciton creators causing using redux-thunk?
+function mapDispatchToProps(dispatch) {
+   return bindActionCreators({ fetchUser }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App); //guessint no mapdispatchtoprops cause no need to bind aciton creators causing using redux-thunk?

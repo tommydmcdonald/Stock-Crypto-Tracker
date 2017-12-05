@@ -4,7 +4,7 @@ import axiosRetry from 'axios-retry';
 import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES } from './types';
 
 export const addTicker = (name, type) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
-   const newTicker = { name, type };
+   const newTicker = { name, type, quantity: 1 };
 
    const res = await axios.post('/api/tickers', newTicker);
    dispatch({ type: ADD_TICKER, payload: res.data });

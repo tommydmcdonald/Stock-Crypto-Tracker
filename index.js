@@ -7,7 +7,6 @@ const bodyParser  = require("body-parser");
 const { updateTickerData } = require('./functions');
 const keys = require('./config/keys');
 
-const Ticker = mongoose.model('tickers');
 require('./services/passport');
 
 mongoose.connect(keys.mongoURI);

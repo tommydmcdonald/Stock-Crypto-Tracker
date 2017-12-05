@@ -63,6 +63,14 @@ module.exports = app => {
 
    });
 
+   app.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update ticker quantity for a user
+      const { type, name, quantity } = req.params;
+      const user = await User.find( req.user._id );
+      await user.update({ 'tickerList.name': name, 'tickerList.type': type}, {$set: { 'tickerList.$.quantity': quantity} });
+      await user.save();
+      res.send(user);
+   });
+
    app.get('/api/tickers', (req, res) => { //get list of tickers
       res.send(req.user.tickerList);
    });
@@ -115,6 +123,8 @@ module.exports = app => {
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const { type, name } = req.params;
       console.log('name = ', name, ' type= ', type);
+
+
       const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
       console.log('updatedUser = ', updatedUser);
       res.sendStatus(200);
