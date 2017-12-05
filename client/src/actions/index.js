@@ -1,8 +1,7 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 // import retry from 'async/retry';
-import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES } from './types';
-import { FETCH_CHART_DATA } from './chart_data';
+import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES, FETCH_CHART_DATA } from './types';
 
 export const addTicker = (name, type) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    const newTicker = { name, type };

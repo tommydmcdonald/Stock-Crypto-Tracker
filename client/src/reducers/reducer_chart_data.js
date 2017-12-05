@@ -1,4 +1,4 @@
-import { FETCH_CHART_DATA } from '../actions/chart_data';
+import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
 
 export default function( state = {}, action ) {
   switch(action.type) {

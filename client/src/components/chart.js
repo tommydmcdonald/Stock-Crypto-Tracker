@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {Line} from 'react-chartjs-2';
-import { FETCH_CHART_DATA } from '../actions/chart_data';
+import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
 
 
 const data = {

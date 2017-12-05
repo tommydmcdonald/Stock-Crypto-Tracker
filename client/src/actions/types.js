@@ -5,7 +5,9 @@ module.exports = {
    LOAD_TICKERS: 'load_tickers',
    LOAD_TICKER_PRICES: 'load_ticker_prices',
    FETCH_TICKER_PRICE: 'fetch_ticker_price',
-   TYPE: {STOCK: 'STOCK', CRYPTO: 'CRYPTO'}
+   TYPE: {STOCK: 'STOCK', CRYPTO: 'CRYPTO'},
+   FETCH_CHART_DATA: 'fetch_chart_data',
+   LOAD_CHART_DATA: 'load_chart_data'
 }
 
 // export const GET_TICKER_DATA = 'get_ticker_data';

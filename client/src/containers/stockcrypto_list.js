@@ -22,24 +22,28 @@ class StockCryptoList extends Component {
    componentDidMount() {
       this.props.loadTickerList();
       this.props.loadTickerPrices();
+      //this.props.fetchChartData();
    }
 
    handleRemoveClick( _id ) {
       this.props.removeTicker(_id);
    }
 
+
    renderTracker (tickerItem) {
       const { name, type } = tickerItem;
       const _id = tickerItem._id != null ? tickerItem._id : name;
       console.log('tickerItem = ', tickerItem);
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
+      //let cData = _.get(this.props.chartData);
+      //console.log('Chart Data: ', chartData);
+
 
       return (
-            <StockCryptoTracker key={_id} _id={_id} trackerName={name} currentPrice={currentPrice} onClick={this.handleRemoveClick.bind(this)} />
+            <StockCryptoTracker  key={_id} _id={_id} trackerName={name} currentPrice={currentPrice} onClick={this.handleRemoveClick.bind(this)} />
+              // Would need to put chartData={cData} here right?
       );
-
    }
-
 
    renderTrackerList () {
       return (
@@ -68,7 +72,7 @@ class StockCryptoList extends Component {
                   </tr>
                </thead>
                <tbody>
-                {this.renderTrackerList()}
+                 {this.renderTrackerList()}
                </tbody>
             </table>
          </div>
