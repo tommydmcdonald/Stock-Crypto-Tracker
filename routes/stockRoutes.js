@@ -19,17 +19,17 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
    if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
       return false;
    }
-   else { //valid
-      data = replaceKeys(data);
+   else { //valid ticker
+      const dataFormatted = replaceKeys(data);
 
-      const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: data } });
-      addTicker.save( (err, addedTic) => {
-      })
+      const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: dataFormatted } });
+      await addTicker.save();
       return true;
    }
 }
 
 const findCurrentPrice = (ticker) => {
+   console.log('fCP, ticker = ', ticker);
    const { name, type } = ticker;
    const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
@@ -52,24 +52,22 @@ module.exports = app => {
          //check if ticker is in Ticker
          const queryTicker = await Ticker.findOne( { ...newTicker });
 
-         if (!queryTicker) {
-            const tickerAddSuccess = addTickerToTickers(newTicker); //if not found, add to Ticker collection
-
+         if (!queryTicker) {  //if ticker in Ticker db, add it
+            const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
-
             }
          }
+         //if exists in db or once added, send price back
+         const queryTic = await Ticker.findOne( {'name': newTicker.name, 'type': newTicker.type } );
+         const price = findCurrentPrice(queryTic);
+         res.send( { price } );
 
-         const queryUser = await User.findOne( { _id, tickerList: { $elemMatch: newTicker } } ); //refactor with update
-
-         if (!queryUser) { //if user does not contain ticker in their list, add it to their tickerList
-            await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } } ); //$addToSet =  add a value to an array only if the value is not already present
-            res.send(newTicker);
-         }
+         //Adding ticker to User's tickerList
+         const updatedUser = await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
 
       } catch(err) {
-         return res.status(500).send(err);
+         res.send(err);
       }
 
    });
