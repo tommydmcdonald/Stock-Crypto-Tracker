@@ -7,20 +7,26 @@ const Ticker = mongoose.model('tickers');
 const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
-const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
+const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
    const { name, type } = newTicker;
 
    const FUNCTION_TYPE = (type == TYPE.STOCK) ? 'TIME_SERIES_INTRADAY&interval=1min&' : 'DIGITAL_CURRENCY_INTRADAY&market=USD&'
    const URL = `${BASE_URL}${FUNCTION_TYPE}symbol=${name}`;
 
-   let { data } = await axios.get(URL);
-   data = replaceKeys(data);
+   const { data } = await axios.get(URL);
 
-   const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: data } });
-   addTicker.save( (err, addedTic) => {
-   })
+   if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+      return false;
+   }
+   else { //valid
+      data = replaceKeys(data);
 
+      const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: data } });
+      addTicker.save( (err, addedTic) => {
+      })
+      return true;
+   }
 }
 
 const findCurrentPrice = (ticker) => {
@@ -46,8 +52,14 @@ module.exports = app => {
          //check if ticker is in Ticker
          const queryTicker = await Ticker.findOne( { ...newTicker });
 
-         if (!queryTicker)
-            addTickerToTickers(newTicker); //if not found, add to Ticker collection
+         if (!queryTicker) {
+            const tickerAddSuccess = addTickerToTickers(newTicker); //if not found, add to Ticker collection
+
+            if (!tickerAddSuccess) { //if ticker is not valid API ticker
+               res.send( { error: 'Ticker could not be added.'} )
+               return;
+            }
+         }
 
          const queryUser = await User.findOne( { _id, tickerList: { $elemMatch: newTicker } } ); //refactor with update
 
@@ -55,6 +67,7 @@ module.exports = app => {
             await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } } ); //$addToSet =  add a value to an array only if the value is not already present
             res.send(newTicker);
          }
+
       } catch(err) {
          return res.status(500).send(err);
       }
@@ -85,29 +98,33 @@ module.exports = app => {
 
    });
 
-   app.get('/api/tickers/current_prices/:type/:name', async (req, res) => { //get one stock's price
-      const name = req.params.name.toUpperCase();
-      const type = req.params.type.toUpperCase();
-
-      let found = false;
-      let count = 0;
-
-      //waits for data to be added to Ticker from Alpha Vantage API
-      while (!found && count < 50) {
-         try {
-            const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
-             found = true;
-            res.send( { name, type, price } );
-            return;
-         }
-         catch (err) {
-            count++;
-            await delay(250);
-         }
-      }
-
-      res.sendStatus(404);
-   })
+   // Not needed because of data response in new post refactor for ticker
+   // app.get('/api/tickers/current_prices/:type/:name', async (req, res) => { //get one stock's price
+   //    const name = req.params.name.toUpperCase();
+   //    const type = req.params.type.toUpperCase();
+   //
+   //    let found = false;
+   //    let count = 0;
+   //
+   //    //waits for data to be added to Ticker from Alpha Vantage API
+   //    while (!found && count < 30) {
+   //       try {
+   //          const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
+   //          found = true;
+   //          res.send( { name, type, price } );
+   //          return;
+   //       }
+   //       catch (err) {
+   //          count++;
+   //          await delay(250);
+   //       }
+   //    }
+   //    if (!found) {
+   //       res.send( {} );
+   //       //make sure not added to db
+   //    }
+   //
+   // })
 
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const { type, name } = req.params;

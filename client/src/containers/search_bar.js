@@ -13,7 +13,7 @@ class SearchBar extends Component {
    constructor(props) {
       super(props);
 
-      this.state = { ticker: '', type: '', switch: TYPE.STOCK, suggestions: ''}
+      this.state = { ticker: '', type: '', switch: TYPE.STOCK, suggestions: {} }
 
       this.onInputChange = this.onInputChange.bind(this);
       this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -28,7 +28,6 @@ class SearchBar extends Component {
    }
 
    onInputChange(event, value) {
-      console.log('value = ', value);
       this.setState({ ticker: value });
    }
 
