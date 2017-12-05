@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addTicker } from '../actions/index';
 import { Row, Autocomplete, Button, Col, Input } from 'react-materialize';
+import axios from 'axios';
 
 import { TYPE } from '../actions/types';
 
@@ -12,7 +13,7 @@ class SearchBar extends Component {
    constructor(props) {
       super(props);
 
-      this.state = { ticker: '', type: '', switch: TYPE.STOCK}
+      this.state = { ticker: '', type: '', switch: TYPE.STOCK, suggestions: ''}
 
       this.onInputChange = this.onInputChange.bind(this);
       this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -21,8 +22,14 @@ class SearchBar extends Component {
       this.onSwitchChange = this.onSwitchChange.bind(this);
    }
 
-   onInputChange(event) {
-      this.setState({ ticker: event.target.value });
+   async componentDidMount() {
+      const res = await axios.get('/api/tickers/suggestions');
+      this.setState( {suggestions: res.data} );
+   }
+
+   onInputChange(event, value) {
+      console.log('value = ', value);
+      this.setState({ ticker: value });
    }
 
    onSwitchChange() {
@@ -68,18 +75,14 @@ class SearchBar extends Component {
                   value={this.state.ticker}
                   onChange={this.onInputChange}
                   onKeyPress={this.handleEnterOnSearchBar}
-                  data={
-                     {
-                        'Apple': null,
-                        'Microsoft': null,
-                        'Google': 'http://placehold.it/250x250'
-                     }
-                  }
+                  minLength={2}
+                  data={this.state.suggestions}
+                  limit={10}
                />
             </Col>
-            <Col s={2}><Button className='search-button' id={TYPE.STOCK} onClick={this.onButtonClick} waves='light'>Add Stock</Button></Col>
-            <Col s={2}><Button className='search-button' id={TYPE.CRYPTO} onClick={this.onButtonClick} waves='light'>Add Crypto</Button></Col>
-            <Col s={2}><div class="switch"><label>Stock<input type="checkbox" onChange={this.onSwitchChange}/><span class="lever"></span>Crypto</label></div></Col></Row>
+            <Col s={2}><Button className='search-button teal lighten-3' id={TYPE.STOCK} onClick={this.onButtonClick} waves='light'>Add Stock</Button></Col>
+            <Col s={2}><Button className='search-button teal lighten-3' id={TYPE.CRYPTO} onClick={this.onButtonClick} waves='light'>Add Crypto</Button></Col>
+            <Col s={2}><div className="switch"><label>Stock<input type="checkbox" onChange={this.onSwitchChange}/><span className="lever"></span>Crypto</label></div></Col></Row>
       );
 
    }

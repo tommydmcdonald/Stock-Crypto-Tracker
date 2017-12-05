@@ -140,4 +140,43 @@ module.exports = app => {
       } catch (err) {}
    });
 
+   app.get('/api/tickers/suggestions', async (req, res) => {
+      const stockCryptoList = {
+         aapl: null,
+         msft: null,
+         tsla: null,
+         amzn: null,
+         nvda: null,
+         intc: null,
+         f: null,
+         ge: null,
+         pypl: null,
+         fb: null,
+         snap: null,
+         ebay: null,
+         etsy: null,
+         nflx: null,
+         btc: null,
+         eth: null,
+         ltc: null,
+         bch: null,
+         dash: null,
+         xmr: null,
+         nxt: null,
+         zec: null,
+         xrp: null,
+         etc: null,
+         btg: null,
+         neo: null,
+         xlm: null,
+         eos: null,
+         sc: null,
+         omg: null,
+         dgb: null,
+         iot: null
+      };
+
+      res.send(stockCryptoList);
+   });
+
 }
