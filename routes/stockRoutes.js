@@ -57,7 +57,7 @@ module.exports = app => {
 
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
-               return;
+
             }
          }
 
