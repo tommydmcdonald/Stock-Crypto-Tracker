@@ -29,16 +29,14 @@ class StockCryptoList extends Component {
 
    renderTracker (tickerItem) {
       const { name, type } = tickerItem;
-      console.log('renderTracker. name = ', name, ' type= ', type);
       const _id = tickerItem._id != null ? tickerItem._id : name;
-      console.log('tickerItem = ', tickerItem);
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
       if (currentPrice != '-')
          currentPrice = Number(currentPrice).toFixed(2);
       currentPrice = '$' + currentPrice;
 
       return (
-            <StockCryptoTracker key={_id} _id={_id} trackerName={name} trackerType={type} currentPrice={currentPrice} onClick={this.props.removeTicker} />
+            <StockCryptoTracker key={_id} _id={_id} name={name} type={type} currentPrice={currentPrice} onClick={this.props.removeTicker} />
       );
 
    }
@@ -50,12 +48,10 @@ class StockCryptoList extends Component {
    }
 
    loadTickerPrices() {
-      console.log('list ltp');
       this.props.loadTickerPrices();
    }
 
    render () {
-      console.log('type of loadTickerPrices = ', typeof this.props.loadTickerPrices);
       const refreshRateSeconds = 15;
       const timeout = refreshRateSeconds * 1000;
 

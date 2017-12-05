@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { addTicker } from '../actions/index';
 import { Row, Autocomplete, Button, Col, Input } from 'react-materialize';
 import axios from 'axios';
+import _ from 'lodash';
 
 import { TYPE } from '../actions/types';
 
@@ -13,7 +14,7 @@ class SearchBar extends Component {
    constructor(props) {
       super(props);
 
-      this.state = { ticker: '', type: '', switch: TYPE.STOCK, suggestions: ''}
+      this.state = { ticker: '', type: '', switch: TYPE.STOCK, suggestions: {} }
 
       this.onInputChange = this.onInputChange.bind(this);
       this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -28,7 +29,6 @@ class SearchBar extends Component {
    }
 
    onInputChange(event, value) {
-      console.log('value = ', value);
       this.setState({ ticker: value });
    }
 
@@ -43,11 +43,11 @@ class SearchBar extends Component {
 
    onFormSubmit() {
       // Fetch tracker info
-      const tickerFormatted = this.state.ticker.toUpperCase();
+      const newTicker = { name: this.state.ticker.toUpperCase(), type: this.state.type };
 
-      if (tickerFormatted != '') {//only add if not empty string
-         this.props.addTicker(tickerFormatted, this.state.type);
-      }
+      if ( newTicker.name !== '' && !_.some(this.props.tickerList, newTicker) ) { //only add if not empty string and ticker doesn't exist in redux tickerList
+         this.props.addTicker(newTicker);
+      } //
 
       this.setState( { ticker: '', type: ''} ); //sets default state
    }
@@ -92,4 +92,10 @@ function mapDispatchToProps(dispatch) {
    return bindActionCreators({ addTicker }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(SearchBar);
+function mapStateToProps( {tickerList} ){
+   return {
+      tickerList, // [ {name, type}, ...]
+   }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
