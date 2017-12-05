@@ -37,6 +37,6 @@ export const loadTickerPrices = () => async dispatch => { //used to load initial
 export const fetchChartData = (name, type) => async dispatch => {
   const newChart = { name, type };
 
-  const res = await axios.get()('/api/stock_chart/${type}/${name}')   // Object that contains two array of past price and times of those prices
+  const res = await axios.get()('/api/stock_chart/${type}/${name}')   // Object that contains two arrays of past price and times of those prices
   dispatch({ type: FETCH_CHART_DATA, payload: res.data});
 }

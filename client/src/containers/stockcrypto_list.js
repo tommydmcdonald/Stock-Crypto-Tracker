@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StockCryptoTracker from '../components/stockcrypto_tracker.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker, loadTickerList, loadTickerPrices, removeTicker, fetchChartData } from '../actions/index';
+import { addTicker, loadTickerList, loadTickerPrices, removeTicker, fetchChartData, loadChartData } from '../actions/index';
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
 
@@ -22,7 +22,7 @@ class StockCryptoList extends Component {
    componentDidMount() {
       this.props.loadTickerList();
       this.props.loadTickerPrices();
-      //this.props.fetchChartData();
+      this.props.fetchChartData();
    }
 
    handleRemoveClick( _id ) {
@@ -88,7 +88,7 @@ function mapStateToProps({tickerList, priceList, }){
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker }, dispatch);
+   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker, fetchChartData }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StockCryptoList);
