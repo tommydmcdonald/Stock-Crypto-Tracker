@@ -5,6 +5,7 @@ import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE
 
 export const addTicker = (name, type) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    const newTicker = { name, type };
+   console.log('name = ', name, ' type = ', type);
 
    const res = await axios.post('/api/tickers', newTicker);
    dispatch({ type: ADD_TICKER, payload: res.data });

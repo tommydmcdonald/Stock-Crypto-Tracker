@@ -19,7 +19,6 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
 
    const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: data } });
    addTicker.save( (err, addedTic) => {
-      if (err) return console.log(addedTic + ' had this error while being added: ' + err);
    })
 
 }
@@ -57,7 +56,6 @@ module.exports = app => {
             res.send(newTicker);
          }
       } catch(err) {
-         console.log('err');
          return res.status(500).send(err);
       }
 
@@ -71,7 +69,6 @@ module.exports = app => {
       let currentPriceList = { STOCK: {}, CRYPTO: {} };
 
       try {
-         console.log(req.user.tickerList);
          const { tickerList } = req.user;
          for (let i = 0; i < tickerList.length; i++) {
 
@@ -114,9 +111,7 @@ module.exports = app => {
 
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const { type, name } = req.params;
-      console.log('name = ', name, ' type= ', type);
       const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
-      console.log('updatedUser = ', updatedUser);
       res.sendStatus(200);
    });
 
@@ -142,9 +137,7 @@ module.exports = app => {
          }
 
          res.send(chartData);
-      } catch (err) {
-         console.log(err);
-      }
+      } catch (err) {}
    });
 
 }
