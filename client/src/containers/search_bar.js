@@ -45,9 +45,9 @@ class SearchBar extends Component {
       // Fetch tracker info
       const newTicker = { name: this.state.ticker.toUpperCase(), type: this.state.type };
 
-      if ( newTicker.name !== '' && !_.matches(this.props.tickerList, newTicker) ) { //only add if not empty string and ticker doesn't exist in redux tickerList
+      if ( newTicker.name !== '' && !_.some(this.props.tickerList, newTicker) ) { //only add if not empty string and ticker doesn't exist in redux tickerList
          this.props.addTicker(newTicker);
-      }
+      } //
 
       this.setState( { ticker: '', type: ''} ); //sets default state
    }
@@ -92,4 +92,10 @@ function mapDispatchToProps(dispatch) {
    return bindActionCreators({ addTicker }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(SearchBar);
+function mapStateToProps( {tickerList} ){
+   return {
+      tickerList, // [ {name, type}, ...]
+   }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
