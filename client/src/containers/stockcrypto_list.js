@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StockCryptoTracker from '../components/stockcrypto_tracker.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker, loadTickerList, loadTickerPrices, removeTicker, fetchChartData, loadChartData } from '../actions/index';
+import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartData } from '../actions/index';
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
 
