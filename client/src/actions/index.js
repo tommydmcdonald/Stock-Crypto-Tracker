@@ -16,8 +16,9 @@ export const addTicker = (newTicker) => async dispatch => { //adds new ticker to
    }
    else { //add ticker price and load chart data
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, data: res.data } });
-      const resChart = await axios.get(`/api/stock_charts/${type}/${name}`);
-      dispatch({ type: LOAD_CHART_DATA, payload: resChart.data})
+      let resChart = await axios.get(`/api/stock_charts/${type}/${name}`);
+      resChart = { name, type, prices: resChart.data.prices, times: resChart.data.times }
+      dispatch({ type: FETCH_CHART_DATA, payload: resChart})
    }
 }
 

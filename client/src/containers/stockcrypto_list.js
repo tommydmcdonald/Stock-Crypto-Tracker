@@ -28,7 +28,6 @@ class StockCryptoList extends Component {
       this.props.removeTicker(_id);
    }
 
-
    renderTracker (tickerItem) {
       const { name, type } = tickerItem;
       const key = name + '-' + type;
