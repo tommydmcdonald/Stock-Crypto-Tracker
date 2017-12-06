@@ -35,7 +35,7 @@ class StockCryptoList extends Component {
       const _id = tickerItem._id != null ? tickerItem._id : name;
       console.log('tickerItem = ', tickerItem);
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
-      let allChartData = _.get(this.props.chartData, `[${type}][${name}]`, '-');
+      let allChartData = this.props.chartData;
       console.log('Chart Data: ', allChartData);
 
 
