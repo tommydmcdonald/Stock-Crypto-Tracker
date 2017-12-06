@@ -13,3 +13,7 @@
 .navbar-img{
     padding-top: 250px;
 }
+
+.collapsable-body {
+  border-top: 5px;
+}
