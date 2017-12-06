@@ -15,7 +15,7 @@ export default class Chart extends Component {
         labels: times,
         datasets: [
           {
-            label: 'Price Chart',
+            label: '1 Hour',
             fill: false,
             lineTension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.4)',
@@ -27,7 +27,7 @@ export default class Chart extends Component {
             pointBorderColor: 'rgba(75,192,192,1)',
             pointBackgroundColor: '#fff',
             pointBorderWidth: 1,
-            pointHoverRadius: 5,
+            pointHoverRadius: 7,
             pointHoverBackgroundColor: 'rgba(75,192,192,1)',
             pointHoverBorderColor: 'rgba(220,220,220,1)',
             pointHoverBorderWidth: 2,
@@ -39,7 +39,7 @@ export default class Chart extends Component {
       };
       return (
          <div className="container">
-            <Line data={data} width={50} height={300} options={{maintainAspectRatio: false}} ></Line>
+            <Line data={data} width={70} height={300} options={{maintainAspectRatio: false}} ></Line>
          </div>
       );
    }
