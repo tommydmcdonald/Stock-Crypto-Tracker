@@ -134,12 +134,10 @@ module.exports = app => {
 
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const { type, name } = req.params;
-<<<<<<< HEAD
       console.log('name = ', name, ' type= ', type);
 
 
-=======
->>>>>>> development
+
       const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
       res.sendStatus(200);
    });
