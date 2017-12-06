@@ -29,7 +29,6 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
 }
 
 const findCurrentPrice = (ticker) => {
-   console.log('fCP, ticker = ', ticker);
    const { name, type } = ticker;
    const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
@@ -39,6 +38,26 @@ const findCurrentPrice = (ticker) => {
    const currentPrice = timeSeries[seriesKey][priceInterval];
 
    return currentPrice;
+}
+
+const findChartData = async (name, type) => {
+   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+
+   const queryTicker = await Ticker.findOne( { name, type } );
+   const timeSeries = queryTicker.data.data[timeSeriesType];
+
+   const chartData = { prices: [], times: [] };
+
+   for (const key in timeSeries) {
+      const price = timeSeries[key][priceInterval];
+      const time = key.slice(11,16);
+
+      chartData.prices.push(price);
+      chartData.times.push(time);
+   }
+
+   return chartData;
 }
 
 module.exports = app => {
@@ -96,63 +115,33 @@ module.exports = app => {
 
    });
 
-   // Not needed because of data response in new post refactor for ticker
-   // app.get('/api/tickers/current_prices/:type/:name', async (req, res) => { //get one stock's price
-   //    const name = req.params.name.toUpperCase();
-   //    const type = req.params.type.toUpperCase();
-   //
-   //    let found = false;
-   //    let count = 0;
-   //
-   //    //waits for data to be added to Ticker from Alpha Vantage API
-   //    while (!found && count < 30) {
-   //       try {
-   //          const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
-   //          found = true;
-   //          res.send( { name, type, price } );
-   //          return;
-   //       }
-   //       catch (err) {
-   //          count++;
-   //          await delay(250);
-   //       }
-   //    }
-   //    if (!found) {
-   //       res.send( {} );
-   //       //make sure not added to db
-   //    }
-   //
-   // })
-
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const { type, name } = req.params;
       const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
       res.sendStatus(200);
    });
 
-   app.get('/api/stock_chart/:type/:name', async (req, res) => {
+   app.get('/api/stock_charts', async (req, res) => {
+      const { tickerList } = await User.findById( req.user._id, 'tickerList -_id');
+      const allChartData = { STOCK: {}, CRYPTO: {} };
+
+      console.log('tickerList = ', tickerList);
+
+      for (let i = 0; i < tickerList.length; i++) {
+         const { name, type} = tickerList[i];
+         const chartData = await findChartData(name, type);
+         allChartData[type][name] = chartData;
+      }
+
+      res.send(allChartData);
+   });
+
+   app.get('/api/stock_charts/:type/:name', async (req, res) => {
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
-      const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
-      const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
-
-      try {
-         const queryTicker = await Ticker.findOne( { name, type } );
-         const timeSeries = queryTicker.data.data[timeSeriesType]
-
-         const chartData = { prices: [], times: [] };
-
-         for (const key in timeSeries) {
-            const price = timeSeries[key][priceInterval];
-            const time = key.slice(11,16);
-
-            chartData.prices.push(price);
-            chartData.times.push(time);
-         }
-
-         res.send(chartData);
-      } catch (err) {}
+      const chartData = await findChartData(name, type);
+      res.send(chartData);
    });
 
    app.get('/api/tickers/suggestions', async (req, res) => {

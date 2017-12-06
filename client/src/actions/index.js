@@ -1,7 +1,7 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-import _ from 'lodash';
-import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, ADD_TICKER_PRICE, LOAD_TICKER_PRICES } from './types';
+// import retry from 'async/retry';
+import { FETCH_USER, ADD_TICKER, ADD_TICKER_PRICE, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES, FETCH_CHART_DATA, LOAD_CHART_DATA } from './types';
 
 export const addTicker = (newTicker) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    //initial ticker add before checking if it is valid
@@ -14,8 +14,11 @@ export const addTicker = (newTicker) => async dispatch => { //adds new ticker to
    if ( res.data.hasOwnProperty('error') ) { //if ticker is not valid for API
       dispatch({type: REMOVE_TICKER, payload: newTicker });
    }
-   else { //add ticker price
+   else { //add ticker price and load chart data
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, data: res.data } });
+      let resChart = await axios.get(`/api/stock_charts/${type}/${name}`);
+      resChart = { name, type, prices: resChart.data.prices, times: resChart.data.times }
+      dispatch({ type: FETCH_CHART_DATA, payload: resChart})
    }
 }
 
@@ -37,4 +40,15 @@ export const loadTickerList = () => async dispatch => { //used to load initial t
 export const loadTickerPrices = () => async dispatch => { //used to load initial ticker prices when page is loaded
    const res = await axios.get('/api/tickers/current_prices');
    dispatch({ type: LOAD_TICKER_PRICES, payload: res.data});
+}
+
+export const loadChartData = () => async dispatch => { //used to laod initial chart data
+    const res = await axios.get('/api/stock_charts');
+    dispatch({type: LOAD_CHART_DATA, payload: res.data});
+}
+
+export const fetchChartData = (name, type) => async dispatch => {
+  const res = { name, type };
+
+  dispatch({type: FETCH_CHART_DATA, payload: res.data});
 }
