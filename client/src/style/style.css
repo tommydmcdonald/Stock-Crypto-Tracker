@@ -10,10 +10,10 @@
   padding-top: 15px;
 }
 
-.navbar-img{
+.navbar-img {
     padding-top: 250px;
 }
 
-.collapsable-body {
-  border-top: 5px;
+.side-nav {
+  background-color: #FDFDFD;
 }
