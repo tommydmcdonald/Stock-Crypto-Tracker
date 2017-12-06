@@ -21,7 +21,7 @@ class Header extends Component {
                <Link
                   to={this.props.auth ? '/' : '/landing'}
                   className="brand-logo" id="logo">
-                  StockCrypto List
+                  StockCrypto Tracker
                </Link>
                <ul className="right">
                   {this.renderContent()}
