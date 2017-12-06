@@ -14,8 +14,10 @@ export const addTicker = (newTicker) => async dispatch => { //adds new ticker to
    if ( res.data.hasOwnProperty('error') ) { //if ticker is not valid for API
       dispatch({type: REMOVE_TICKER, payload: newTicker });
    }
-   else { //add ticker price
+   else { //add ticker price and load chart data
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, data: res.data } });
+      const resChart = await axios.get(`/api/stock_charts/${type}/${name}`);
+      dispatch({ type: LOAD_CHART_DATA, payload: resChart.data})
    }
 }
 

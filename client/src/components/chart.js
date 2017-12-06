@@ -4,9 +4,6 @@ import { bindActionCreators } from 'redux';
 import {Line} from 'react-chartjs-2';
 import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
 
-
-
-
 export default class Chart extends Component {
    constructor(props) {
       super(props);
@@ -15,7 +12,7 @@ export default class Chart extends Component {
    render() {
       const { prices, times } = this.props.chartData;
       const data = {
-        labels: [...times],
+        labels: times,
         datasets: [
           {
             label: 'Price Chart',
@@ -36,7 +33,7 @@ export default class Chart extends Component {
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: [...prices], // this.props.chartData.prices
+            data: prices, // this.props.chartData.prices
           }
         ]
       };
