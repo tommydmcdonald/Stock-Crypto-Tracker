@@ -33,7 +33,7 @@ class StockCryptoList extends Component {
       const { name, type } = tickerItem;
       const _id = tickerItem._id != null ? tickerItem._id : name;
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
-      let allChartData = this.props.chartData;
+      // let allChartData = this.props.chartData;
       if (currentPrice != '-')
          currentPrice = Number(currentPrice).toFixed(2);
       currentPrice = '$' + currentPrice;
