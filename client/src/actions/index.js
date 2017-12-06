@@ -1,7 +1,7 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import _ from 'lodash';
-import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, ADD_TICKER_PRICE, LOAD_TICKER_PRICES } from './types';
+import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, ADD_TICKER_PRICE, LOAD_TICKER_PRICES, UPDATE_TICKER_QUANTITY } from './types';
 
 export const addTicker = (newTicker) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    //initial ticker add before checking if it is valid
@@ -38,4 +38,9 @@ export const loadTickerList = () => async dispatch => { //used to load initial t
 export const loadTickerPrices = () => async dispatch => { //used to load initial ticker prices when page is loaded
    const res = await axios.get('/api/tickers/current_prices');
    dispatch({ type: LOAD_TICKER_PRICES, payload: res.data});
+}
+
+export const updateQuantity = ( name, type, quantity ) => async dispatch => { //updates ticker quantity in user's tickerList when field is changed in Tracker
+   axios.get(`/api/tickers/${type}/${name}/${quantity}`);
+   dispatch({ type: UPDATE_TICKER_QUANTITY, payload: { name, type, quantity } });
 }

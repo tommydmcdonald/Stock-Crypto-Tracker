@@ -1,4 +1,5 @@
-import { ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS } from '../actions/types';
+import { ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, UPDATE_TICKER_QUANTITY } from '../actions/types';
+import _ from 'lodash';
 
 export default function(state = [], action) {
    switch (action.type) {
@@ -18,6 +19,11 @@ export default function(state = [], action) {
       }); //action.payload = _id
    case LOAD_TICKERS:
       return action.payload;
+   case UPDATE_TICKER_QUANTITY:
+      const { name, type, quantity } = action.payload
+      const newState = [ ...state ];
+      _.find(newState, { name, type }).quantity = quantity;
+      return newState;
    default:
       return state;
   }
