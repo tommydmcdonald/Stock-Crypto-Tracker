@@ -67,6 +67,7 @@ class SearchBar extends Component {
 
    render() {
       return (
+        <div className="container">
          <Row className='valign-wrapper'>
             <Col s={5}>
                <Autocomplete
@@ -84,6 +85,7 @@ class SearchBar extends Component {
             <Col s={2}><Button className='search-button teal lighten-3' id={TYPE.CRYPTO} onClick={this.onButtonClick} waves='light'>Add Crypto</Button></Col>
             <Col s={2}><div className="switch"><label>Stock<input type="checkbox" onChange={this.onSwitchChange}/><span className="lever"></span>Crypto</label></div></Col>
           </Row>
+        </div>
       );
 
    }

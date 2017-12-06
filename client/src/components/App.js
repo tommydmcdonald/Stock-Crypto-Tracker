@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import SideBarNav from '../containers/sidebar_nav';
 
 import '../style/style.css';
 // import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
