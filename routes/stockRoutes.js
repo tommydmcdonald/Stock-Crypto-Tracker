@@ -116,34 +116,6 @@ module.exports = app => {
 
    });
 
-   // Not needed because of data response in new post refactor for ticker
-   // app.get('/api/tickers/current_prices/:type/:name', async (req, res) => { //get one stock's price
-   //    const name = req.params.name.toUpperCase();
-   //    const type = req.params.type.toUpperCase();
-   //
-   //    let found = false;
-   //    let count = 0;
-   //
-   //    //waits for data to be added to Ticker from Alpha Vantage API
-   //    while (!found && count < 30) {
-   //       try {
-   //          const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
-   //          found = true;
-   //          res.send( { name, type, price } );
-   //          return;
-   //       }
-   //       catch (err) {
-   //          count++;
-   //          await delay(250);
-   //       }
-   //    }
-   //    if (!found) {
-   //       res.send( {} );
-   //       //make sure not added to db
-   //    }
-   //
-   // })
-
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const { type, name } = req.params;
       const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
@@ -166,8 +138,7 @@ module.exports = app => {
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
-         res.send(chartData);
-      } catch (err) {}
+      res.send(chartData);
    });
 
    app.get('/api/tickers/suggestions', async (req, res) => {

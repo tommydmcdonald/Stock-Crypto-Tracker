@@ -1,5 +1,6 @@
 module.exports = {
    ADD_TICKER: 'add_ticker',
+   'ADD_TICKER_PRICE': 'add_ticker_price',
    REMOVE_TICKER: 'remove_ticker',
    FETCH_USER: 'fetch_user',
    LOAD_TICKERS: 'load_tickers',
