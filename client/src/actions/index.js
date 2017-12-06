@@ -41,6 +41,6 @@ export const loadTickerPrices = () => async dispatch => { //used to load initial
 }
 
 export const updateQuantity = ( name, type, quantity ) => async dispatch => { //updates ticker quantity in user's tickerList when field is changed in Tracker
-   axios.get(`/api/tickers/${type}/${name}/${quantity}`);
+   axios.post(`/api/tickers/${type}/${name}/${quantity}`);
    dispatch({ type: UPDATE_TICKER_QUANTITY, payload: { name, type, quantity } });
 }
