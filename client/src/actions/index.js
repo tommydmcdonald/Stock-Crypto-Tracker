@@ -3,20 +3,25 @@ import axiosRetry from 'axios-retry';
 // import retry from 'async/retry';
 import { FETCH_USER, ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES, FETCH_CHART_DATA, LOAD_CHART_DATA } from './types';
 
-export const addTicker = (name, type) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
-   const newTicker = { name, type };
+export const addTicker = (newTicker) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
+   //initial ticker add before checking if it is valid
+   const { name, type } = newTicker;
+
+   dispatch({ type: ADD_TICKER, payload: newTicker });
 
    const res = await axios.post('/api/tickers', newTicker);
-   dispatch({ type: ADD_TICKER, payload: res.data });
 
-   const result = await axios.get(`/api/tickers/current_prices/${type}/${name}`) // The first request fails and the second returns 'ok'
-   dispatch({ type: FETCH_TICKER_PRICE, payload: result.data })
+   if ( res.data.hasOwnProperty('error') ) { //if ticker is not valid for API
+      dispatch({type: REMOVE_TICKER, payload: newTicker });
+   }
+   else { //add ticker price
+      dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, data: res.data } });
+   }
 }
 
-export const removeTicker = ( _id ) => dispatch => {
-   console.log('actions - removeTicker. _id=', _id);
-   axios.delete(`/api/tickers/${_id}`);
-   dispatch({type: REMOVE_TICKER, payload: _id });
+export const removeTicker = ( name, type ) => dispatch => {
+   axios.delete(`/api/tickers/${type}/${name}`);
+   dispatch({type: REMOVE_TICKER, payload: { type, name } });
 }
 
 export const fetchUser = () => async dispatch => { //get user information for who is logged in

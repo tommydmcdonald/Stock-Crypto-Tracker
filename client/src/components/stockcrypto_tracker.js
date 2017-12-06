@@ -5,6 +5,7 @@ import Chart from './chart';
 export default class StockCryptoTracker extends Component {
 
    render() {
+      const { name, type } = this.props;
       return (
          <tr>
             <th scope="row">{this.props.trackerName} </th>

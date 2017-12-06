@@ -15,8 +15,7 @@ class StockCryptoList extends Component {
 
       this.renderTrackerList = this.renderTrackerList.bind(this);
       this.renderTracker = this.renderTracker.bind(this);
-      this.updateTrackerData = this.updateTrackerData.bind(this);
-      this.handleRemoveClick = this.handleRemoveClick.bind(this);
+      // this.loadTickerPrices = this.loadTickerPrices.bind(this);
    }
 
    componentDidMount() {
@@ -25,23 +24,22 @@ class StockCryptoList extends Component {
       this.props.loadChartData();
    }
 
-   handleRemoveClick( _id ) {
-      this.props.removeTicker(_id);
-   }
+   // handleRemoveClick( _id ) {
+   //    this.props.removeTicker(_id);
+   // }
 
 
    renderTracker (tickerItem) {
       const { name, type } = tickerItem;
       const _id = tickerItem._id != null ? tickerItem._id : name;
-      console.log('tickerItem = ', tickerItem);
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
-      let allChartData = this.props.chartData;
-      console.log('Chart Data: ', allChartData);
-
+      // let allChartData = this.props.chartData;
+      if (currentPrice != '-')
+         currentPrice = Number(currentPrice).toFixed(2);
+      currentPrice = '$' + currentPrice;
 
       return (
-            <StockCryptoTracker  key={_id} _id={_id} trackerName={name} currentPrice={currentPrice} onClick={this.handleRemoveClick.bind(this)} />
-              // Would need to put chartData={cData} here right?
+            <StockCryptoTracker key={_id} _id={_id} name={name} type={type} currentPrice={currentPrice} onClick={this.props.removeTicker} />
       );
    }
 
@@ -51,18 +49,18 @@ class StockCryptoList extends Component {
       );
    }
 
-   updateTrackerData () {
-      // this.props.tickerList.forEach( ticker => this.props.getTickerData(ticker) );
+   loadTickerPrices() {
+      this.props.loadTickerPrices();
    }
 
    render () {
-      const refreshRateSeconds = 25;
+      const refreshRateSeconds = 15;
       const timeout = refreshRateSeconds * 1000;
 
       return (
          <div>
             <ReactInterval timeout={timeout} enabled={true}
-            callback={this.updateTrackerData}
+            callback={this.loadTickerPrices.bind(this)}
             />
             <table className="table table-hover">
                <thead>
