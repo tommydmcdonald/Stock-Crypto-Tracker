@@ -142,15 +142,14 @@ module.exports = app => {
 
    app.get('/api/stock_charts', async (req, res) => {
       const tickerList = await User.findById( req.user._id, 'tickerList');
-
       const allChartData = [];
 
-      tickerList.forEach( async ({name, type}) => {
-         const chartData = await findChartData(name, type);
-         allChartData.push(chartData)
+     tickerList.forEach( async ({name, type}) => {
+       const chartData = await findChartData(name, type);
+       allChartData.push(chartData);
       });
 
-      return allChartData;
+      res.send(allChartData);
    });
 
    app.get('/api/stock_charts/:type/:name', async (req, res) => {

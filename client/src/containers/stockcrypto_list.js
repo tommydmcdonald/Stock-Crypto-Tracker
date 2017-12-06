@@ -22,7 +22,7 @@ class StockCryptoList extends Component {
    componentDidMount() {
       this.props.loadTickerList();
       this.props.loadTickerPrices();
-      this.props.fetchChartData();
+      this.props.loadChartData();
    }
 
    handleRemoveClick( _id ) {
@@ -35,8 +35,8 @@ class StockCryptoList extends Component {
       const _id = tickerItem._id != null ? tickerItem._id : name;
       console.log('tickerItem = ', tickerItem);
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
-      //let cData = _.get(this.props.chartData);
-      //console.log('Chart Data: ', chartData);
+      let allChartData = _.get(this.props.chartData, `[${type}][${name}]`, '-');
+      console.log('Chart Data: ', allChartData);
 
 
       return (
@@ -80,15 +80,16 @@ class StockCryptoList extends Component {
    }
 }
 
-function mapStateToProps({tickerList, priceList, }){
+function mapStateToProps({tickerList, priceList, chartData}){
    return {
-      tickerList, // [ {name, type}, ...]
-      priceList // { STOCK: { name: price, ...} , CRYPTO: { name: price, ...} }
+      tickerList,   // [ {name, type}, ...]
+      priceList,    // { STOCK: { name: price, ...} , CRYPTO: { name: price, ...} }
+      chartData  //
    }
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker, fetchChartData }, dispatch);
+   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker, loadChartData }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StockCryptoList);
