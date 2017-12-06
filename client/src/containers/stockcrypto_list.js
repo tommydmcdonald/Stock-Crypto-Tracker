@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartData } from '../actions/index';
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
+import { Row, Col } from 'react-materialize';
+
 
 import ReactInterval from 'react-interval';
 
@@ -70,6 +72,7 @@ class StockCryptoList extends Component {
                   <tr>
                      <th>Ticker</th>
                      <th>Price (USD)</th>
+                     <th>Graph</th>
                   </tr>
                </thead>
                <tbody>
