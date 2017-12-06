@@ -29,7 +29,6 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
 }
 
 const findCurrentPrice = (ticker) => {
-   console.log('fCP, ticker = ', ticker);
    const { name, type } = ticker;
    const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
@@ -46,7 +45,7 @@ const findChartData = async (name, type) => {
    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
 
    const queryTicker = await Ticker.findOne( { name, type } );
-   const timeSeries = queryTicker.data.data[timeSeriesType]
+   const timeSeries = queryTicker.data.data[timeSeriesType];
 
    const chartData = { prices: [], times: [] };
 
@@ -123,13 +122,16 @@ module.exports = app => {
    });
 
    app.get('/api/stock_charts', async (req, res) => {
-      const tickerList = await User.findById( req.user._id, 'tickerList');
-      const allChartData = [];
+      const { tickerList } = await User.findById( req.user._id, 'tickerList -_id');
+      const allChartData = { STOCK: {}, CRYPTO: {} };
 
-     tickerList.forEach( async ({name, type}) => {
-       const chartData = await findChartData(name, type);
-       allChartData.push(chartData);
-      });
+      console.log('tickerList = ', tickerList);
+
+      for (let i = 0; i < tickerList.length; i++) {
+         const { name, type} = tickerList[i];
+         const chartData = await findChartData(name, type);
+         allChartData[type][name] = chartData;
+      }
 
       res.send(allChartData);
    });
@@ -138,6 +140,7 @@ module.exports = app => {
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
+      const chartData = await findChartData(name, type);
       res.send(chartData);
    });
 
