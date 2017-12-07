@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import StockCryptoTracker from '../components/stockcrypto_tracker.js';
+import StockCryptoTracker from '../components/stockcrypto_tracker';
+import PortfolioValue from '../components/PortfolioValue';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartData } from '../actions/index';
+import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartData, updateQuantity } from '../actions/index';
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Preloader } from 'react-materialize';
 
 
 import ReactInterval from 'react-interval';
+import { Table } from 'react-materialize';
 
 class StockCryptoList extends Component {
 
@@ -30,22 +32,37 @@ class StockCryptoList extends Component {
       this.props.removeTicker(_id);
    }
 
+   returnProgress(){
+
+     return (<Row> <Col> <Preloader size='small'/> </Col> </Row>);
+
+   }
+
    renderTracker (tickerItem) {
-      const { name, type } = tickerItem;
+      const { name, type, quantity } = tickerItem;
       const key = name + '-' + type;
       console.log('tickerItem = ', tickerItem);
 
-      let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
+      let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '');
 
-      if (currentPrice != '-')
-         currentPrice = Number(currentPrice).toFixed(2);
-      currentPrice = '$' + currentPrice;
+       if (currentPrice != '') {
+          currentPrice = Number(currentPrice).toFixed(2);
+          currentPrice = '$' + this.numberWithCommas(currentPrice);
+       }
+       else{
+         currentPrice = this.returnProgress();
+       }
 
       let chartData = _.get(this.props.chartData, `[${type}][${name}]`, {prices: [0], times:[0] } );
 
       return (
-            <StockCryptoTracker key={key} name={name} type={type} currentPrice={currentPrice} chartData={chartData} onClick={this.props.removeTicker} />
+            <StockCryptoTracker key={key} name={name} type={type} currentPrice={currentPrice} quantity={quantity}
+               updateQuantity={this.props.updateQuantity} chartData={chartData} onClick={this.props.removeTicker} />
       );
+   }
+
+   numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
    }
 
    renderTrackerList () {
@@ -65,20 +82,24 @@ class StockCryptoList extends Component {
       return (
          <div className="">
             <ReactInterval timeout={timeout} enabled={true}
-            callback={this.loadTickerPrices.bind(this)}
+            callback={this.loadTickerPrices}
             />
-            <table className="table table-hover">
+            <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
+            <Table>
                <thead>
                   <tr>
                      <th className="white-text">Ticker</th>
                      <th className="white-text">Price (USD)</th>
+                     <th className="white-text">Quantity</th>
                      <th className="white-text">Graph</th>
+                     <th className="white-text">Remove</th>
                   </tr>
                </thead>
+
                <tbody>
                  {this.renderTrackerList()}
                </tbody>
-            </table>
+            </Table>
          </div>
       );
    }
@@ -93,7 +114,7 @@ function mapStateToProps({tickerList, priceList, chartData}){
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker, loadChartData }, dispatch);
+   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker, loadChartData, updateQuantity }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StockCryptoList);

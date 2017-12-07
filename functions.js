@@ -5,7 +5,7 @@ require('./models/Users');
 require('./models/Tickers');
 const { TYPE, BASE_URL } = require('./config/keys');
 const mongoose = require('mongoose');
-const Ticker = mongoose.model('tickers');
+const Ticker = mongoose.model('ticker');
 
 exports.updateTickerData = (intervalMS) => {
    const updateTickerDataCall = async () => {

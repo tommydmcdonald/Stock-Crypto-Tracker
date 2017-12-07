@@ -1,21 +1,23 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-// import retry from 'async/retry';
-import { FETCH_USER, ADD_TICKER, ADD_TICKER_PRICE, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES, FETCH_CHART_DATA, LOAD_CHART_DATA } from './types';
+import _ from 'lodash';
+import { FETCH_USER, ADD_TICKER, ADD_TICKER_PRICE, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES, FETCH_CHART_DATA, LOAD_CHART_DATA, UPDATE_TICKER_QUANTITY } from './types';
 
 export const addTicker = (newTicker) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    //initial ticker add before checking if it is valid
    const { name, type } = newTicker;
+   newTicker.quantity = 1;
 
    dispatch({ type: ADD_TICKER, payload: newTicker });
 
    const res = await axios.post('/api/tickers', newTicker);
+   const { price } = res.data;
 
    if ( res.data.hasOwnProperty('error') ) { //if ticker is not valid for API
       dispatch({type: REMOVE_TICKER, payload: newTicker });
    }
    else { //add ticker price and load chart data
-      dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, data: res.data } });
+      dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, price } });
       let resChart = await axios.get(`/api/stock_charts/${type}/${name}`);
       resChart = { name, type, prices: resChart.data.prices, times: resChart.data.times }
       dispatch({ type: FETCH_CHART_DATA, payload: resChart})
@@ -51,4 +53,9 @@ export const fetchChartData = (name, type) => async dispatch => {
   const res = { name, type };
 
   dispatch({type: FETCH_CHART_DATA, payload: res.data});
+}
+
+export const updateQuantity = ( name, type, quantity ) => async dispatch => { //updates ticker quantity in user's tickerList when field is changed in Tracker
+   axios.post(`/api/tickers/${type}/${name}/${quantity}`);
+   dispatch({ type: UPDATE_TICKER_QUANTITY, payload: { name, type, quantity } });
 }

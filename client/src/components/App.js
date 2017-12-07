@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchUser } from '../actions';
 import * as actions from '../actions';
 import SideBarNav from '../containers/sidebar_nav';
 
@@ -37,4 +39,8 @@ function mapStateToProps({ auth }) {
    return { auth };
 }
 
-export default connect(mapStateToProps, actions)(App); //guessint no mapdispatchtoprops cause no need to bind aciton creators causing using redux-thunk?
+function mapDispatchToProps(dispatch) {
+   return bindActionCreators({ fetchUser }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App); //guessint no mapdispatchtoprops cause no need to bind aciton creators causing using redux-thunk?
