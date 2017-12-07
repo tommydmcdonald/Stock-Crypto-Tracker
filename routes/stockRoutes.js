@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const _ = require('lodash');
 const delay = require('delay');
-const User = mongoose.model('users');
-const Ticker = mongoose.model('tickers');
+const User = mongoose.model('user');
+const Ticker = mongoose.model('ticker');
 const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
@@ -29,7 +29,6 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
 }
 
 const findCurrentPrice = (ticker) => {
-   console.log('fCP, ticker = ', ticker);
    const { name, type } = ticker;
    const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
@@ -47,12 +46,14 @@ module.exports = app => {
 
       try {
          const newTicker = req.body;
+         const { name, type } = newTicker;
          const { _id } = req.user;
 
          //check if ticker is in Ticker
-         const queryTicker = await Ticker.findOne( { ...newTicker });
+         const queryTicker = await Ticker.findOne( { name, type });
 
          if (!queryTicker) {  //if ticker in Ticker db, add it
+            console.log('!queryTicker');
             const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
@@ -74,10 +75,10 @@ module.exports = app => {
 
    app.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update ticker quantity for a user
       const { type, name, quantity } = req.params;
-      const user = await User.find( req.user._id );
-      await user.update({ 'tickerList.name': name, 'tickerList.type': type}, {$set: { 'tickerList.$.quantity': quantity} });
-      await user.save();
-      res.send(user);
+
+      await User.updateOne( { _id: req.user._id, tickerList: { $elemMatch: { name, type }}},
+      { $set: { 'tickerList.$.quantity': quantity }} )
+
    });
 
    app.get('/api/tickers', (req, res) => { //get list of tickers
@@ -135,8 +136,6 @@ module.exports = app => {
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const { type, name } = req.params;
       console.log('name = ', name, ' type= ', type);
-
-
 
       const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
       res.sendStatus(200);

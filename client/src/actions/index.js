@@ -11,12 +11,13 @@ export const addTicker = (newTicker) => async dispatch => { //adds new ticker to
    dispatch({ type: ADD_TICKER, payload: newTicker });
 
    const res = await axios.post('/api/tickers', newTicker);
+   const { price } = res.data;
 
    if ( res.data.hasOwnProperty('error') ) { //if ticker is not valid for API
       dispatch({type: REMOVE_TICKER, payload: newTicker });
    }
    else { //add ticker price
-      dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, data: res.data } });
+      dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, price } });
    }
 }
 

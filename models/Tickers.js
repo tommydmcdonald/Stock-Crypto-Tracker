@@ -9,4 +9,4 @@ const tickerSchema = new Schema({
    data: { frequency: String, data: Schema.Types.Mixed }
 });
 
-mongoose.model('tickers', tickerSchema);
+mongoose.model('ticker', tickerSchema);
