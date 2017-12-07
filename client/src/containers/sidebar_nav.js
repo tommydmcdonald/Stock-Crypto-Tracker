@@ -21,9 +21,11 @@ class SideBarNav extends Component {
      this.loadTickerPrices = this.loadTickerPrices.bind(this);
   }
 
-  componentDidMount() {
-     this.props.loadTickerList();
-     this.props.loadTickerPrices();
+  async componentDidMount() {
+     await this.props.loadTickerList();
+     await this.props.loadTickerPrices();
+     const { name, type } = this.props.tickerList[0];
+     this.props.updateGraphTicker({ name, type });
   }
 
   handleRemoveClick( _id ) {
@@ -106,6 +108,7 @@ class SideBarNav extends Component {
       <ul id="nav-mobile" className="side-nav fixed z-depth-6">
         <Card className='navbar-img'
         	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
+         <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
         </Card>
         <Collapsible popout defaultActiveKey={1}>
         	<CollapsibleItem id="collapsible-header" className="white-text" header='Stocks' icon='trending_up'>
