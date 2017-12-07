@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartData } from '../actions/index';
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Preloader } from 'react-materialize';
 
 
 import ReactInterval from 'react-interval';
@@ -30,16 +30,26 @@ class StockCryptoList extends Component {
       this.props.removeTicker(_id);
    }
 
+   returnProgress(){
+
+     return (<Row> <Col> <Preloader size='small'/> </Col> </Row>);
+
+   }
+
    renderTracker (tickerItem) {
       const { name, type } = tickerItem;
       const key = name + '-' + type;
       console.log('tickerItem = ', tickerItem);
 
-      let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
+      let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '');
 
-      if (currentPrice != '-')
-         currentPrice = Number(currentPrice).toFixed(2);
-      currentPrice = '$' + currentPrice;
+       if (currentPrice != '') {
+          currentPrice = Number(currentPrice).toFixed(2);
+          currentPrice = '$' + currentPrice;
+       }
+       else{
+         currentPrice = this.returnProgress();
+       }
 
       let chartData = _.get(this.props.chartData, `[${type}][${name}]`, {prices: [0], times:[0] } );
 
