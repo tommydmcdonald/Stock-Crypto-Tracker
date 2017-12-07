@@ -31,12 +31,17 @@ class StockCryptoList extends Component {
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '-');
       if (currentPrice != '-')
          currentPrice = Number(currentPrice).toFixed(2);
-      currentPrice = '$' + currentPrice;
+
+      currentPrice = '$' + this.numberWithCommas(currentPrice);
 
       return (
             <StockCryptoTracker key={_id} name={name} type={type} quantity={quantity} updateQuantity={this.props.updateQuantity} currentPrice={currentPrice} onClick={this.props.removeTicker} />
       );
 
+   }
+
+   numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
    }
 
    renderTrackerList () {
