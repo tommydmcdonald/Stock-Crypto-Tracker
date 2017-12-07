@@ -110,16 +110,16 @@ class SideBarNav extends Component {
   render() {
     return(
 
-      <ul id="nav-mobile" className="side-nav fixed z-depth-6">
+      <ul id="nav-mobile" className="side-nav fixed z-depth-8">
         <Card className='navbar-img'
         	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
          <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
         </Card>
         <Collapsible>
-        	<CollapsibleItem id="collapsible-header" className="white-text" header='Stocks' icon='trending_up'>
+        	<CollapsibleItem id="collapsible-header" className="white-text z-depth-6" header='Stocks' icon='trending_up'>
             {this.renderTrackerList(TYPE.STOCK)}
         	</CollapsibleItem>
-        	<CollapsibleItem id="collapsible-header" className="white-text" header='Crypto Currencies' icon='trending_up'>
+        	<CollapsibleItem id="collapsible-header" className="white-text z-depth-6" header='Crypto Currencies' icon='trending_up'>
             {this.renderTrackerList(TYPE.CRYPTO)}
           </CollapsibleItem>
         </Collapsible>
