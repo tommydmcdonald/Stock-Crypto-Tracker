@@ -22,7 +22,7 @@ class Header extends Component {
                 <Link
                   to={this.props.auth ? '/' : '/landing'}
                   className="brand-logo" id="logo">
-                  BAD A$$ET$
+                  StockCrypto Tracker
                </Link>}
                fixed right>
   	      <NavItem className="">{this.renderContent()}</NavItem>
