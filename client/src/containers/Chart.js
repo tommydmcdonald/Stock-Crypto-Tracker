@@ -42,7 +42,7 @@ class Chart extends Component {
             borderColor: 'rgba(75,192,192,1)',
             borderCapStyle: 'butt',
             borderDash: [],
-            borderDashOffset: 0.0,
+            borderDashOffset: 0.2,
             borderJoinStyle: 'miter',
             pointBorderColor: 'rgba(75,192,192,1)',
             pointBackgroundColor: '#fff',
@@ -58,8 +58,8 @@ class Chart extends Component {
         ]
       };
       return (
-         <div className="container">
-            <Line data={data} width={170} height={300} options={{maintainAspectRatio: false}} ></Line>
+         <div className="chartPiece">
+            <Line data={data} width={1100} height={730} options={{maintainAspectRatio: false}} ></Line>
          </div>
       );
    }

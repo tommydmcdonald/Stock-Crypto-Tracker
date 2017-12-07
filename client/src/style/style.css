@@ -13,6 +13,10 @@
    background-color: #4A525A;
 }
 
+.chartPiece {
+  padding-right: 150px;
+}
+
 .valign-wrapper {
   padding-top: 15px;
   z-index: 1;
