@@ -89,8 +89,9 @@ class StockCryptoList extends Component {
                   <tr>
                      <th>Ticker</th>
                      <th>Price (USD)</th>
-                     <th>Graph</th>
                      <th>Quantity</th>
+                     <th>Graph</th>
+                     <th>Remove</th>
                   </tr>
                </thead>
 

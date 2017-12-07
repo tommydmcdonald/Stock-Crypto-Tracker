@@ -20,11 +20,12 @@ export default function(state = [], action) {
       return newState;
    case LOAD_TICKERS:
       return action.payload;
-   case UPDATE_TICKER_QUANTITY:
+   case UPDATE_TICKER_QUANTITY: {
       const { name, type, quantity } = action.payload
       const newState = [ ...state ];
       _.find(newState, { name, type }).quantity = quantity;
       return newState;
+   }
    default:
       return state;
   }
