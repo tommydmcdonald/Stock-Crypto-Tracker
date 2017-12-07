@@ -8,12 +8,36 @@
 
 .valign-wrapper {
   padding-top: 15px;
+  z-index: 1;
+  position: relative;
+}
+
+.stock-crypto-list {
+  z-index: 0;
+  position: relative;
 }
 
 .navbar-img {
-    padding-top: 250px;
+    padding-top: 300px;
+}
+.header {
+    color: #FAFAFA;
+    box-shadow: 10px, 10px, 5px;
+    z-index: 1;
+    position: relative;
 }
 
 .side-nav {
-  background-color: #FDFDFD;
+  background-color: #FDFDFF;
+  z-index: 0;
+  position: relative;
+}
+
+.navbar-img {
+  border-bottom: solid;
+  border-width: 1px;
+}
+
+.mainApp {
+  overflow: scroll;
 }

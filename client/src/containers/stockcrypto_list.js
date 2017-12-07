@@ -63,7 +63,7 @@ class StockCryptoList extends Component {
       const timeout = refreshRateSeconds * 1000;
 
       return (
-         <div className="container">
+         <div className="">
             <ReactInterval timeout={timeout} enabled={true}
             callback={this.loadTickerPrices.bind(this)}
             />

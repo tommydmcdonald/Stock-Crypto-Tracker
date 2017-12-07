@@ -11,7 +11,7 @@ export default class SideBarNav extends Component {
 
   render() {
     return(
-      <ul id="nav-mobile" className="side-nav fixed">
+      <ul id="nav-mobile" className="side-nav fixed z-depth-2">
         <li className="navbar-img"></li>
         <Collapsible>
         	<CollapsibleItem header='Stocks' icon='poll'>
