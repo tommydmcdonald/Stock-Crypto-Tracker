@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Collapsible, CollapsibleItem, Card, CardTitle } from 'react-materialize';
+import { Collapsible, CollapsibleItem, Card, CardTitle, Collection, CollectionItem } from 'react-materialize';
 
 //from list
 import StockCryptoTracker from '../components/stockcrypto_tracker';
@@ -56,11 +56,11 @@ class SideBarNav extends Component {
        let chartData = _.get(this.props.chartData, `[${type}][${name}]`, {prices: [0], times:[0] } );
 
        return (
-          <Row>
-             <StockCryptoTracker key={key} name={name} type={type} currentPrice={currentPrice} quantity={quantity}
-                updateQuantity={this.props.updateQuantity} chartData={chartData}
-                onClick={this.props.removeTicker} updateGraphTicker={this.props.updateGraphTicker}/>
-          </Row>);
+          <li class="collection-item">
+            <StockCryptoTracker key={key} name={name} type={type} currentPrice={currentPrice} quantity={quantity}
+               updateQuantity={this.props.updateQuantity} chartData={chartData}
+               onClick={this.props.removeTicker} updateGraphTicker={this.props.updateGraphTicker}/>
+         </li>);
      }
 
 
@@ -74,22 +74,14 @@ class SideBarNav extends Component {
      console.log('renderType = ', renderType);
      return (
         <div className="black-text">
-           <li>
-              <Table>
-                 <Row>
-                 <thead>
-                    <tr>
-                       <th>Ticker</th>
-                       <th>Price</th>
-                       <th>Quantity</th>
-                    </tr>
-                 </thead>
-                 </Row>
-                 <tbody>
+           <ul class="collection">
+	             <li class="collection-item">
+                   <Row>
+                     <Col s={2}>Ticker</Col><Col className='price-text' s={3}>Price</Col><Col s={2}><div className='quantity-text'>Quantity</div></Col>
+                   </Row>
+                </li>
                  {this.props.tickerList.map( ticker => this.renderTracker(ticker, renderType))}
-              </tbody>
-              </Table>
-           </li>
+            </ul>
         </div>
     )
   }
@@ -115,7 +107,7 @@ class SideBarNav extends Component {
         	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
          <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
         </Card>
-        <Collapsible>
+        <Collapsible className='ticker-collasp'>
         	<CollapsibleItem id="collapsible-header" className="white-text z-depth-6" header='Stocks' icon='trending_up'>
             {this.renderTrackerList(TYPE.STOCK)}
         	</CollapsibleItem>

@@ -65,3 +65,33 @@
 .side-nav {
    width: 375px;
 }
+
+.quantity {
+   width: 3.5em !important;
+   height: 2em !important;
+   margin: 0px !important;
+   text-align: right;
+}
+
+.tracker-icon {
+   padding: 0px !important;
+   height: 35px !important;
+   line-height: 40px !important;
+}
+
+.tracker-row {
+   padding-bottom: 10px;
+}
+
+.collapsible-body {
+   padding-left: 10px !important;
+}
+
+.quantity-text {
+   padding-right: .2em !important;
+   padding-left: .2em !important;
+}
+
+.price-text {
+   padding-right: 1.5em !important;
+}
