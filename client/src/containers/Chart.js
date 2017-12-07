@@ -58,7 +58,7 @@ class Chart extends Component {
         ]
       };
       return (
-         <div className="container">
+         <div id="chartPiece" className="container">
             <h3 className="white-text">{this.props.graphTicker.name}</h3>
             <Line data={data} width={170} height={400} options={{maintainAspectRatio: false}} ></Line>
          </div>

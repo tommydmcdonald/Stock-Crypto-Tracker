@@ -132,7 +132,6 @@ class SideBarNav extends Component {
 
          </ul>
       </Row>
-
     );
   }
 }
