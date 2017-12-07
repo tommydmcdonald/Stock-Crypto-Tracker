@@ -1,3 +1,97 @@
 #logo {
    padding-left: 15px;
 }
+#header {
+  background-color: #5FCA9D;
+}
+
+.mainApp {
+  background-color: #212B33;
+}
+
+
+.search-button {
+   font-size: 14px;
+   background-color: #5FCA9D;
+}
+
+#chartPiece {
+  padding-bottom: 400px;
+  padding-right: 100px;
+
+}
+
+.valign-wrapper {
+  padding-top: 15px;
+  z-index: 1;
+  position: relative;
+}
+
+.stock-crypto-list {
+  z-index: 0;
+  position: relative;
+}
+
+.navbar-img {
+    padding-top: 57px;
+    background-color: #4A525A;
+}
+
+#collapsible-header {
+  background-color: #4A525A;
+}
+
+.collapsible-body {
+   background-color: #3c444c !important;
+   padding: 0px !important;
+}
+
+.header {
+    box-shadow: 10px, 10px, 5px;
+    z-index: 1;
+    position: relative;
+}
+
+.side-nav {
+  background-color: #4A525A;
+  z-index: 0;
+  position: relative;
+}
+
+.navbar-img {
+  filter: blur(0px);
+}
+
+.side-nav {
+   width: 375px;
+}
+
+.quantity {
+   width: 3.5em !important;
+   height: 2em !important;
+   margin: 0px !important;
+   text-align: right;
+}
+
+.tracker-icon {
+   padding: 0px !important;
+   height: 35px !important;
+   line-height: 40px !important;
+}
+
+.tracker-row {
+   padding-bottom: 10px;
+}
+
+.collapsible-body {
+   padding-left: 10px !important;
+}
+
+.quantity-text {
+   padding-right: .2em !important;
+   padding-left: .2em !important;
+}
+
+.price-text {
+   padding-right: 1.5em !important;
+}

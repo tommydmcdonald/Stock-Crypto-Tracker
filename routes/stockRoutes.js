@@ -1,66 +1,63 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
 const _ = require('lodash');
-const User = mongoose.model('users');
-const Ticker = mongoose.model('tickers');
-const TYPE = {STOCK: 'STOCK', CRYPTO: 'CRYPTO'};
+const delay = require('delay');
+const User = mongoose.model('user');
+const Ticker = mongoose.model('ticker');
+const { replaceKeys } = require('./index');
+const { BASE_URL, TYPE } = require('../config/keys');
 
-const API_KEY = 'BIYQYMYZ9KIBXS9V';
-const BASE_URL = `https://www.alphavantage.co/query?apikey=${API_KEY}&function=`;
-
-const replaceKeys = (data) => { //removes . from keys of data object. '.' are not valid keys in mongodb
-   data = _.mapKeys(data, (value, key) => {
-      return key.replace('.', '_');
-   })
-
-   for (let key in data) {
-      if ( typeof data[key] == 'object') {
-         for (let subkey in data[key]) {
-            if (typeof data[key][subkey] == 'object') {
-               data[key][subkey] = _.mapKeys(data[key][subkey], (value, key) => {
-                  return key.replace('.', '_');
-               })
-            }
-         }
-
-         data[key] = _.mapKeys(data[key], (value, key) => {
-            return key.replace('.', '_');
-         })
-      }
-   }
-
-   return data;
-}
-
-const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => {
+const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
    const { name, type } = newTicker;
 
    const FUNCTION_TYPE = (type == TYPE.STOCK) ? 'TIME_SERIES_INTRADAY&interval=1min&' : 'DIGITAL_CURRENCY_INTRADAY&market=USD&'
    const URL = `${BASE_URL}${FUNCTION_TYPE}symbol=${name}`;
 
-   console.log('URL = ', URL);
-   let { data } = await axios.get(URL);
-   data = replaceKeys(data);
+   const { data } = await axios.get(URL);
 
-   const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: data } });
-   addTicker.save( (err, addedTic) => {
-      if (err) return console.log(addedTic + ' had this error while being added: ' + err);
-   })
+   if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+      return false;
+   }
+   else { //valid ticker
+      const dataFormatted = replaceKeys(data);
 
+      const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: dataFormatted } });
+      await addTicker.save();
+      return true;
+   }
 }
 
 const findCurrentPrice = (ticker) => {
    const { name, type } = ticker;
-   if ( type == TYPE.STOCK ) {
-      const timeSeries = ticker['data']['data']['Time Series (1min)'];
-      const seriesKey = Object.keys(timeSeries).sort()[0]
-      const currentPrice = timeSeries[seriesKey]['4_ close'];
-      return currentPrice;
-   }
-   else if ( type == TYPE.CRYPTO ) {
+   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
 
+   const timeSeries = ticker.data.data[timeSeriesType];
+   const seriesKey = Object.keys(timeSeries).reverse()[0];
+   const currentPrice = timeSeries[seriesKey][priceInterval];
+
+   return currentPrice;
+}
+
+const findChartData = async (name, type) => {
+   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+
+   const queryTicker = await Ticker.findOne( { name, type } );
+   const timeSeries = queryTicker.data.data[timeSeriesType];
+
+   const chartData = { prices: [], times: [] };
+
+   for (const key in timeSeries) {
+      const price = timeSeries[key][priceInterval];
+      const time = key.slice(11,16);
+
+      chartData.prices.push(price);
+      chartData.times.push(time);
    }
+
+   return chartData;
 }
 
 module.exports = app => {
@@ -69,24 +66,38 @@ module.exports = app => {
 
       try {
          const newTicker = req.body;
+         const { name, type } = newTicker;
          const { _id } = req.user;
 
          //check if ticker is in Ticker
-         const queryTicker = await Ticker.findOne( { ...newTicker });
+         const queryTicker = await Ticker.findOne( { name, type });
 
-         if (!queryTicker)
-            addTickerToTickers(newTicker); //if not found, add to Ticker collection
-
-         const queryUser = await User.findOne( { _id, tickerList: { $elemMatch: newTicker } } ); //refactor with update
-
-         if (!queryUser) { //if user does not contain ticker in their list, add it to their tickerList
-            await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } } ); //$addToSet =  add a value to an array only if the value is not already present
-            res.send(newTicker);
+         if (!queryTicker) {  //if ticker in Ticker db, add it
+            console.log('!queryTicker');
+            const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
+            if (!tickerAddSuccess) { //if ticker is not valid API ticker
+               res.send( { error: 'Ticker could not be added.'} )
+            }
          }
+         //if exists in db or once added, send price back
+         const queryTic = await Ticker.findOne( {'name': newTicker.name, 'type': newTicker.type } );
+         const price = findCurrentPrice(queryTic);
+         res.send( { price } );
+
+         //Adding ticker to User's tickerList
+         await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
+
       } catch(err) {
-         console.log('err');
-         return res.status(500).send(err);
+         res.send(err);
       }
+
+   });
+
+   app.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update ticker quantity for a user
+      const { type, name, quantity } = req.params;
+
+      await User.updateOne( { _id: req.user._id, tickerList: { $elemMatch: { name, type }}},
+      { $set: { 'tickerList.$.quantity': quantity }} )
 
    });
 
@@ -98,7 +109,6 @@ module.exports = app => {
       let currentPriceList = { STOCK: {}, CRYPTO: {} };
 
       try {
-         console.log(req.user.tickerList);
          const { tickerList } = req.user;
          for (let i = 0; i < tickerList.length; i++) {
 
@@ -115,20 +125,74 @@ module.exports = app => {
 
    });
 
-   app.get('/api/tickers/current_prices/:type/:name', async (req, res) => {
+   app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
+      const { type, name } = req.params;
+      console.log('name = ', name, ' type= ', type);
+
+      const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
+      res.sendStatus(200);
+   });
+
+   app.get('/api/stock_charts', async (req, res) => {
+      const { tickerList } = await User.findById( req.user._id, 'tickerList -_id');
+      const allChartData = { STOCK: {}, CRYPTO: {} };
+
+      console.log('tickerList = ', tickerList);
+
+      for (let i = 0; i < tickerList.length; i++) {
+         const { name, type} = tickerList[i];
+         const chartData = await findChartData(name, type);
+         allChartData[type][name] = chartData;
+      }
+
+      res.send(allChartData);
+   });
+
+   app.get('/api/stock_charts/:type/:name', async (req, res) => {
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
-      try {
-         const price = findCurrentPrice( await Ticker.findOne( { name, type }) );
-         res.send( { name, type, price } );
-      }
-      catch (err) {
-         return res.status(500).send(err);
-      }
+      const chartData = await findChartData(name, type);
+      res.send(chartData);
+   });
 
-   })
+   app.get('/api/tickers/suggestions', async (req, res) => {
+      const stockCryptoList = {
+         aapl: null,
+         msft: null,
+         tsla: null,
+         amzn: null,
+         nvda: null,
+         intc: null,
+         f: null,
+         ge: null,
+         pypl: null,
+         fb: null,
+         snap: null,
+         ebay: null,
+         etsy: null,
+         nflx: null,
+         btc: null,
+         eth: null,
+         ltc: null,
+         bch: null,
+         dash: null,
+         xmr: null,
+         nxt: null,
+         zec: null,
+         xrp: null,
+         etc: null,
+         btg: null,
+         neo: null,
+         xlm: null,
+         eos: null,
+         sc: null,
+         omg: null,
+         dgb: null,
+         iot: null
+      };
 
-
+      res.send(stockCryptoList);
+   });
 
 }
