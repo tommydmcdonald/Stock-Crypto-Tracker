@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Chart from './chart';
-import { Row } from 'react-materialize';
+import { Row, Icon, Col } from 'react-materialize';
 
 export default class StockCryptoTracker extends Component {
 
    render() {
       const { name, type, currentPrice, quantity, chartData } = this.props;
       return (
-         <tr>
-            <th scope="row">{name}</th>
-            <td>{this.props.currentPrice}</td>
-            <td><input value={quantity} onChange={ event => this.props.updateQuantity(name, type, event.target.value)} /></td>
-            <Chart chartData={chartData}/>
-            <td><a className="waves-effect waves-teal btn-flat" onClick={ () => this.props.onClick(name, type)}>Remove</a></td>
-        </tr>
+         <div className='valign-wrapper tracker-row'>
+                  <Col s={2}>{name}</Col>
+                  <Col s={5}>{currentPrice}</Col>
+                  <Col s={4}><input className='quantity' value={quantity} onChange={ event => this.props.updateQuantity(name, type, event.target.value)} /></Col>
+                  <Col s={2}>
+                     <a className='tracker-icon'onClick={ () => this.props.updateGraphTicker({name, type})}>
+                     <Icon small>assessment</Icon>
+                     </a>
+                  </Col>
+                  <Col s={2}>
+                     <a className='tracker-icon' onClick={ () => this.props.onClick(name, type)}>
+                     <Icon small>clear</Icon>
+                     </a>
+                  </Col>
+         </div>
       );
    }
 }
-
-{/*  */}

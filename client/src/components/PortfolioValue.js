@@ -38,7 +38,7 @@ export default class PortfolioValue extends Component {
 
    render() {
       return (
-         <h2>Current Value: ${this.calculateValue()}</h2>
+         <h5 className="white-text">Current Value: ${this.calculateValue()}</h5>
       );
    }
 

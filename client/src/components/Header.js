@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Col, Row } from 'react-materialize';
-
+import { Navbar, NavItem } from 'react-materialize';
 
 class Header extends Component {
    renderContent() {
@@ -18,20 +18,18 @@ class Header extends Component {
 
    render() {
       return (
-        <Row>
-         <nav>
-            <div className="nav-wrapper grey lighten-1">
-               <Link
+        <Navbar className="z-depth-4" id="header"
+                brand = {
+                <Link
                   to={this.props.auth ? '/' : '/landing'}
                   className="brand-logo" id="logo">
                   StockCrypto Tracker
-               </Link>
-               <ul className="right">
-                  {this.renderContent()}
-               </ul>
-            </div>
-         </nav>
-         </Row>
+               </Link>}
+               fixed right>
+  	      <NavItem className="">{this.renderContent()}</NavItem>
+        </Navbar>
+
+
       );
    }
 }

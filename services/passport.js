@@ -30,7 +30,7 @@ passport.use(
             return done(null, existingUser);
          }
 
-         const user = await new User({ googleId: profile.id }).save(); // We do not have a user id with this profile, make new Id
+         const user = await new User({ googleId: profile.id, displayName: profile.displayName }).save(); // We do not have a user id with this profile, make new Id
          done(null, user);
 
       }

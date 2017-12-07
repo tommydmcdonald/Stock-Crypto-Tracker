@@ -41,7 +41,6 @@ class StockCryptoList extends Component {
    renderTracker (tickerItem) {
       const { name, type, quantity } = tickerItem;
       const key = name + '-' + type;
-      console.log('tickerItem = ', tickerItem);
 
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '');
 
@@ -80,7 +79,7 @@ class StockCryptoList extends Component {
       const timeout = refreshRateSeconds * 1000;
 
       return (
-         <div>
+         <div className="">
             <ReactInterval timeout={timeout} enabled={true}
             callback={this.loadTickerPrices}
             />
@@ -88,11 +87,11 @@ class StockCryptoList extends Component {
             <Table>
                <thead>
                   <tr>
-                     <th>Ticker</th>
-                     <th>Price (USD)</th>
-                     <th>Quantity</th>
-                     <th>Graph</th>
-                     <th>Remove</th>
+                     <th className="white-text">Ticker</th>
+                     <th className="white-text">Price (USD)</th>
+                     <th className="white-text">Quantity</th>
+                     <th className="white-text">Graph</th>
+                     <th className="white-text">Remove</th>
                   </tr>
                </thead>
 
