@@ -1,9 +1,16 @@
 #logo {
    padding-left: 15px;
 }
+#header {
+  background-color: #4A525A;
+}
 
+.mainApp {
+  background-color: #212B33;
+}
 .search-button {
    font-size: 14px;
+   background-color: #4A525A;
 }
 
 .valign-wrapper {
@@ -18,26 +25,30 @@
 }
 
 .navbar-img {
-    padding-top: 300px;
+    padding-top: 57px;
+    background-color: #4A525A;
 }
+
+.collapsable-body {
+  background-color: #2C363D;
+}
+
+.collapsible-options {
+  background-color: #4A525A;
+}
+
 .header {
-    color: #FAFAFA;
     box-shadow: 10px, 10px, 5px;
     z-index: 1;
     position: relative;
 }
 
 .side-nav {
-  background-color: #FDFDFF;
+  background-color: #4A525A;
   z-index: 0;
   position: relative;
 }
 
 .navbar-img {
-  border-bottom: solid;
-  border-width: 1px;
-}
-
-.mainApp {
-  overflow: scroll;
+  filter: blur(0px);
 }

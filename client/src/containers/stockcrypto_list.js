@@ -70,9 +70,9 @@ class StockCryptoList extends Component {
             <table className="table table-hover">
                <thead>
                   <tr>
-                     <th>Ticker</th>
-                     <th>Price (USD)</th>
-                     <th>Graph</th>
+                     <th className="white-text">Ticker</th>
+                     <th className="white-text">Price (USD)</th>
+                     <th className="white-text">Graph</th>
                   </tr>
                </thead>
                <tbody>

@@ -9,10 +9,10 @@ export default class StockCryptoTracker extends Component {
       const { name, type } = this.props;
       return (
          <tr>
-            <th scope="row">{name} </th>
-            <td>{this.props.currentPrice} </td>
+            <th className="white-text" scope="row">{name} </th>
+            <td className="white-text">{this.props.currentPrice} </td>
             <td><Chart chartData={this.props.chartData} /></td>
-            <td><a className="waves-effect waves-teal btn-flat" onClick={ () => this.props.onClick(name, type)}>Remove</a></td>
+            <td ><a className="white-text waves-effect waves-teal btn-flat" onClick={ () => this.props.onClick(name, type)}>Remove</a></td>
         </tr>
       );
    }

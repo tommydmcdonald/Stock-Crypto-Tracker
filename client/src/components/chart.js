@@ -39,7 +39,7 @@ export default class Chart extends Component {
       };
       return (
          <div className="container">
-            <Line data={data} width={70} height={300} options={{maintainAspectRatio: false}} ></Line>
+            <Line data={data} width={170} height={300} options={{maintainAspectRatio: false}} ></Line>
          </div>
       );
    }

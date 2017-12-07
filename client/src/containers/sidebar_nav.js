@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Collapsible, CollapsibleItem } from 'react-materialize';
+import { Collapsible, CollapsibleItem, Card, CardTitle } from 'react-materialize';
 
 
 export default class SideBarNav extends Component {
@@ -11,24 +11,20 @@ export default class SideBarNav extends Component {
 
   render() {
     return(
-      <ul id="nav-mobile" className="side-nav fixed z-depth-2">
-        <li className="navbar-img"></li>
-        <Collapsible>
-        	<CollapsibleItem header='Stocks' icon='poll'>
-            <div className="collapsable-body">
-              <ul>
-                <li>Item 1</li>
-                <li>Item 2</li>
-                <li>Item 3</li>
-              </ul>
-            </div>
+      <ul id="nav-mobile" className="side-nav fixed z-depth-6">
+        <Card className='navbar-img'
+        	header={<CardTitle image={require('../img/a.jpg')}>Hello World!</CardTitle>}>
+        </Card>
+        <Collapsible popout defaultActiveKey={1}>
+        	<CollapsibleItem className="white-text" header='Stocks' icon='trending_up'>
+        		<li>Lorem ipsum dolor sit amet.</li>
+            <li>Lorem ipsum dolor sit amet.</li>
+            <li>Lorem ipsum dolor sit amet.</li>
         	</CollapsibleItem>
-        	<CollapsibleItem header='Crypto Currencies' icon='trending_up'>
-            <div className="collapsable-body">
-              <li>Item 1</li>
-              <li>Item 2</li>
-              <li>Item 3</li>
-            </div>
+        	<CollapsibleItem className="white-text" header='Crypto Currencies' icon='trending_up'>
+            <li>Lorem ipsum dolor sit amet.</li>
+            <li>Lorem ipsum dolor sit amet.</li>
+            <li>Lorem ipsum dolor sit amet.</li>
           </CollapsibleItem>
         </Collapsible>
       </ul>

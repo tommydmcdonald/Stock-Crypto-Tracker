@@ -17,7 +17,7 @@ class Header extends Component {
 
    render() {
       return (
-        <Navbar className="nav-wrapper grey lighten-1 header"
+        <Navbar className="z-depth-4" id="header"
                 brand = {
                 <Link
                   to={this.props.auth ? '/' : '/landing'}
@@ -25,7 +25,7 @@ class Header extends Component {
                   StockCrypto Tracker
                </Link>}
                fixed right>
-  	      <NavItem className="z-depth-6">{this.renderContent()}</NavItem>
+  	      <NavItem className="">{this.renderContent()}</NavItem>
         </Navbar>
 
 
