@@ -55,9 +55,12 @@ class SideBarNav extends Component {
 
        let chartData = _.get(this.props.chartData, `[${type}][${name}]`, {prices: [0], times:[0] } );
 
-       return (<StockCryptoTracker key={key} name={name} type={type} currentPrice={currentPrice} quantity={quantity}
-        updateQuantity={this.props.updateQuantity} chartData={chartData}
-        onClick={this.props.removeTicker} updateGraphTicker={this.props.updateGraphTicker}/>);
+       return (
+          <Row>
+             <StockCryptoTracker key={key} name={name} type={type} currentPrice={currentPrice} quantity={quantity}
+                updateQuantity={this.props.updateQuantity} chartData={chartData}
+                onClick={this.props.removeTicker} updateGraphTicker={this.props.updateGraphTicker}/>
+          </Row>);
      }
 
 
@@ -73,6 +76,7 @@ class SideBarNav extends Component {
         <div className="black-text">
            <li>
               <Table>
+                 <Row>
                  <thead>
                     <tr>
                        <th>Ticker</th>
@@ -80,6 +84,7 @@ class SideBarNav extends Component {
                        <th>Quantity</th>
                     </tr>
                  </thead>
+                 </Row>
                  <tbody>
                  {this.props.tickerList.map( ticker => this.renderTracker(ticker, renderType))}
               </tbody>
@@ -110,7 +115,7 @@ class SideBarNav extends Component {
         	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
          <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
         </Card>
-        <Collapsible popout defaultActiveKey={1}>
+        <Collapsible popout>
         	<CollapsibleItem id="collapsible-header" className="white-text" header='Stocks' icon='trending_up'>
             {this.renderTrackerList(TYPE.STOCK)}
         	</CollapsibleItem>
