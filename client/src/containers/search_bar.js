@@ -67,7 +67,7 @@ class SearchBar extends Component {
 
    render() {
       return (
-         <Row className='valign-wrapper'>
+         <Row className='valign-wrapper white-text'>
             <Col s={5}>
                <Autocomplete
                   s={12}
