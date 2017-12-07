@@ -58,8 +58,14 @@ class Chart extends Component {
         ]
       };
       return (
+<<<<<<< HEAD
          <div className="chartPiece">
             <Line data={data} width={1100} height={730} options={{maintainAspectRatio: false}} ></Line>
+=======
+         <div>
+            <h3 className="white-text">{this.props.graphTicker.name}</h3>
+            <Line data={data} width={170} height={300} options={{maintainAspectRatio: false}} ></Line>
+>>>>>>> fd66a9a3654e4286d7986904b3ed1e16b1360c9e
          </div>
       );
    }
