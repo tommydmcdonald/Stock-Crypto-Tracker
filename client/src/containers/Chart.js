@@ -1,16 +1,36 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { loadChartData } from '../actions'
 import {Line} from 'react-chartjs-2';
 import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
 
-export default class Chart extends Component {
+class Chart extends Component {
    constructor(props) {
       super(props);
    }
 
+   componentDidMount() {
+      this.props.loadChartData();
+   }
+
    render() {
-      const { prices, times } = this.props.chartData;
+      let prices = [0];
+      let times = [0];
+
+      console.log('render chart', this.props);
+
+      if (this.props.graphTicker && this.props.chartData) {
+         const { name, type } = this.props.graphTicker;
+         const { chartData } = this.props;
+
+
+         if ( chartData[type] && chartData[type][name] ) {
+            prices = chartData[type][name]['prices'];
+            times = chartData[type][name]['times'];
+         }
+      }
+
       const data = {
         labels: times,
         datasets: [
@@ -45,3 +65,13 @@ export default class Chart extends Component {
    }
 
 }
+
+function mapStateToProps({ chartData }){
+   return { chartData };
+}
+
+function mapDispatchToProps(dispatch) {
+   return bindActionCreators({ loadChartData }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chart);

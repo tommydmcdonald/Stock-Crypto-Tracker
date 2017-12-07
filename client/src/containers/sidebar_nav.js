@@ -54,7 +54,8 @@ class SideBarNav extends Component {
        let chartData = _.get(this.props.chartData, `[${type}][${name}]`, {prices: [0], times:[0] } );
 
        return (<StockCryptoTracker key={key} name={name} type={type} currentPrice={currentPrice} quantity={quantity}
-        updateQuantity={this.props.updateQuantity} chartData={chartData} onClick={this.props.removeTicker} />);
+        updateQuantity={this.props.updateQuantity} chartData={chartData}
+        onClick={this.props.removeTicker} updateGraphTicker={this.props.updateGraphTicker}/>);
      }
 
 
@@ -75,7 +76,6 @@ class SideBarNav extends Component {
                        <th>Ticker</th>
                        <th>Price</th>
                        <th>Quantity</th>
-                       <th>Remove</th>
                     </tr>
                  </thead>
                  <tbody>

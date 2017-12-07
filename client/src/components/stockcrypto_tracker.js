@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Chart from './chart';
 import { Row } from 'react-materialize';
 
 export default class StockCryptoTracker extends Component {
@@ -12,10 +11,9 @@ export default class StockCryptoTracker extends Component {
             <th scope="row">{name}</th>
             <td>{this.props.currentPrice}</td>
             <td><input value={quantity} onChange={ event => this.props.updateQuantity(name, type, event.target.value)} /></td>
-            <td><a className="waves-effect waves-teal btn-flat" onClick={ () => this.props.onClick(name, type)}>Remove</a></td>
+            <td><a className="waves-effect waves-teal btn-flat" onClick={ () => this.props.updateGraphTicker({name, type})}>G</a></td>
+            <td><a className="waves-effect waves-teal btn-flat" onClick={ () => this.props.onClick(name, type)}>X</a></td>
         </tr>
       );
    }
 }
-
-{/*  */}
