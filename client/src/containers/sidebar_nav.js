@@ -82,6 +82,8 @@ class SideBarNav extends Component {
                        <th>Ticker</th>
                        <th>Price</th>
                        <th>Quantity</th>
+                       <th>Graph</th>
+                       <th>Remove</th>
                     </tr>
                  </thead>
                  </Row>
@@ -109,21 +111,28 @@ class SideBarNav extends Component {
 
   render() {
     return(
+      <Row>
+         <ul id="nav-mobile" className="side-nav fixed z-depth-6">
+           <Card className='navbar-img'
+           	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
+            <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
+           </Card>
+           <Row>
+             <Col s={10}>
+                <Collapsible>
+               	<CollapsibleItem id="collapsible-header" className="white-text" header='Stocks' icon='trending_up'>
+                   {this.renderTrackerList(TYPE.STOCK)}
+               	</CollapsibleItem>
+               	<CollapsibleItem id="collapsible-header" className="white-text" header='Crypto Currencies' icon='trending_up'>
+                   {this.renderTrackerList(TYPE.CRYPTO)}
+                 </CollapsibleItem>
+                 </Collapsible>
+             </Col>
+           </Row>
 
-      <ul id="nav-mobile" className="side-nav fixed z-depth-6">
-        <Card className='navbar-img'
-        	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
-         <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
-        </Card>
-        <Collapsible popout>
-        	<CollapsibleItem id="collapsible-header" className="white-text" header='Stocks' icon='trending_up'>
-            {this.renderTrackerList(TYPE.STOCK)}
-        	</CollapsibleItem>
-        	<CollapsibleItem id="collapsible-header" className="white-text" header='Crypto Currencies' icon='trending_up'>
-            {this.renderTrackerList(TYPE.CRYPTO)}
-          </CollapsibleItem>
-        </Collapsible>
-      </ul>
+         </ul>
+      </Row>
+
     );
   }
 }
