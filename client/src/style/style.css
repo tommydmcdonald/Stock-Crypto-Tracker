@@ -8,12 +8,14 @@
 .mainApp {
   background-color: #212B33;
 }
+
+
 .search-button {
    font-size: 14px;
-   background-color: #4A525A;
+   background-color: #6ABEBF;
 }
 
-.chartPiece {
+#chartPiece {
   padding-right: 150px;
 }
 
