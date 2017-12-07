@@ -115,7 +115,7 @@ class SideBarNav extends Component {
         	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
          <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
         </Card>
-        <Collapsible popout>
+        <Collapsible>
         	<CollapsibleItem id="collapsible-header" className="white-text" header='Stocks' icon='trending_up'>
             {this.renderTrackerList(TYPE.STOCK)}
         	</CollapsibleItem>
