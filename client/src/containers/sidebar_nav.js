@@ -16,12 +16,12 @@ export default class SideBarNav extends Component {
         	header={<CardTitle image={require('../img/a.jpg')}>Hello World!</CardTitle>}>
         </Card>
         <Collapsible popout defaultActiveKey={1}>
-        	<CollapsibleItem className="white-text" header='Stocks' icon='trending_up'>
+        	<CollapsibleItem className="" header='Stocks' icon='trending_up'>
         		<li>Lorem ipsum dolor sit amet.</li>
             <li>Lorem ipsum dolor sit amet.</li>
             <li>Lorem ipsum dolor sit amet.</li>
         	</CollapsibleItem>
-        	<CollapsibleItem className="white-text" header='Crypto Currencies' icon='trending_up'>
+        	<CollapsibleItem className="" header='Crypto Currencies' icon='trending_up'>
             <li>Lorem ipsum dolor sit amet.</li>
             <li>Lorem ipsum dolor sit amet.</li>
             <li>Lorem ipsum dolor sit amet.</li>
