@@ -25,8 +25,8 @@ module.exports = app => {
   app.get('/api/current_user', (req, res) => {
      if (req.user)
      {
-        const userInfo = _.pick(req.user, ['_id', 'googleId', '__v']);
-        res.send( _.pick(req.user, ['_id', 'googleId', '__v']) ); //send user back without tickerlist
+        const userInfo = _.pick(req.user, ['_id', 'googleId', '__v', 'googleName']);
+        res.send( _.pick(req.user, ['_id', 'googleId', '__v', 'googleName']) ); //send user back without tickerlist
         return;
      }
 
