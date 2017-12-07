@@ -10,8 +10,8 @@ const Home = () => {
       <div className='mainApp'>
         <Row> <Col s={9} offset="s3"> <SearchBar /> </Col></Row>
         <Row>
-          <Col s={3}><SideBarNav /></Col>
-          <Col s={9}><StockCryptoList className="stock-crypto-list"/></Col>
+          <Col s={4}><SideBarNav s={12}/></Col>
+          <Col s={8}><StockCryptoList className="stock-crypto-list"/></Col>
         </Row>
       </div>
    );

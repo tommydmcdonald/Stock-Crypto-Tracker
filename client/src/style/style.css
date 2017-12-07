@@ -52,3 +52,7 @@
 .navbar-img {
   filter: blur(0px);
 }
+
+.side-nav {
+   width: 375px;
+}

@@ -41,7 +41,6 @@ class StockCryptoList extends Component {
    renderTracker (tickerItem) {
       const { name, type, quantity } = tickerItem;
       const key = name + '-' + type;
-      console.log('tickerItem = ', tickerItem);
 
       let currentPrice = _.get(this.props.priceList, `[${type}][${name}]`, '');
 
