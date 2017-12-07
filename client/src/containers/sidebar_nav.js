@@ -108,11 +108,10 @@ class SideBarNav extends Component {
         	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
         </Card>
         <Collapsible popout defaultActiveKey={1}>
-        	<CollapsibleItem  header='Stocks' icon='trending_up'>
-
+        	<CollapsibleItem id="collapsible-header" className="white-text" header='Stocks' icon='trending_up'>
             {this.renderTrackerList(TYPE.STOCK)}
         	</CollapsibleItem>
-        	<CollapsibleItem className="white-text" header='Crypto Currencies' icon='trending_up'>
+        	<CollapsibleItem id="collapsible-header" className="white-text" header='Crypto Currencies' icon='trending_up'>
             {this.renderTrackerList(TYPE.CRYPTO)}
           </CollapsibleItem>
         </Collapsible>
