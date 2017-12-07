@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import StockCryptoTracker from '../components/stockcrypto_tracker.js';
+import StockCryptoTracker from '../components/stockcrypto_tracker';
+import PortfolioValue from '../components/PortfolioValue';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addTicker, loadTickerList, loadTickerPrices, removeTicker, updateQuantity } from '../actions/index';
@@ -57,6 +58,7 @@ class StockCryptoList extends Component {
             <ReactInterval timeout={timeout} enabled={true}
             callback={this.loadTickerPrices}
             />
+            <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
             <Table>
                <thead>
                   <tr>
