@@ -24,7 +24,13 @@ export default class PortfolioValue extends Component {
             }
          }
 
-         return currentValue;
+         const numberWithCommas = (x) => {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+         }
+
+         currentValue = Number(currentValue).toFixed(2);
+
+         return numberWithCommas(currentValue);
       }
       return 0;
 
