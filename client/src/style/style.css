@@ -29,12 +29,8 @@
     background-color: #4A525A;
 }
 
-.collapsable-body {
-  background-color: #2C363D;
-}
-
-.collapsible-options {
-  background-color: #4A525A;
+#collapsible-header {
+  background-color: #607D8B;
 }
 
 .header {

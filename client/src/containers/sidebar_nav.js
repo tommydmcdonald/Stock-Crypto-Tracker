@@ -57,7 +57,7 @@ class SideBarNav extends Component {
         updateQuantity={this.props.updateQuantity} chartData={chartData} onClick={this.props.removeTicker} />);
      }
 
-     
+
   }
 
   numberWithCommas(x) {
@@ -91,13 +91,21 @@ class SideBarNav extends Component {
      this.props.loadTickerPrices();
   }
 
+  renderName() {
+    const { auth } = this.props;
+    if (auth) {
+      return auth.displayName;
+    }
+    return 'Welcome';
+  }
+
 
   render() {
     return(
 
       <ul id="nav-mobile" className="side-nav fixed z-depth-6">
         <Card className='navbar-img'
-        	header={<CardTitle image={require('../img/a.jpg')}>Hello World!</CardTitle>}>
+        	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
         </Card>
         <Collapsible popout defaultActiveKey={1}>
         	<CollapsibleItem  header='Stocks' icon='trending_up'>
@@ -113,8 +121,8 @@ class SideBarNav extends Component {
   }
 }
 
-function mapStateToProps({tickerList, priceList, chartData}){
-   return { tickerList, priceList }
+function mapStateToProps({tickerList, priceList, auth}){
+   return { tickerList, priceList, auth }
 }
 
 function mapDispatchToProps(dispatch) {
