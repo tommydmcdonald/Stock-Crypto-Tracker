@@ -4,16 +4,25 @@ import { bindActionCreators } from 'redux';
 import { Collapsible, CollapsibleItem, Card, CardTitle } from 'react-materialize';
 
 
-export default class SideBarNav extends Component {
+class SideBarNav extends Component {
   constructor(props) {
      super(props);
   }
+
+  renderName() {
+    const { auth } = this.props;
+    if (auth) {
+      return auth.displayName;
+    }
+    return 'Welcome';
+  }
+
 
   render() {
     return(
       <ul id="nav-mobile" className="side-nav fixed z-depth-6">
         <Card className='navbar-img'
-        	header={<CardTitle image={require('../img/a.jpg')}>Hello World!</CardTitle>}>
+        	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
         </Card>
         <Collapsible popout defaultActiveKey={1}>
         	<CollapsibleItem className="white-text" header='Stocks' icon='trending_up'>
@@ -35,3 +44,8 @@ export default class SideBarNav extends Component {
     );
   }
 }
+function mapStateToProps({ auth }) {
+   return { auth };
+}
+
+export default connect(mapStateToProps)(SideBarNav);
