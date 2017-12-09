@@ -44,7 +44,7 @@ class Chart extends Component {
 
       console.log('render chart', this.props);
 
-      if (this.props.graphTicker && this.props.chartData) {
+      if (this.props.graphTicker.name && this.props.chartData) {
          const { name, type } = this.props.graphTicker;
          const { chartData } = this.props;
 

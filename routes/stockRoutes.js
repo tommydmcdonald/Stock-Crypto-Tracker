@@ -16,6 +16,7 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
 
    const { data } = await axios.get(URL);
 
+
    if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
       return false;
    }
