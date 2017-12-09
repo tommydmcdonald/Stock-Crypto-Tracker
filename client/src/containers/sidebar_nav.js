@@ -24,8 +24,12 @@ class SideBarNav extends Component {
   async componentDidMount() {
      await this.props.loadTickerList();
      await this.props.loadTickerPrices();
-     const { name, type } = this.props.tickerList[0];
-     this.props.updateGraphTicker({ name, type });
+
+     if (this.props.tickerList[0]) {
+        const { name, type } = this.props.tickerList[0];
+        this.props.updateGraphTicker({ name, type });
+     }
+
   }
 
   handleRemoveClick( _id ) {
