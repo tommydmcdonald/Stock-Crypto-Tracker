@@ -22,8 +22,8 @@ class Home extends Component {
          <div className='mainApp'>
            <Row> <Col s={9} offset="s3"> <SearchBar /> </Col></Row>
            <Row>
-             <Col s={4}><SideBarNav updateGraphTicker={this.updateGraphTicker} s={12}/></Col>
-             <Col s={8}><Chart graphTicker={this.state.graphTicker} /></Col>
+             <Col s={3}><SideBarNav updateGraphTicker={this.updateGraphTicker} s={12}/></Col>
+             <Col s={9}><Chart graphTicker={this.state.graphTicker} /></Col>
            </Row>
          </div>
       );
