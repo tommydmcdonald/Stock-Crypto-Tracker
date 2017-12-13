@@ -13,6 +13,9 @@ import { Row, Col, Preloader, Table } from 'react-materialize';
 import ReactInterval from 'react-interval';
 
 
+// http://recharts.org/#/en-US/guide/getting-started
+// For dynamic pie chart
+
 class SideBarNav extends Component {
   constructor(props) {
      super(props);
