@@ -11,6 +11,7 @@ import { TYPE } from '../actions/types';
 import _ from 'lodash';
 import { Row, Col, Preloader, Table } from 'react-materialize';
 import ReactInterval from 'react-interval';
+import { Pie, PieChart } from 'recharts';
 
 
 // http://recharts.org/#/en-US/guide/getting-started
@@ -118,7 +119,13 @@ class SideBarNav extends Component {
          />
          <ul id="nav-mobile" className="side-nav fixed z-depth-8">
            <Card className='navbar-img'
-           	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
+           	header={<CardTitle image={require('../img/a.jpg')}>
+                      <PieChart width={200} height={200} onMouseEnter={this.onPieEnter}>
+                        <Pie data={this.props.priceList} cx={120} cy={200} innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={3}>
+                        </Pie>
+                      </PieChart>
+                      {this.renderName()}
+                    </CardTitle>}>
             <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
            </Card>
            <Collapsible className='ticker-collasp'>
