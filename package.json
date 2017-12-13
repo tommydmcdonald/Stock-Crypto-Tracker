@@ -50,6 +50,7 @@
       "react-router-dom": "^4.2.2",
       "react-sparklines": "^1.7.0",
       "react-tap-event-plugin": "^3.0.2",
+      "recharts": "^1.0.0-beta.6",
       "redux": "^3.7.2",
       "redux-devtools-extension": "^2.13.2",
       "redux-promise": "^0.5.3",

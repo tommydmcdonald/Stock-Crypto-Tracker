@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Collapsible, CollapsibleItem, Card, CardTitle, Collection, CollectionItem } from 'react-materialize';
+import {PieChart} from 'recharts';
 
 //from list
 import StockCryptoTracker from '../components/stockcrypto_tracker';
@@ -11,6 +12,7 @@ import { TYPE } from '../actions/types';
 import _ from 'lodash';
 import { Row, Col, Preloader, Table } from 'react-materialize';
 import ReactInterval from 'react-interval';
+// import PieChart from '../components/piechart';
 
 
 class SideBarNav extends Component {
