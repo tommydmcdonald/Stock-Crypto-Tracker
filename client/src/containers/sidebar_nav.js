@@ -11,7 +11,7 @@ import { TYPE } from '../actions/types';
 import _ from 'lodash';
 import { Row, Col, Preloader, Table } from 'react-materialize';
 import ReactInterval from 'react-interval';
-import { PieChart, Pie, Cell  } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 
 // http://recharts.org/#/en-US/guide/getting-started
@@ -126,7 +126,8 @@ class SideBarNav extends Component {
               if(priceList && priceList[type] && priceList[type][name])
               {
                 const price = Number(priceList[type][name]).toFixed(2);
-                pieChartData.push({name, value: Number(price*quantity).toFixed(2)});
+                const valueOwn = Number(price*quantity).toFixed(2);
+                pieChartData.push({name: name, value: Number(valueOwn)});
               }
             }
           }
@@ -140,9 +141,9 @@ class SideBarNav extends Component {
     const refreshRateSeconds = 15;
     const timeout = refreshRateSeconds * 1000;
 
-    const data = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
-                   {name: 'Group C', value: 300}, {name: 'Group D', value: 200}];
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+    const data = this.getPieChartData();
 
     return(
       <div>
@@ -150,10 +151,11 @@ class SideBarNav extends Component {
          callback={this.props.loadTickerPrices}
          />
          <ul id="nav-mobile" className="side-nav fixed z-depth-8">
+
            <Card className='navbar-img'
            	header={<CardTitle image={require('../img/a.jpg')}>
-                      <PieChart width={200} height={200} onMouseEnter={this.onPieEnter}>
-                        <Pie data={data} cx={120} cy={200} innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={3}>
+                      <PieChart width={300} height={300} onMouseEnter={this.onPieEnter} onMouseOver={this.label}>
+                        <Pie data={data} cx={155} cy={200} innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={3} label>
                           {data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/> )}
                         </Pie>
                       </PieChart>
