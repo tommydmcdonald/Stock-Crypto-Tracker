@@ -24,6 +24,7 @@ class SideBarNav extends Component {
      this.renderTrackerList = this.renderTrackerList.bind(this);
      this.renderTracker = this.renderTracker.bind(this);
      this.loadTickerPrices = this.loadTickerPrices.bind(this);
+
   }
 
   async componentDidMount() {
@@ -107,15 +108,41 @@ class SideBarNav extends Component {
     return 'Welcome';
   }
 
-  // Need but not sure why
-  // const data = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
-  //              {name: 'Group C', value: 300}, {name: 'Group D', value: 200}];
-  // const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+  getPieChartData() {
+    const { priceList, tickerList } = this.props;
+    let pieChartData = new Array;
+
+    for (let i = 0; i < tickerList.length; i++) {
+      if(tickerList && priceList) {
+          if(tickerList[i].name && tickerList[i].type)
+          {
+            const { name, type } = tickerList[i];
+
+            if(tickerList[i] && tickerList[i].quantity)
+            {
+              const { quantity } = _.find( tickerList, { name, type} );
+
+              if(priceList && priceList[type] && priceList[type][name])
+              {
+                const price = Number(priceList[type][name]).toFixed(2);
+                pieChartData.push({name, value: Number(price*quantity).toFixed(2)});
+              }
+            }
+          }
+        }
+    }
+    return pieChartData;
+   }
 
 
   render() {
-     const refreshRateSeconds = 15;
-     const timeout = refreshRateSeconds * 1000;
+    const refreshRateSeconds = 15;
+    const timeout = refreshRateSeconds * 1000;
+
+    const data = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
+                   {name: 'Group C', value: 300}, {name: 'Group D', value: 200}];
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
     return(
       <div>
@@ -126,7 +153,7 @@ class SideBarNav extends Component {
            <Card className='navbar-img'
            	header={<CardTitle image={require('../img/a.jpg')}>
                       <PieChart width={200} height={200} onMouseEnter={this.onPieEnter}>
-                        <Pie data={this.props.priceList} cx={120} cy={200} innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={3}>
+                        <Pie data={data} cx={120} cy={200} innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={3}>
                           {data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/> )}
                         </Pie>
                       </PieChart>
