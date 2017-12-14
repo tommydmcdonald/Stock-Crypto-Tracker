@@ -154,8 +154,8 @@ class SideBarNav extends Component {
 
            <Card className='navbar-img'
            	header={<CardTitle image={require('../img/a.jpg')}>
-                      <PieChart width={300} height={300} onMouseEnter={this.onPieEnter} onMouseOver={this.label}>
-                        <Pie data={data} cx={155} cy={200} innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={3} label>
+                      <PieChart width={300} height={300} onMouseEnter={this.onPieEnter}>
+                        <Pie valueKey={"name"} data={data} cx={155} cy={200} innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={3} label>
                           {data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/> )}
                         </Pie>
                       </PieChart>
