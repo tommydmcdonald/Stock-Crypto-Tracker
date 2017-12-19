@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Col, Row } from 'react-materialize';
-import { Navbar, NavItem } from 'react-materialize';
+import { Navbar, NavItem, Icon, Dropdown, Button } from 'react-materialize';
+
 
 class Header extends Component {
    renderContent() {
@@ -26,10 +27,8 @@ class Header extends Component {
                   StockCrypto Tracker
                </Link>}
                fixed right>
-  	      <NavItem className="">{this.renderContent()}</NavItem>
+          <NavItem className="">{this.renderContent()}</NavItem>
         </Navbar>
-
-
       );
    }
 }
