@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Col, Row } from 'react-materialize';
 import { Navbar, NavItem, Icon, Dropdown, Button } from 'react-materialize';
 
+import AccountDropDown from '../containers/account_dropdown';
 
 class Header extends Component {
    renderContent() {
@@ -19,7 +20,7 @@ class Header extends Component {
 
    render() {
       return (
-        <Navbar className="z-depth-4" id="header"
+        <Navbar className="z-depth-0" id="header"
                 brand = {
                 <Link
                   to={this.props.auth ? '/' : '/landing'}
@@ -28,6 +29,8 @@ class Header extends Component {
                </Link>}
                fixed right>
           <NavItem className="">{this.renderContent()}</NavItem>
+
+        <NavItem><AccountDropDown /></NavItem>
         </Navbar>
       );
    }

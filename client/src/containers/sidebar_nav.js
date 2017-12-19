@@ -100,14 +100,6 @@ class SideBarNav extends Component {
      this.props.loadTickerPrices();
   }
 
-  renderName() {
-    const { auth } = this.props;
-    if (auth) {
-      return auth.displayName;
-    }
-    return 'Welcome';
-  }
-
 
   getPieChartData() {
     const { priceList, tickerList } = this.props;
@@ -161,7 +153,6 @@ class SideBarNav extends Component {
                         </Pie>
                         <Tooltip />
                       </PieChart>
-                      {this.renderName()}
                     </CardTitle>}>
             <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
            </Card>
