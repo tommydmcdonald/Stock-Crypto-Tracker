@@ -30,7 +30,7 @@ class Header extends Component {
                fixed right>
           <NavItem className="">{this.renderContent()}</NavItem>
 
-        <NavItem><AccountDropDown /></NavItem>
+        {/* <NavItem><AccountDropDown /></NavItem> */}
         </Navbar>
       );
    }
