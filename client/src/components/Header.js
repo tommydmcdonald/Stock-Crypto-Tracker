@@ -28,9 +28,9 @@ class Header extends Component {
                   StockCrypto Tracker
                </Link>}
                fixed right>
-          {/* <NavItem className="">{this.renderContent()}</NavItem> */}
+          <NavItem className="">{this.renderContent()}</NavItem>
 
-        <NavItem><AccountDropDown /></NavItem>
+        {/* <NavItem><AccountDropDown /></NavItem> */}
         </Navbar>
       );
    }
