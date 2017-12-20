@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Collapsible, CollapsibleItem, Card, CardTitle, Collection, CollectionItem } from 'react-materialize';
-import {PieChart} from 'recharts';
 
 //from list
 import StockCryptoTracker from '../components/stockcrypto_tracker';
