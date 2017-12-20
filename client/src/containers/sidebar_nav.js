@@ -12,8 +12,11 @@ import { TYPE } from '../actions/types';
 import _ from 'lodash';
 import { Row, Col, Preloader, Table } from 'react-materialize';
 import ReactInterval from 'react-interval';
-// import PieChart from '../components/piechart';
+import { PieChart, Sector, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
+
+// http://recharts.org/#/en-US/guide/getting-started
+// For dynamic pie chart documentation
 
 class SideBarNav extends Component {
   constructor(props) {
@@ -22,6 +25,7 @@ class SideBarNav extends Component {
      this.renderTrackerList = this.renderTrackerList.bind(this);
      this.renderTracker = this.renderTracker.bind(this);
      this.loadTickerPrices = this.loadTickerPrices.bind(this);
+
   }
 
   async componentDidMount() {
@@ -97,18 +101,43 @@ class SideBarNav extends Component {
      this.props.loadTickerPrices();
   }
 
-  renderName() {
-    const { auth } = this.props;
-    if (auth) {
-      return auth.displayName;
+
+  getPieChartData() {
+    const { priceList, tickerList } = this.props;
+    let pieChartData = new Array;
+
+    for (let i = 0; i < tickerList.length; i++) {
+      if(tickerList && priceList) {
+          if(tickerList[i].name && tickerList[i].type)
+          {
+            const { name, type } = tickerList[i];
+
+            if(tickerList[i] && tickerList[i].quantity)
+            {
+              const { quantity } = _.find( tickerList, { name, type} );
+
+              if(priceList && priceList[type] && priceList[type][name])
+              {
+                const price = Number(priceList[type][name]).toFixed(2);
+                const valueOwn = Number(price*quantity).toFixed(2);
+                pieChartData.push({name: name, value: Number(valueOwn)});
+              }
+            }
+          }
+        }
     }
-    return 'Welcome';
-  }
+    return pieChartData;
+   }
 
 
   render() {
-     const refreshRateSeconds = 15;
-     const timeout = refreshRateSeconds * 1000;
+    const refreshRateSeconds = 15;
+    const timeout = refreshRateSeconds * 1000;
+
+    const COLORS = ['#8884d8'];
+
+    const data = this.getPieChartData();
+    console.log('names: ', data);
 
     return(
       <div>
@@ -116,8 +145,16 @@ class SideBarNav extends Component {
          callback={this.props.loadTickerPrices}
          />
          <ul id="nav-mobile" className="side-nav fixed z-depth-8">
+
            <Card className='navbar-img'
-           	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
+           	header={<CardTitle image={require('../img/a.jpg')}>
+                      <PieChart width={300} height={300} onMouseEnter={this.onPieEnter}>
+                        <Pie data={data} cx={155} cy={200} innerRadius={70} outerRadius={80} fill="#8884d8" paddingAngle={6} >
+                          {data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/> )}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </CardTitle>}>
             <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
            </Card>
            <Collapsible className='ticker-collasp'>
