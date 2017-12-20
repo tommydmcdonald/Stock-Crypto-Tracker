@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { loadChartData } from '../actions'
 import {Line} from 'react-chartjs-2';
+import { Row, Col } from 'react-materialize';
+import _ from 'lodash';
 import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
 
 class Chart extends Component {
@@ -14,13 +16,35 @@ class Chart extends Component {
       this.props.loadChartData();
    }
 
+   renderLabel() {
+      let priceText = '';
+      if(this.props.graphTicker) {
+         const { name, type } = this.props.graphTicker;
+         if (this.props.priceList && this.props.priceList[type] && this.props.priceList[type][name] ) {
+            const { quantity } = _.find( this.props.tickerList, { name, type} );
+            const price = Number(this.props.priceList[type][name]).toFixed(2);
+            priceText = { price, amtOwned: Number(price*quantity).toFixed(2) };
+         }
+      }
+
+      return (
+         <Row>
+            <div>
+               <Col s={3}><h4 className="white-text">{this.props.graphTicker.name}</h4></Col>
+               <Col s={4}><p className="white-text">price: ${priceText.price} <br />value owned: ${priceText.amtOwned}</p></Col>
+            </div>
+         </Row>
+
+      )
+   }
+
    render() {
       let prices = [0];
       let times = [0];
 
       console.log('render chart', this.props);
 
-      if (this.props.graphTicker && this.props.chartData) {
+      if (this.props.graphTicker.name && this.props.chartData) {
          const { name, type } = this.props.graphTicker;
          const { chartData } = this.props;
 
@@ -58,17 +82,17 @@ class Chart extends Component {
         ]
       };
       return (
-         <div id="chartPiece" className="container">
-            <h3 className="white-text">{this.props.graphTicker.name}</h3>
-            <Line data={data} width={170} height={400} options={{maintainAspectRatio: false}} ></Line>
+         <div id="chartPiece">
+            {this.renderLabel()}
+            <Line data={data} width={600} height={250} options={{maintainAspectRatio: false}} ></Line>
          </div>
       );
    }
 
 }
 
-function mapStateToProps({ chartData }){
-   return { chartData };
+function mapStateToProps({ chartData, tickerList, priceList }){
+   return { chartData, tickerList, priceList };
 }
 
 function mapDispatchToProps(dispatch) {

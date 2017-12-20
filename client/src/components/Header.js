@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Col, Row } from 'react-materialize';
 import { Navbar, NavItem } from 'react-materialize';
 
 class Header extends Component {
@@ -9,9 +10,9 @@ class Header extends Component {
          case null:
             return;
          case false:
-            return <li><a href="/auth/google">Login With Google</a></li>
+            return <Col><a href="/auth/google"><img src={require('../images/googlelogin.png')} /></a></Col>
          default:
-            return <li><a href="/api/logout">Logout</a></li>;
+            return <Col><a href="/api/logout">Logout</a></Col>;
       }
    }
 

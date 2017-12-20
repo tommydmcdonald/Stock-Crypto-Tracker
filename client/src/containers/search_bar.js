@@ -29,7 +29,8 @@ class SearchBar extends Component {
    }
 
    onInputChange(event, value) {
-      this.setState({ ticker: value });
+
+      this.setState({ ticker: value.toUpperCase() });
    }
 
    onSwitchChange() {
@@ -77,7 +78,7 @@ class SearchBar extends Component {
                   onKeyPress={this.handleEnterOnSearchBar}
                   minLength={2}
                   data={this.state.suggestions}
-                  limit={10}
+                  limit={3}
                />
             </Col>
             <Col s={2}><Button className="search-button"  id={TYPE.STOCK} onClick={this.onButtonClick} waves='light'>Add Stock</Button></Col>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Collapsible, CollapsibleItem, Card, CardTitle, Collection, CollectionItem } from 'react-materialize';
+import {PieChart} from 'recharts';
 
 //from list
 import StockCryptoTracker from '../components/stockcrypto_tracker';
@@ -10,6 +11,8 @@ import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartDat
 import { TYPE } from '../actions/types';
 import _ from 'lodash';
 import { Row, Col, Preloader, Table } from 'react-materialize';
+import ReactInterval from 'react-interval';
+// import PieChart from '../components/piechart';
 
 
 class SideBarNav extends Component {
@@ -24,8 +27,12 @@ class SideBarNav extends Component {
   async componentDidMount() {
      await this.props.loadTickerList();
      await this.props.loadTickerPrices();
-     const { name, type } = this.props.tickerList[0];
-     this.props.updateGraphTicker({ name, type });
+
+     if (this.props.tickerList[0]) {
+        const { name, type } = this.props.tickerList[0];
+        this.props.updateGraphTicker({ name, type });
+     }
+
   }
 
   handleRemoveClick( _id ) {
@@ -100,22 +107,29 @@ class SideBarNav extends Component {
 
 
   render() {
-    return(
+     const refreshRateSeconds = 15;
+     const timeout = refreshRateSeconds * 1000;
 
-      <ul id="nav-mobile" className="side-nav fixed z-depth-8">
-        <Card className='navbar-img'
-        	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
-         <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
-        </Card>
-        <Collapsible className='ticker-collasp'>
-        	<CollapsibleItem id="collapsible-header" className="white-text z-depth-6" header='Stocks' icon='trending_up'>
-            {this.renderTrackerList(TYPE.STOCK)}
-        	</CollapsibleItem>
-        	<CollapsibleItem id="collapsible-header" className="white-text z-depth-6" header='Crypto Currencies' icon='trending_up'>
-            {this.renderTrackerList(TYPE.CRYPTO)}
-          </CollapsibleItem>
-        </Collapsible>
-      </ul>
+    return(
+      <div>
+         <ReactInterval timeout={timeout} enabled={true}
+         callback={this.props.loadTickerPrices}
+         />
+         <ul id="nav-mobile" className="side-nav fixed z-depth-8">
+           <Card className='navbar-img'
+           	header={<CardTitle image={require('../img/a.jpg')}>{this.renderName()}</CardTitle>}>
+            <PortfolioValue tickerList={this.props.tickerList} priceList={this.props.priceList} />
+           </Card>
+           <Collapsible className='ticker-collasp'>
+           	<CollapsibleItem id="collapsible-header" className="white-text z-depth-6" header='Stocks' icon='trending_up'>
+               {this.renderTrackerList(TYPE.STOCK)}
+           	</CollapsibleItem>
+           	<CollapsibleItem id="collapsible-header" className="white-text z-depth-6" header='Crypto Currencies' icon='trending_up'>
+               {this.renderTrackerList(TYPE.CRYPTO)}
+             </CollapsibleItem>
+           </Collapsible>
+         </ul>
+      </div>
     );
   }
 }
