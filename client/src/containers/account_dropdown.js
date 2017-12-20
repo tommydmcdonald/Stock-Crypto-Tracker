@@ -27,7 +27,7 @@ class AccountDropDown extends Component {
                 <Col s={2}><Icon>keyboard_arrow_down</Icon></Col>
             </Row>
           </NavItem>
-        }data-beloworigin="true">
+        } data-beloworigin="true">
         	<NavItem>Settings</NavItem>
         	<NavItem>FAQ</NavItem>
           <NavItem>Invite peeps</NavItem>

@@ -3,6 +3,7 @@
 }
 #header {
   background-color: #5FCA9D;
+  z-index: 1;
 }
 
 .mainApp {
@@ -98,4 +99,7 @@
 
 .price-text {
    padding-right: 1.5em !important;
+}
+
+nav div div {
 }
