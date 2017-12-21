@@ -7,6 +7,9 @@
   background-color: #5FCA9D;
   z-index: 1;
 }
+#AccountDropDown-NavItem {
+  font-weight: 300;
+}
 
 #AccountDropDown-row {
   font-weight: 300;
@@ -20,6 +23,10 @@
 
 #dropdown {
   z-index:1000;
+}
+
+.material-icons {
+  font-size: 60px;
 }
 
 .search-button {
