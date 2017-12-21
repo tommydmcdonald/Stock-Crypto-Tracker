@@ -27,7 +27,7 @@ class Header extends Component {
                      <Link
                         to={this.props.auth ? '/' : '/landing'}
                         className="brand-logo" id="logo">
-                        StockCrypto Tracker
+                        cryptofluence
                      </Link>
                   </a>
                   <ul id="nav-mobile" class="right hide-on-med-and-down">

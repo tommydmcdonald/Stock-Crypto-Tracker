@@ -1,5 +1,6 @@
 #logo {
-   padding-left: 15px;
+   padding-left: 20px;
+   font-size: 25px;
 }
 #header {
   background-color: #5FCA9D;
@@ -9,7 +10,6 @@
 .mainApp {
   background-color: #212B33;
 }
-
 
 #dropdown {
   z-index:1000;
