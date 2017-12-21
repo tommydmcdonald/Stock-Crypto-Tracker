@@ -20,8 +20,8 @@ class Chart extends Component {
 
    renderLabel() {
       let priceText = '';
-      if(this.props.graphTicker) {
-         const { name, type } = this.props.graphTicker;
+      if (this.props.selectedChart) {
+         const { name, type } = this.props.selectedChart;
          if (this.props.priceList && this.props.priceList[type] && this.props.priceList[type][name] ) {
             const { quantity } = _.find( this.props.tickerList, { name, type} );
             const price = Number(this.props.priceList[type][name]).toFixed(2);
@@ -32,7 +32,7 @@ class Chart extends Component {
       return (
          <Row>
             <div>
-               <Col s={3}><h4 className="white-text">{this.props.graphTicker.name}</h4></Col>
+               <Col s={3}><h4 className="white-text">{this.props.selectedChart.name}</h4></Col>
                <Col s={4}><p className="white-text">price: ${priceText.price} <br />value owned: ${priceText.amtOwned}</p></Col>
             </div>
          </Row>
@@ -44,10 +44,8 @@ class Chart extends Component {
       let prices = [0];
       let times = [0];
 
-      console.log('render chart', this.props);
-
-      if (this.props.graphTicker.name && this.props.chartData) {
-         const { name, type } = this.props.graphTicker;
+      if (this.props.selectedChart.name && this.props.chartData) {
+         const { name, type } = this.props.selectedChart;
          const { chartData } = this.props;
 
 
@@ -93,8 +91,8 @@ class Chart extends Component {
 
 }
 
-function mapStateToProps({ chartData, tickerList, priceList }){
-   return { chartData, tickerList, priceList };
+function mapStateToProps({ chartData, tickerList, priceList, selectedChart }){
+   return { chartData, tickerList, priceList, selectedChart };
 }
 
 function mapDispatchToProps(dispatch) {

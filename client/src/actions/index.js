@@ -1,7 +1,8 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import _ from 'lodash';
-import { FETCH_USER, ADD_TICKER, ADD_TICKER_PRICE, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE, LOAD_TICKER_PRICES, FETCH_CHART_DATA, LOAD_CHART_DATA, UPDATE_TICKER_QUANTITY } from './types';
+import { FETCH_USER, ADD_TICKER, ADD_TICKER_PRICE, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE,
+         LOAD_TICKER_PRICES, FETCH_CHART_DATA, LOAD_CHART_DATA, UPDATE_TICKER_QUANTITY, SELECT_CHART } from './types';
 
 export const addTicker = (newTicker) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    //initial ticker add before checking if it is valid
@@ -24,7 +25,7 @@ export const addTicker = (newTicker) => async dispatch => { //adds new ticker to
    }
 }
 
-export const removeTicker = ( name, type ) => dispatch => {
+export const removeTicker = ( {name, type} ) => dispatch => {
    axios.delete(`/api/tickers/${type}/${name}`);
    dispatch({type: REMOVE_TICKER, payload: { type, name } });
 }
@@ -59,3 +60,8 @@ export const updateQuantity = ( name, type, quantity ) => async dispatch => { //
    axios.post(`/api/tickers/${type}/${name}/${quantity}`);
    dispatch({ type: UPDATE_TICKER_QUANTITY, payload: { name, type, quantity } });
 }
+
+export const selectChart = ({ name, type }) => dispatch => {
+   dispatch({type: SELECT_CHART, payload: { name, type } });
+}
+//finish action
