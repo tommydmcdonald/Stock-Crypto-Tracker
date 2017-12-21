@@ -19,15 +19,14 @@ class AccountDropDown extends Component {
   render() {
     return (
         <Dropdown trigger={
-            <a>
-                <Row>
-                   <Col s={2}><Icon large>account_circle</Icon></Col>
-                   <Col s={8}>{this.renderName()}</Col>
-                   <Col s={2}><Icon>keyboard_arrow_down</Icon></Col>
-                </Row>
-              </a>
-          }
-          data-beloworigin="true">
+          <a data-beloworigin="true" data-hover="true">
+            <Row id="AccountDropDown-row">
+               <Icon left>account_circle</Icon>
+               {this.renderName()}
+               <Icon right>keyboard_arrow_down</Icon>
+            </Row>
+          </a>
+          }>
         	<NavItem>Settings</NavItem>
         	<NavItem>FAQ</NavItem>
           <NavItem>Invite peeps</NavItem>
