@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Collapsible, CollapsibleItem, Card, CardTitle, Collection, CollectionItem } from 'react-materialize';
 
 //from list
-import StockCryptoTracker from '../components/stockcrypto_tracker';
+import Tracker from '../components/Tracker';
 import PortfolioValue from '../components/PortfolioValue';
 import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartData, updateQuantity } from '../actions/index';
 import { TYPE } from '../actions/types';
@@ -67,9 +67,10 @@ class SideBarNav extends Component {
 
        return (
           <li class="collection-item">
-            <StockCryptoTracker key={key} name={name} type={type} currentPrice={currentPrice} quantity={quantity}
+            <Tracker key={key} name={name} type={type} currentPrice={currentPrice} quantity={quantity}
                updateQuantity={this.props.updateQuantity} chartData={chartData}
-               onClick={this.props.removeTicker} updateGraphTicker={this.props.updateGraphTicker}/>
+               onClick={this.props.removeTicker} updateGraphTicker={this.props.updateGraphTicker}
+            />
          </li>);
      }
 
