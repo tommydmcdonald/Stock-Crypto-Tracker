@@ -14,7 +14,7 @@ class Header extends Component {
          case false:
             return <Col><a href="/auth/google"><img src={require('../images/googlelogin.png')} /></a></Col>
          default:
-            return <Col><a href="/api/logout">Logout</a></Col>;
+            return <Col><AccountDropDown /></Col>;
       }
    }
 
@@ -27,12 +27,11 @@ class Header extends Component {
                      <Link
                         to={this.props.auth ? '/' : '/landing'}
                         className="brand-logo" id="logo">
-                        StockCrypto Tracker
+                        cryptofluence
                      </Link>
                   </a>
                   <ul id="nav-mobile" class="right hide-on-med-and-down">
-                     <li>{this.renderContent()}</li>
-                     <li><AccountDropDown /></li>
+                    <li>{this.renderContent()}</li>
                   </ul>
                </div>
             </nav>

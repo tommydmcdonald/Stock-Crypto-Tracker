@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Navbar, NavItem, Icon, Dropdown, Button, Row, Col, Section } from 'react-materialize';
 
+
 class AccountDropDown extends Component {
   constructor(props) {
     super(props);
@@ -18,24 +19,23 @@ class AccountDropDown extends Component {
 
   render() {
     return (
-      <container>
-        <Dropdown options={{belowOrigin: true}} trigger={
-             <NavItem>
-                <Row className='center'>
-                   <Col s={2}><Icon medium>account_circle</Icon></Col>
-                   <Col s={8}>{this.renderName()}</Col>
-                   <Col s={2}><Icon>keyboard_arrow_down</Icon></Col>
-                </Row>
-             </NavItem>
-          }
-          data-beloworigin="true">
-        	<NavItem>Settings</NavItem>
-        	<NavItem>FAQ</NavItem>
-          <NavItem>Invite peeps</NavItem>
-        	<NavItem divider />
-        	<NavItem>Sign out</NavItem>
+        <Dropdown trigger={
+          <a data-beloworigin="true" data-hover="true">
+            <Row id="AccountDropDown-row">
+               <Icon medium left>account_circle</Icon>
+               {this.renderName()}
+               <Icon medium right>keyboard_arrow_down</Icon>
+            </Row>
+          </a>
+          }>
+          <div id="AccountDropDown-NavItem">
+          	<NavItem>Settings</NavItem>
+          	<NavItem>FAQ</NavItem>
+            <NavItem>Invite peeps</NavItem>
+          	<NavItem divider />
+          	<NavItem href="/api/logout">Sign out</NavItem>
+          </div>
         </Dropdown>
-      </container>
     );
   }
 }

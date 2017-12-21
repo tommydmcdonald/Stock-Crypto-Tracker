@@ -1,18 +1,32 @@
 #logo {
-   padding-left: 15px;
+   padding-left: 20px;
+   font-size: 25px;
+   font-weight: 300;
 }
 #header {
   background-color: #5FCA9D;
   z-index: 1;
+}
+#AccountDropDown-NavItem {
+  font-weight: 300;
+}
+
+#AccountDropDown-row {
+  font-weight: 300;
+  font-size: 16px;
+  padding-right: 20px;
 }
 
 .mainApp {
   background-color: #212B33;
 }
 
-
 #dropdown {
   z-index:1000;
+}
+
+.material-icons {
+  font-size: 60px;
 }
 
 .search-button {
