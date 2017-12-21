@@ -19,25 +19,27 @@ class Header extends Component {
    }
 
    render() {
-      //clean up code / indenting
       return (
          <div class="navbar-fixed">
-         <nav id='header'>
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo"><Link
-        to={this.props.auth ? '/' : '/landing'}
-        className="brand-logo" id="logo">
-        StockCrypto Tracker
-     </Link></a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li>{this.renderContent()}</li>
-        <li><AccountDropDown /></li>
-      </ul>
-    </div>
-  </nav>
-</div>
+            <nav id='header'>
+               <div class="nav-wrapper">
+                  <a href="#" class="brand-logo">
+                     <Link
+                        to={this.props.auth ? '/' : '/landing'}
+                        className="brand-logo" id="logo">
+                        StockCrypto Tracker
+                     </Link>
+                  </a>
+                  <ul id="nav-mobile" class="right hide-on-med-and-down">
+                     <li>{this.renderContent()}</li>
+                     <li><AccountDropDown /></li>
+                  </ul>
+               </div>
+            </nav>
+         </div>
       );
    }
+
 }
 
 function mapStateToProps({ auth }) {
