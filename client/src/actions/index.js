@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { FETCH_USER, ADD_TICKER, ADD_TICKER_PRICE, REMOVE_TICKER, LOAD_TICKERS, FETCH_TICKER_PRICE,
          LOAD_TICKER_PRICES, FETCH_CHART_DATA, LOAD_CHART_DATA, UPDATE_TICKER_QUANTITY, SELECT_CHART } from './types';
 
-export const addTicker = (newTicker) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
+export const addTicker = (newTicker, tickerListSize) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    //initial ticker add before checking if it is valid
    const { name, type } = newTicker;
    newTicker.quantity = 1;
@@ -19,6 +19,9 @@ export const addTicker = (newTicker) => async dispatch => { //adds new ticker to
    }
    else { //add ticker price and load chart data
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, price } });
+      if (tickerListSize == 0) { //if nothing in tickerList, nothing will be graphed. Graph newly added ticker, since it is the only ticker
+         dispatch({ type: SELECT_CHART, payload: {name, type} });
+      }
       let resChart = await axios.get(`/api/stock_charts/${type}/${name}`);
       resChart = { name, type, prices: resChart.data.prices, times: resChart.data.times }
       dispatch({ type: FETCH_CHART_DATA, payload: resChart})

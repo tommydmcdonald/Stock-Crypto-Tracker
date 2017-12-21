@@ -47,7 +47,7 @@ class SearchBar extends Component {
       const newTicker = { name: this.state.ticker.toUpperCase(), type: this.state.type };
 
       if ( newTicker.name !== '' && !_.some(this.props.tickerList, newTicker) ) { //only add if not empty string and ticker doesn't exist in redux tickerList
-         this.props.addTicker(newTicker);
+         this.props.addTicker(newTicker, this.props.tickerList.length);
       } //
 
       this.setState( { ticker: '', type: ''} ); //sets default state
