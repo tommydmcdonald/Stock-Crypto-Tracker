@@ -7,7 +7,7 @@ import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import reduxThunk from 'redux-thunk';
 
 import reducers from './reducers';
-import App from './components/App';
+import App from './containers/App';
 
 const middlewares = [promise, reduxThunk];
 const middlewareEnhancer = applyMiddleware(...middlewares);

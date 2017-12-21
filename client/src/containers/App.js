@@ -4,14 +4,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser } from '../actions';
 import * as actions from '../actions';
-import SideBarNav from '../containers/sidebar_nav';
 
 import '../style/style.css';
 // import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
 
-import Home from './Home';
-import Landing from './Landing'
-import Login from './Login';
+import Home from '../components/Home';
+import Landing from '../components/Landing'
 import Header from './Header';
 
 class App extends Component {
@@ -26,7 +24,6 @@ class App extends Component {
                <div>
                   <Header />
                   <Route exact path={"/"} component={this.props.auth ? Home : Landing} />
-                  <Route exact path="/login" component={Login} />
                   <Route path="/landing" component={Landing} />
                </div>
             </BrowserRouter>

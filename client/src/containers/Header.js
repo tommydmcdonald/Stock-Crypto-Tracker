@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Col, Row } from 'react-materialize';
 import { Navbar, NavItem, Icon, Dropdown, Button } from 'react-materialize';
 
-import AccountDropDown from '../containers/account_dropdown';
+import AccountDropDown from '../containers/AccountDropDown';
 
 class Header extends Component {
    renderContent() {

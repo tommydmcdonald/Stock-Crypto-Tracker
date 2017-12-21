@@ -17,7 +17,7 @@ import { PieChart, Sector, Pie, Cell, ResponsiveContainer, Legend, Tooltip } fro
 // http://recharts.org/#/en-US/guide/getting-started
 // For dynamic pie chart documentation
 
-class SideBarNav extends Component {
+class SideNav extends Component {
   constructor(props) {
      super(props);
 
@@ -179,4 +179,4 @@ function mapDispatchToProps(dispatch) {
    return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker, updateQuantity }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SideBarNav);
+export default connect(mapStateToProps, mapDispatchToProps)(SideNav);

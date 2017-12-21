@@ -20,14 +20,15 @@ class AccountDropDown extends Component {
     return (
       <container>
         <Dropdown options={{belowOrigin: true}} trigger={
-          <NavItem>
-            <Row className='center'>
-                <Col s={2}><Icon medium>account_circle</Icon></Col>
-                <Col s={8}>{this.renderName()}</Col>
-                <Col s={2}><Icon>keyboard_arrow_down</Icon></Col>
-            </Row>
-          </NavItem>
-        } data-beloworigin="true">
+             <NavItem>
+                <Row className='center'>
+                   <Col s={2}><Icon medium>account_circle</Icon></Col>
+                   <Col s={8}>{this.renderName()}</Col>
+                   <Col s={2}><Icon>keyboard_arrow_down</Icon></Col>
+                </Row>
+             </NavItem>
+          }
+          data-beloworigin="true">
         	<NavItem>Settings</NavItem>
         	<NavItem>FAQ</NavItem>
           <NavItem>Invite peeps</NavItem>
