@@ -4,62 +4,99 @@ const _ = require('lodash');
 const delay = require('delay');
 const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
+const Chart = mongoose.model('chart');
 const { replaceKeys } = require('./index');
-const { BASE_URL, TYPE } = require('../config/keys');
+const { TYPE } = require('../config/keys');
 
-const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
+const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
+   console.log('aTtT');
    const { name, type } = newTicker;
 
-   const FUNCTION_TYPE = (type == TYPE.STOCK) ? 'TIME_SERIES_INTRADAY&interval=1min&' : 'DIGITAL_CURRENCY_INTRADAY&market=USD&'
-   const URL = `${BASE_URL}${FUNCTION_TYPE}symbol=${name}`;
+   if (type == TYPE.CRYPTO) {
+      const BASE_URL = 'https://min-api.cryptocompare.com/data/';
+      console.log('type = ', type, 'name = ', name);
+      const PRICE_URL = `${BASE_URL}price?fsym=${name}&tsyms=USD&e=Coinbase`;
+      console.log('PRICE_URL = ', PRICE_URL);
 
-   const { data } = await axios.get(URL);
+      const res = await axios.get(PRICE_URL);//.data.USD;
+      const price = res.data.USD;
 
+      console.log('price = ', res.data.USD);
+      console.log('price2');
 
-   if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
-      return false;
-   }
-   else { //valid ticker
-      const dataFormatted = replaceKeys(data);
+      if (res.data.Response == 'Error') {
+         return false;
+      }
 
-      const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: dataFormatted } });
-      await addTicker.save();
+      console.log('after error check');
+
+      try {
+         const addTicker = new Ticker({ ...newTicker, data: price })
+         await addTicker.save();
+      } catch(err) {
+         console.log('caught err');
+         console.log(err)
+      }
+
+      console.log('after save');
       return true;
    }
 }
 
-const findCurrentPrice = (ticker) => {
-   const { name, type } = ticker;
-   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
-   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
-   const timeSeries = ticker.data.data[timeSeriesType];
-   const seriesKey = Object.keys(timeSeries).reverse()[0];
-   const currentPrice = timeSeries[seriesKey][priceInterval];
+   const { name, type } = newTicker;
 
-   return currentPrice;
-}
-
-const findChartData = async (name, type) => {
-   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
-   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
-
-   const queryTicker = await Ticker.findOne( { name, type } );
-   const timeSeries = queryTicker.data.data[timeSeriesType];
-
-   const chartData = { prices: [], times: [] };
-
-   for (const key in timeSeries) {
-      const price = timeSeries[key][priceInterval];
-      const time = key.slice(11,16);
-
-      chartData.prices.push(price);
-      chartData.times.push(time);
+   const CRYPTO_URLS = {
+      hour: `${BASE_URL}histominute?fsym=${name}&tsym=USD&limit=60&aggregate=1&e=Coinbase`
    }
 
-   return chartData;
+   if (type == TYPE.CRYPTO) {
+      const hourRes = await axios.get(CRYPTO_URLS.hour).data;
+
+      if (hourRes.Response == 'Error') {
+         return false;
+      }
+
+      const addHourChart = new Chart({ ...newTicker, frequency: 'hour', data: hourRes.Data});
+      await addHourChart.save();
+      return true;
+   }
+
 }
+
+// const findCurrentPrice = (ticker) => {
+//    const { name, type } = ticker;
+//    const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+//    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+//
+//    const timeSeries = ticker.data.data[timeSeriesType];
+//    const seriesKey = Object.keys(timeSeries).reverse()[0];
+//    const currentPrice = timeSeries[seriesKey][priceInterval];
+//
+//    return currentPrice;
+// }
+
+// const findChartData = async (name, type) => {
+//    const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
+//    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
+//
+//    const queryTicker = await Ticker.findOne( { name, type } );
+//    const timeSeries = queryTicker.data.data[timeSeriesType];
+//
+//    const chartData = { prices: [], times: [] };
+//
+//    for (const key in timeSeries) {
+//       const price = timeSeries[key][priceInterval];
+//       const time = key.slice(11,16);
+//
+//       chartData.prices.push(price);
+//       chartData.times.push(time);
+//    }
+//
+//    return chartData;
+// }
 
 module.exports = app => {
 
@@ -73,20 +110,27 @@ module.exports = app => {
          //check if ticker is in Ticker
          const queryTicker = await Ticker.findOne( { name, type });
 
-         if (!queryTicker) {  //if ticker in Ticker db, add it
-            console.log('!queryTicker');
+         if (!queryTicker) {  //if ticker not in Ticker db, add it
+            console.log(name + 'not found');
             const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
+               return;
             }
          }
          //if exists in db or once added, send price back
-         const queryTic = await Ticker.findOne( {'name': newTicker.name, 'type': newTicker.type } );
-         const price = findCurrentPrice(queryTic);
-         res.send( { price } );
+         console.log('newTicker = ', newTicker);
+         const queryTic = await Ticker.findOne( { name, type } );
 
          //Adding ticker to User's tickerList
          await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
+         console.log('after adding to set')
+         console.log('type = ', type, 'TYPE.CRYPTO = ', TYPE.CRYPTO);
+         if (type == TYPE.CRYPTO) {
+            console.log('in type == TYPE.CRYTPO');
+            console.log(queryTic);
+            res.send( { price: queryTic.data } )
+         }
 
       } catch(err) {
          res.send(err);
@@ -116,7 +160,7 @@ module.exports = app => {
             const { type, name } = tickerList[i];
             const ticker = await Ticker.findOne( { name, type });
 
-            currentPriceList[type][name] = findCurrentPrice(ticker);
+            currentPriceList[type][name] = ticker.data;
          }
          res.send(currentPriceList);
 
@@ -142,7 +186,8 @@ module.exports = app => {
 
       for (let i = 0; i < tickerList.length; i++) {
          const { name, type} = tickerList[i];
-         const chartData = await findChartData(name, type);
+         // const chartData = await findChartData(name, type);
+         const chartData = { prices: [], times: [] };
          allChartData[type][name] = chartData;
       }
 
@@ -153,7 +198,8 @@ module.exports = app => {
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
-      const chartData = await findChartData(name, type);
+      // const chartData = await findChartData(name, type);
+      const chartData = { prices: [], times: [] };
       res.send(chartData);
    });
 

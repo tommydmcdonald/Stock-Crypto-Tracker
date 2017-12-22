@@ -15,7 +15,7 @@ class Chart extends Component {
    }
 
    componentDidMount() {
-      this.props.loadChartData();
+      // this.props.loadChartData();
    }
 
    renderLabel() {

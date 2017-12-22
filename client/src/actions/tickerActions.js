@@ -11,6 +11,7 @@ export const addTicker = (newTicker, tickerListSize) => async dispatch => { //ad
 
    const res = await axios.post('/api/tickers', newTicker);
    const { price } = res.data;
+   console.log('res.data = ', res.data);
 
    if ( res.data.hasOwnProperty('error') ) { //if ticker is not valid for API
       dispatch({type: REMOVE_TICKER, payload: newTicker });
@@ -18,11 +19,12 @@ export const addTicker = (newTicker, tickerListSize) => async dispatch => { //ad
    else { //add ticker price and load chart data
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, price } });
       if (tickerListSize == 0) { //if nothing in tickerList, nothing will be graphed. Graph newly added ticker, since it is the only ticker
-         dispatch({ type: SELECT_CHART, payload: {name, type} });
+         // uncomment later
+         // dispatch({ type: SELECT_CHART, payload: {name, type} });
       }
       let resChart = await axios.get(`/api/stock_charts/${type}/${name}`);
       resChart = { name, type, prices: resChart.data.prices, times: resChart.data.times }
-      dispatch({ type: FETCH_CHART_DATA, payload: resChart})
+      // dispatch({ type: FETCH_CHART_DATA, payload: resChart})
    }
 }
 

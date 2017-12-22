@@ -9,4 +9,6 @@ const chartSchema = new Schema({
    data: { frequency: String, data: Schema.Types.Mixed }
 });
 
+console.log('chart schema bitch');
+
 mongoose.model('chart', chartSchema);
