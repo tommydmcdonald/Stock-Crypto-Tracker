@@ -4,7 +4,7 @@ const _ = require('lodash');
 const delay = require('delay');
 const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
-//const Chart = mongoose.model('chart');
+const Chart = mongoose.model('chart');
 const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
@@ -30,6 +30,25 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
       await addTicker.save();
       return true;
    }
+}
+
+const addChartToCharts = async (newChart = {name: '', type: ''}) => {
+
+  const { name, type } = newTicker;
+  const URL = `${BASE_URL}/stock/${name}/chart/1m`;
+  const { data } = await axios.get(URL);
+  console.log('Chart data pls: ', data);
+
+  if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+     return false;
+  }
+  else { //valid ticker
+     const dataFormatted = replaceKeys(data);
+
+     const addChart = new Chart ({ ...newChart, data: { data: data } });
+     await addChart.save();
+     return true;
+  }
 }
 
 
@@ -64,7 +83,6 @@ const findChartData = async (name, type) => {
 module.exports = app => {
 
    app.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
-
       try {
          const newTicker = req.body;
          const { name, type } = newTicker;
@@ -94,8 +112,7 @@ module.exports = app => {
 
    });
 
-   app.post('api/charts', async (req, res) => {
-
+   app.post('api/charts/', async (req, res) => {
     try {
       const newChart = req.body;
       const { name, type } = newChart;
@@ -105,24 +122,25 @@ module.exports = app => {
 
       if (!queryTicker) {  //if ticker in Ticker db, add it
          console.log('!queryTicker');
-         const tickerAddSuccess = await addTickerToTickers(newChart); //if not found, add to Ticker collection
-         if (!tickerAddSuccess) { //if ticker is not valid API ticker
-            res.send( { error: 'Ticker could not be added.'} )
+         const chartAddSuccess = await addChartToCharts(newChart); //if not found, add to Ticker collection
+         if (!chartAddSuccess) { //if ticker is not valid API ticker
+            res.send( { error: 'Chart could not be added.'} )
          }
       }
 
       //if exists in db or once added, send price back
-      const queryTic = await Ticker.findOne( {'name': newTicker.name, 'type': newTicker.type } );
+      const queryTic = await Chart.findOne( {'name': newChart.name, 'type': newChart.type } );
       const price = findCurrentPrice(queryTic);
       res.send( { price } );
 
-      //Adding ticker to User's tickerList
-      await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
+      //Adding ticker to User's chartList
+      await User.findByIdAndUpdate( _id, { $addToSet: { chartList: newChart } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
 
     } catch(err) {
        res.send(err);
       }
    });
+
 
    app.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update ticker quantity for a user
       const { type, name, quantity } = req.params;
