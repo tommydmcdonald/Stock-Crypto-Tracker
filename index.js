@@ -1,12 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { mongoURI } = require('./config/mongoURI');
 mongoose.Promise = require('bluebird');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser  = require("body-parser");
 const { updateTickerData } = require('./functions');
 const keys = require('./config/keys');
-const { mongoURI } = require('./config/mongoURI');
 
 require('./services/passport');
 

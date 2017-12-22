@@ -4,16 +4,15 @@ const _ = require('lodash');
 const delay = require('delay');
 const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
+//const Chart = mongoose.model('chart');
 const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
-//
 const ONE_DAY = '1d';
 const ONE_MONTH = '1m';
 const THREE_MONTHS = '3m';
 const SIX_MONTHS = '6m';
 const ONE_YEAR = '1y';
-
 
 const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
@@ -27,31 +26,12 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
    else { //valid ticker
       const dataFormatted = replaceKeys(data);
 
-      const addTicker = new Ticker ({ ...newTicker, data: { frequency: ONE_DAY, data: dataFormatted } });
+      const addTicker = new Ticker ({ ...newTicker, data: { data: dataFormatted } });
       await addTicker.save();
       return true;
    }
 }
 
-const addStockTickerChartDataToDB = async (newTicker = {name: '', type: ''}) => {
-
-  const { name, type } = newTicker;
-  const URL =`${BASE_URL}/stock/${name}/chart/${ONE_DAY}`;
-  const { data } = await axios.get(URL);
-
-  if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
-     return false;
-  }
-  else { //valid ticker
-     const dataFormatted = replaceKeys(data);
-
-     const addTicker = new Chart ({ ...newTicker, data: { frequency: ONE_DAY, data: dataFormatted } });
-     await addTicker.save();
-     return true;
-  }
-
-
-}
 
 const findCurrentPrice = (ticker) => {
 
@@ -112,6 +92,36 @@ module.exports = app => {
          res.send(err);
       }
 
+   });
+
+   app.post('api/charts', async (req, res) => {
+
+    try {
+      const newChart = req.body;
+      const { name, type } = newChart;
+      const { _id } = req.user;
+
+      const queryChart = await Chart.findOne( { name, type });
+
+      if (!queryTicker) {  //if ticker in Ticker db, add it
+         console.log('!queryTicker');
+         const tickerAddSuccess = await addTickerToTickers(newChart); //if not found, add to Ticker collection
+         if (!tickerAddSuccess) { //if ticker is not valid API ticker
+            res.send( { error: 'Ticker could not be added.'} )
+         }
+      }
+
+      //if exists in db or once added, send price back
+      const queryTic = await Ticker.findOne( {'name': newTicker.name, 'type': newTicker.type } );
+      const price = findCurrentPrice(queryTic);
+      res.send( { price } );
+
+      //Adding ticker to User's tickerList
+      await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
+
+    } catch(err) {
+       res.send(err);
+      }
    });
 
    app.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update ticker quantity for a user
