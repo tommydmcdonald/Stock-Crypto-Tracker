@@ -4,7 +4,7 @@ mongoose.Promise = require('bluebird');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser  = require("body-parser");
-// const { updateTickerData } = require('./functions');
+const { updateTickerData } = require('./functions');
 const keys = require('./config/keys');
 const { mongoURI } = require('./config/mongoURI');
 
@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 require('./routes/authRoutes')(app);
 require('./routes/stockRoutes')(app);
 
-// updateTickerData(30 * 1000);
+updateTickerData(11 * 1000);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);

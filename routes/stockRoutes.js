@@ -6,7 +6,7 @@ const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
 const Chart = mongoose.model('chart');
 const { replaceKeys } = require('./index');
-const { TYPE } = require('../config/keys');
+const { BASE_URL, TYPE } = require('../config/keys');
 
 const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
@@ -14,9 +14,15 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
    const { name, type } = newTicker;
 
    if (type == TYPE.CRYPTO) {
-      const BASE_URL = 'https://min-api.cryptocompare.com/data/';
-      console.log('type = ', type, 'name = ', name);
-      const PRICE_URL = `${BASE_URL}price?fsym=${name}&tsyms=USD&e=Coinbase`;
+      const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
+      let PRICE_URL;
+      if ( _.includes(coinbaseTickers, type) ) {
+         PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD&e=Coinbase`;
+      }
+      else {
+         PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD`;
+      }
+
       console.log('PRICE_URL = ', PRICE_URL);
 
       const res = await axios.get(PRICE_URL);//.data.USD;
