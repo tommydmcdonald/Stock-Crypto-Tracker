@@ -6,10 +6,11 @@ const passport = require('passport');
 const bodyParser  = require("body-parser");
 const { updateTickerData } = require('./functions');
 const keys = require('./config/keys');
+const { mongoURI } = require('./config/mongoURI');
 
 require('./services/passport');
 
-mongoose.connect(keys.mongoURI);
+mongoose.connect(mongoURI);
 
 const app = express();
 

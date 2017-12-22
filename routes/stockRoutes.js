@@ -18,12 +18,8 @@ const ONE_YEAR = '1y';
 const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
    const { name, type } = newTicker;
-
-   //const FUNCTION_TYPE = (type == TYPE.STOCK) ? 'TIME_SERIES_INTRADAY&interval=1min&' : 'DIGITAL_CURRENCY_INTRADAY&market=USD&'
-   const URL = `${BASE_URL}/stock/${name}/${ONE_DAY}`;
-
+   const URL = `${BASE_URL}/stock/${name}/quote`;
    const { data } = await axios.get(URL);
-   console.log('data form api: ', data);
 
    if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
       return false;
@@ -37,15 +33,30 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
    }
 }
 
+const addStockTickerChartDataToDB = async (newTicker = {name: '', type: ''}) => {
+
+  const { name, type } = newTicker;
+  const URL =`${BASE_URL}/stock/${name}/chart/${ONE_DAY}`;
+  const { data } = await axios.get(URL);
+
+  if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+     return false;
+  }
+  else { //valid ticker
+     const dataFormatted = replaceKeys(data);
+
+     const addTicker = new Chart ({ ...newTicker, data: { frequency: ONE_DAY, data: dataFormatted } });
+     await addTicker.save();
+     return true;
+  }
+
+
+}
 
 const findCurrentPrice = (ticker) => {
-   const { name, type } = ticker;
-   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
-   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
 
-   const timeSeries = ticker.data.data[timeSeriesType];
-   const seriesKey = Object.keys(timeSeries).reverse()[0];
-   const currentPrice = timeSeries[seriesKey][priceInterval];
+   const { name, type } = ticker;
+   const currentPrice = ticker.data['data']['latestPrice'];
 
    return currentPrice;
 }
