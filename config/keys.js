@@ -5,6 +5,6 @@ module.exports = {
     googleClientSecret: 'Xm1pPnl3iHgNGoAY5aRv_TV4',
     mongoURI: 'mongodb://test:test@ds033186.mlab.com:33186/stock-crypto-tracker',
     cookieKey: 'hsdrtyedsrvewredfgbsdtrwsdfgsdewki',
-    BASE_URL: `https://www.alphavantage.co/query?apikey=${API_KEY}&function=`,
+    BASE_URL: `https://api.iextrading.com/1.0`,
     TYPE: {STOCK: 'STOCK', CRYPTO: 'CRYPTO'}
  };

@@ -7,15 +7,23 @@ const Ticker = mongoose.model('ticker');
 const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
+//
+const ONE_DAY = '1d';
+const ONE_MONTH = '1m';
+const THREE_MONTHS = '3m';
+const SIX_MONTHS = '6m';
+const ONE_YEAR = '1y';
+
+
 const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
    const { name, type } = newTicker;
 
-   const FUNCTION_TYPE = (type == TYPE.STOCK) ? 'TIME_SERIES_INTRADAY&interval=1min&' : 'DIGITAL_CURRENCY_INTRADAY&market=USD&'
-   const URL = `${BASE_URL}${FUNCTION_TYPE}symbol=${name}`;
+   //const FUNCTION_TYPE = (type == TYPE.STOCK) ? 'TIME_SERIES_INTRADAY&interval=1min&' : 'DIGITAL_CURRENCY_INTRADAY&market=USD&'
+   const URL = `${BASE_URL}/stock/${name}/${ONE_DAY}`;
 
    const { data } = await axios.get(URL);
-
+   console.log('data form api: ', data);
 
    if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
       return false;
@@ -23,11 +31,12 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
    else { //valid ticker
       const dataFormatted = replaceKeys(data);
 
-      const addTicker = new Ticker ({ ...newTicker, data: { frequency: 'intraday', data: dataFormatted } });
+      const addTicker = new Ticker ({ ...newTicker, data: { frequency: ONE_DAY, data: dataFormatted } });
       await addTicker.save();
       return true;
    }
 }
+
 
 const findCurrentPrice = (ticker) => {
    const { name, type } = ticker;
