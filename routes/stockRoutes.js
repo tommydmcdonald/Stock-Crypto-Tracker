@@ -24,8 +24,6 @@ const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //retu
       return false;
    }
    else { //valid ticker
-      addChartToCharts(newTicker);    // puts chart data into db as well if valid ticker
-
       const dataFormatted = replaceKeys(data);
 
       const addTicker = new Ticker ({ ...newTicker, data: { data: dataFormatted } });
@@ -62,20 +60,22 @@ const findCurrentPrice = (ticker) => {
 }
 
 const findChartData = async (name, type) => {
-   const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
-   const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
 
-   const queryTicker = await Ticker.findOne( { name, type } );
-   const timeSeries = queryTicker.data.data[timeSeriesType];
+   const queryChart = await Chart.findOne( { name, type } );
+   const timeSeries = queryChart.data.data;
 
    const chartData = { prices: [], times: [] };
 
    for (const key in timeSeries) {
-      const price = timeSeries[key][priceInterval];
-      const time = key.slice(11,16);
 
-      chartData.prices.push(price);
-      chartData.times.push(time);
+      const price = timeSeries[key]['average'];
+      const time = timeSeries[key]['label'];
+      const minute = timeSeries[key]['minute'];
+
+      if(price != 0 && minute[4]%5 == 0) {
+        chartData.prices.push(price);
+        chartData.times.push(time);
+      }
    }
 
    return chartData;
@@ -95,9 +95,15 @@ module.exports = app => {
          if (!queryTicker) {  //if ticker in Ticker db, add it
             console.log('!queryTicker');
             const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
+            const chartAddSuccess = await addChartToCharts(newTicker);    // puts chart data into db as well if valid ticker
+
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
             }
+            if (!chartAddSuccess) { //if ticker is not valid API ticker
+               res.send( { error: 'Ticker could not be added.'} )
+            }
+
          }
          //if exists in db or once added, send price back
          const queryTic = await Ticker.findOne( {'name': newTicker.name, 'type': newTicker.type } );
@@ -112,37 +118,6 @@ module.exports = app => {
       }
 
    });
-
-   // app.post('api/charts/', async (req, res) => {
-   //  try {
-   //    const newChart = req.body;
-   //    const { name, type } = newChart;
-   //    const { _id } = req.user;
-   //
-   //    const queryChart = await Chart.findOne( { name, type });
-   //
-   //    if (!queryChart) {  //if ticker in Ticker db, add it
-   //       console.log('!queryChart');
-   //       const chartAddSuccess = await addChartToCharts(newChart); //if not found, add to Ticker collection
-   //       console.log('chartAddSuccess: ', chartAddSuccess);
-   //       if (!chartAddSuccess) { //if ticker is not valid API ticker
-   //          res.send( { error: 'Chart could not be added.'} )
-   //       }
-   //    }
-   //
-   //    //if exists in db or once added, send price back
-   //    const queryTic = await Chart.findOne( {'name': newChart.name, 'type': newChart.type } );
-   //    const price = findChartData(queryTic);
-   //    res.send( { price } );
-   //
-   //    //Adding ticker to User's chartList
-   //    await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newChart } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
-   //
-   //  } catch(err) {
-   //     res.send(err);
-   //    }
-   // });
-
 
    app.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update ticker quantity for a user
       const { type, name, quantity } = req.params;
