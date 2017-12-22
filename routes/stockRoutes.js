@@ -92,7 +92,7 @@ module.exports = app => {
          //check if ticker is in Ticker
          const queryTicker = await Ticker.findOne( { name, type });
 
-         if (!queryTicker) {  //if ticker in Ticker db, add it
+         if (!queryTicker) {  //if ticker is not in Ticker db, add it
             console.log('!queryTicker');
             const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
             const chartAddSuccess = await addChartToCharts(newTicker);    // puts chart data into db as well if valid ticker
@@ -103,6 +103,7 @@ module.exports = app => {
             if (!chartAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
             }
+
 
          }
          //if exists in db or once added, send price back
