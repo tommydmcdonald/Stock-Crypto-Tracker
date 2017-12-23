@@ -10,7 +10,6 @@ const { BASE_URL, TYPE } = require('../config/keys');
 
 const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
-   console.log('aTtT');
    const { name, type } = newTicker;
 
    if (type == TYPE.CRYPTO) {
@@ -23,86 +22,79 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
          PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD`;
       }
 
-      console.log('PRICE_URL = ', PRICE_URL);
-
       const res = await axios.get(PRICE_URL);//.data.USD;
       const price = res.data.USD;
-
-      console.log('price = ', res.data.USD);
-      console.log('price2');
 
       if (res.data.Response == 'Error') {
          return false;
       }
 
-      console.log('after error check');
-
       try {
          const addTicker = new Ticker({ ...newTicker, data: price })
          await addTicker.save();
       } catch(err) {
-         console.log('caught err');
          console.log(err)
       }
 
-      console.log('after save');
       return true;
    }
 }
 
 const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
+   try {
+      const { name, type } = newTicker;
 
-   const { name, type } = newTicker;
+      const NAME_TO = `fsym=${name}&tsym=USD`;
+      const HISTO = {
+         MIN: 'histominute?',
+         HOUR: 'histohour?',
+         DAY: 'histoday?'
+      };
 
-   const CRYPTO_URLS = {
-      hour: `${BASE_URL}histominute?fsym=${name}&tsym=USD&limit=60&aggregate=1&e=Coinbase`
-   }
+      const URL = BASE_URL.CRYPTO;
+      let cryptoURLs = [
+         /*hour*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=60&aggregate=1`,
+         /*day*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=1440&aggregate=1`,
+         /*week*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=2000&aggregate=5`,
+         /*month*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=720&aggregate=1`,
+         /*threeMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1080&aggregate=2`,
+         /*sixMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1080&aggregate=4`,
+         /*year*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1460&aggregate=6`
+      ];
 
-   if (type == TYPE.CRYPTO) {
-      const hourRes = await axios.get(CRYPTO_URLS.hour).data;
+      //if supported by coinbase, use coinbase as exchange
+      const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
 
-      if (hourRes.Response == 'Error') {
-         return false;
+      if ( _.includes(coinbaseTickers, name) ) {
+         cryptoURLs = cryptoURLs.filter( url => url += '&e=Coinbase');
       }
 
-      const addHourChart = new Chart({ ...newTicker, frequency: 'hour', data: hourRes.Data});
-      await addHourChart.save();
-      return true;
+      const requests = [];
+      cryptoURLs.map( url => {
+         requests.push(axios.get(url));
+      })
+
+      const resolved = await axios.all(requests);
+
+      if (type == TYPE.CRYPTO) {
+
+         const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
+
+         const chartData = {};
+         for (let i = 0; i < resolved.length; i++) {
+            const req = resolved[i];
+            const reqData = req.data.Data.map(obj => _.pick(obj, ['close', 'time']));
+            chartData[chartFreq[i]] = reqData;
+         }
+         const addChart = new Chart({ ...newTicker, data: chartData});
+         await addChart.save();
+      }
+   } catch(err) {
+      console.log('aTtC err');
+      console.log(err);
    }
 
 }
-
-// const findCurrentPrice = (ticker) => {
-//    const { name, type } = ticker;
-//    const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
-//    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
-//
-//    const timeSeries = ticker.data.data[timeSeriesType];
-//    const seriesKey = Object.keys(timeSeries).reverse()[0];
-//    const currentPrice = timeSeries[seriesKey][priceInterval];
-//
-//    return currentPrice;
-// }
-
-// const findChartData = async (name, type) => {
-//    const timeSeriesType = type == TYPE.STOCK ? 'Time Series (1min)' : 'Time Series (Digital Currency Intraday)';
-//    const priceInterval = type == TYPE.STOCK ? '4_ close' : '1b_ price (USD)';
-//
-//    const queryTicker = await Ticker.findOne( { name, type } );
-//    const timeSeries = queryTicker.data.data[timeSeriesType];
-//
-//    const chartData = { prices: [], times: [] };
-//
-//    for (const key in timeSeries) {
-//       const price = timeSeries[key][priceInterval];
-//       const time = key.slice(11,16);
-//
-//       chartData.prices.push(price);
-//       chartData.times.push(time);
-//    }
-//
-//    return chartData;
-// }
 
 module.exports = app => {
 
@@ -117,7 +109,6 @@ module.exports = app => {
          const queryTicker = await Ticker.findOne( { name, type });
 
          if (!queryTicker) {  //if ticker not in Ticker db, add it
-            console.log(name + 'not found');
             const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
@@ -125,17 +116,13 @@ module.exports = app => {
             }
          }
          //if exists in db or once added, send price back
-         console.log('newTicker = ', newTicker);
          const queryTic = await Ticker.findOne( { name, type } );
 
          //Adding ticker to User's tickerList
          await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
-         console.log('after adding to set')
-         console.log('type = ', type, 'TYPE.CRYPTO = ', TYPE.CRYPTO);
          if (type == TYPE.CRYPTO) {
-            console.log('in type == TYPE.CRYTPO');
-            console.log(queryTic);
             res.send( { price: queryTic.data } )
+            addTickerToCharts(newTicker);
          }
 
       } catch(err) {

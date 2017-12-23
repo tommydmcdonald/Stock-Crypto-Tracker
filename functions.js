@@ -39,7 +39,7 @@ exports.updateTickerData = (intervalMS) => {
 
          for (let i = 0; i < tickerList.length; i++) {
             const { name, type } = tickerList[i];
-            await requests[i];
+            // dont think i need this - await requests[i];
             console.log('requests[' + i + '] = ', resolved[i].data.USD);
             const price = resolved[i].data.USD;
             await Ticker.findOneAndUpdate( {name, type}, { $set: { data: price} });
