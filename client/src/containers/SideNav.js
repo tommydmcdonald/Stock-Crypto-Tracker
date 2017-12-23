@@ -160,7 +160,7 @@ class SideNav extends Component {
    }
 
    render() {
-      const refreshRateSeconds = 6;
+      const refreshRateSeconds = 3;
       const timeout = refreshRateSeconds * 1000;
 
       const COLORS = ['#8884d8'];

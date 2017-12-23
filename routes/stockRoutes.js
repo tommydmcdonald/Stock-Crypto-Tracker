@@ -16,7 +16,7 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
    if (type == TYPE.CRYPTO) {
       const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
       let PRICE_URL;
-      if ( _.includes(coinbaseTickers, type) ) {
+      if ( _.includes(coinbaseTickers, name) ) {
          PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD&e=Coinbase`;
       }
       else {
