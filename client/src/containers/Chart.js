@@ -30,6 +30,7 @@ class Chart extends Component {
             const { frequency } = this.props.selectedChart;
 
             prices = chartData[type][name][frequency].prices;
+            // times = chartData[type][name][frequency].times;
             times = chartData[type][name][frequency].times.map( time => new Date(time*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) );
          }
       }
@@ -87,6 +88,20 @@ class Chart extends Component {
       )
    }
 
+   renderTabs() {
+      return (
+         <Tabs onChange={ (num) => {this.onTabChange(num)} }>
+            <Tab title='Hour'></Tab>
+            <Tab title='Day'></Tab>
+            <Tab title='Week'></Tab>
+            <Tab title='Month'></Tab>
+            <Tab title='3 Month'></Tab>
+            <Tab title='6 Month'></Tab>
+            <Tab title='Year'></Tab>
+         </Tabs>
+      )
+   }
+
    onTabChange(newTab) {
       const index = parseInt(newTab[1]);
 
@@ -99,16 +114,7 @@ class Chart extends Component {
 
       return (
          <div>
-            <Tabs onChange={ (num) => {this.onTabChange(num)} }>
-               <Tab title='Hour'></Tab>
-               <Tab title='Day'></Tab>
-               <Tab title='Week'></Tab>
-               <Tab title='Month'></Tab>
-               <Tab title='3 Month'></Tab>
-               <Tab title='6 Month'></Tab>
-               <Tab title='Year'></Tab>
-            </Tabs>
-
+            {this.renderTabs()}
             <div id="chartPiece">
                {this.renderLabel()}
                <Line data={this.formatChartData()} width={600} height={250} options={{maintainAspectRatio: false}} ></Line>
