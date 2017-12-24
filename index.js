@@ -7,9 +7,7 @@ const bodyParser  = require("body-parser");
 const { updateTickerData } = require('./functions');
 const keys = require('./config/keys');
 const { mongoURI } = require('./config/mongoURI');
-
 require('./models');
-
 require('./services/passport');
 
 mongoose.connect(mongoURI);

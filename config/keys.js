@@ -4,7 +4,7 @@ module.exports = {
     cookieKey: 'hsdrtyedsrvewredfgbsdtrwsdfgsdewki',
     BASE_URL: {
       CRYPTO: 'https://min-api.cryptocompare.com/data/',
-      STOCK: ''
+      STOCK: 'https://api.iextrading.com/1.0'
    },
     TYPE: {STOCK: 'STOCK', CRYPTO: 'CRYPTO'}
  };

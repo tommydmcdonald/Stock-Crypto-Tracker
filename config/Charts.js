@@ -3,10 +3,10 @@ const { Schema } = mongoose;
 
 const TYPE = ['STOCK', 'CRYPTO'];
 
-const tickerSchema = new Schema({
+const chartSchema = new Schema({
    name: String,
    type: { type: String, enum: [...TYPE] },
-   data: { data: Schema.Types.Mixed }
+   data: { frequency: String, data: Schema.Types.Mixed }
 });
 
-mongoose.model('ticker', tickerSchema);
+mongoose.model('charts', chartSchema);
