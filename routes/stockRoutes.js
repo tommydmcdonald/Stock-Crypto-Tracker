@@ -148,7 +148,7 @@ module.exports = app => {
    app.get('/api/tickers/current_prices', async (req, res) => { //return list of all current prices
       let currentPriceList = { STOCK: {}, CRYPTO: {} };
 
-      if(type == TYPE.STOCK) {
+// Stock try statement    
         try {
            const { tickerList } = req.user;
            for (let i = 0; i < tickerList.length; i++) {
