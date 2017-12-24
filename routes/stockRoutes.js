@@ -16,41 +16,51 @@ const ONE_YEAR = '1y';
 
 const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
-   const { name, type } = newTicker;
-   const URL = `${BASE_URL}/stock/${name}/quote`;
-   const { data } = await axios.get(URL);
+  const { name, type } = newTicker;
 
-   if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+  if(type == TYPE.STOCK) {
+    const { name, type } = newTicker;
+    const URL = `${BASE_URL}/stock/${name}/quote`;
+    const { data } = await axios.get(URL);
+
+    if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
       return false;
-   }
-   else { //valid ticker
+    }
+    else { //valid ticker
       const dataFormatted = replaceKeys(data);
 
       const addTicker = new Ticker ({ ...newTicker, data: { data: dataFormatted } });
       await addTicker.save();
       return true;
-   }
+    }
+  }
+
 }
 
 const addChartToCharts = async (newChart = {name: '', type: ''}) => {
 
   const { name, type } = newChart;
-  const URL = `${BASE_URL}/stock/${name}/chart/1d`;
-  const { data } = await axios.get(URL);
 
-  if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
-     return false;
-  }
-  else { //valid ticker
-     const dataFormatted = replaceKeys(data);
+  if(type == TYPE.STOCK) {
+    const URL = `${BASE_URL}/stock/${name}/chart/1d`;
+    const { data } = await axios.get(URL);
 
-     const addChart = new Chart ({ ...newChart, data: { data: dataFormatted } });
-     await addChart.save();
-     return true;
+    if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+       return false;
+    }
+    else { //valid ticker
+       const dataFormatted = replaceKeys(data);
+
+       const addChart = new Chart ({ ...newChart, data: { data: dataFormatted } });
+       await addChart.save();
+       return true;
+    }
   }
+
 }
 
-
+// Finds current price of only stocks. I want to refactor to pull other information
+// from stock quotes like full company name or market cap
 const findCurrentPrice = (ticker) => {
 
    const { name, type } = ticker;
@@ -61,24 +71,27 @@ const findCurrentPrice = (ticker) => {
 
 const findChartData = async (name, type) => {
 
-   const queryChart = await Chart.findOne( { name, type } );
-   const timeSeries = queryChart.data.data;
+  if(type == TYPE.STOCK) {
+     const queryChart = await Chart.findOne( { name, type } );
+     const timeSeries = queryChart.data.data;
 
-   const chartData = { prices: [], times: [] };
+     const chartData = { prices: [], times: [] };
 
-   for (const key in timeSeries) {
+     for (const key in timeSeries) {
 
-      const price = timeSeries[key]['average'];
-      const time = timeSeries[key]['label'];
-      const minute = timeSeries[key]['minute'];
+        const price = timeSeries[key]['average'];
+        const time = timeSeries[key]['label'];
+        const minute = timeSeries[key]['minute'];
 
-      if(price != 0 && minute[4]%5 == 0) {
-        chartData.prices.push(price);
-        chartData.times.push(time);
-      }
-   }
+        if(price != 0 && minute[4]%5 == 0) {
+          chartData.prices.push(price);
+          chartData.times.push(time);
+        }
+     }
 
    return chartData;
+  }
+
 }
 
 module.exports = app => {
@@ -135,19 +148,21 @@ module.exports = app => {
    app.get('/api/tickers/current_prices', async (req, res) => { //return list of all current prices
       let currentPriceList = { STOCK: {}, CRYPTO: {} };
 
-      try {
-         const { tickerList } = req.user;
-         for (let i = 0; i < tickerList.length; i++) {
+      if(type == TYPE.STOCK) {
+        try {
+           const { tickerList } = req.user;
+           for (let i = 0; i < tickerList.length; i++) {
 
-            const { type, name } = tickerList[i];
-            const ticker = await Ticker.findOne( { name, type });
+              const { type, name } = tickerList[i];
+              const ticker = await Ticker.findOne( { name, type });
 
-            currentPriceList[type][name] = findCurrentPrice(ticker);
-         }
-         res.send(currentPriceList);
+              currentPriceList[type][name] = findCurrentPrice(ticker);
+           }
+           res.send(currentPriceList);
 
-      } catch(err) {
-         return res.status(500).send(err);
+        } catch(err) {
+           return res.status(500).send(err);
+        }
       }
 
    });
