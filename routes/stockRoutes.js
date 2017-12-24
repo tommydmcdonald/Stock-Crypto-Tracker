@@ -9,9 +9,8 @@ const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
 const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
-
+   //CRYPTO
    const { name, type } = newTicker;
-
    if (type == TYPE.CRYPTO) {
       const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
       let PRICE_URL;
@@ -41,92 +40,95 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
 }
 
 const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
-   try {
-      const { name, type } = newTicker;
 
-      const NAME_TO = `fsym=${name}&tsym=USD`;
-      const HISTO = {
-         MIN: 'histominute?',
-         HOUR: 'histohour?',
-         DAY: 'histoday?'
-      };
+   const { name, type } = newTicker;
+   if (type == TYPE.STOCK) {
+      try {
 
-      const URL = BASE_URL.CRYPTO;
-      let cryptoURLs = [
-         /*hour*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=60&aggregate=1`,
-         /*day*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=1440&aggregate=1`,
-         /*week*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=2000&aggregate=5`,
-         /*month*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=720&aggregate=1`,
-         /*threeMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1080&aggregate=2`,
-         /*sixMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1080&aggregate=4`,
-         /*year*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1460&aggregate=6`
-      ];
+         const NAME_TO = `fsym=${name}&tsym=USD`;
+         const HISTO = {
+            MIN: 'histominute?',
+            HOUR: 'histohour?',
+            DAY: 'histoday?'
+         };
 
-      //if supported by coinbase, use coinbase as exchange
-      const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
+         const URL = BASE_URL.CRYPTO;
+         let cryptoURLs = [
+            /*hour*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=60&aggregate=1`, // 1hr * 60 min = 60 min
+            /*day*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=288&aggregate=5`, // 1 day * 24hrs * 60 min = 1440 min
+            /*week*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=672&aggregate=15`, // 7 day * 24hrs * 60 min = 10,080 min
+            /*month*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=240&aggregate=3`, //30 days * 24hrs = 720 hours
+            /*threeMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=364&aggregate=6`, //91 days * 24hrs = 2,184 hours
+            /*sixMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=364&aggregate=12`, //182 days * 24hrs = 4,368 hours
+            /*year*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1460&aggregate=6` //365 days * 24hrs = 8,760 hours
+         ];
 
-      if ( _.includes(coinbaseTickers, name) ) {
-         cryptoURLs = cryptoURLs.filter( url => url += '&e=Coinbase');
-      }
+         //if supported by coinbase, use coinbase as exchange
+         const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
 
-      const requests = [];
-      cryptoURLs.map( url => {
-         requests.push(axios.get(url));
-      })
-
-      const resolved = await axios.all(requests);
-
-      if (type == TYPE.CRYPTO) {
-
-         const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
-
-         const chartData = {};
-         for (let i = 0; i < resolved.length; i++) {
-            const req = resolved[i];
-            const reqData = req.data.Data.map(obj => _.pick(obj, ['close', 'time']));
-            chartData[chartFreq[i]] = reqData;
+         if ( _.includes(coinbaseTickers, name) ) {
+            cryptoURLs = cryptoURLs.filter( url => url += '&e=Coinbase');
          }
-         const addChart = new Chart({ ...newTicker, data: chartData});
-         await addChart.save();
+
+         const requests = [];
+         cryptoURLs.map( url => {
+            requests.push(axios.get(url));
+         })
+
+         const resolved = await axios.all(requests);
+
+         if (type == TYPE.CRYPTO) {
+
+            const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
+
+            const chartData = {};
+            for (let i = 0; i < resolved.length; i++) {
+               const req = resolved[i];
+               const reqData = req.data.Data.map(obj => _.pick(obj, ['close', 'time']));
+               chartData[chartFreq[i]] = reqData;
+            }
+            const addChart = new Chart({ ...newTicker, data: chartData});
+            await addChart.save();
+         }
+      } catch(err) {
+         console.log('aTtC err');
+         console.log(err);
       }
-   } catch(err) {
-      console.log('aTtC err');
-      console.log(err);
    }
 
 }
 
 const findChartData = async (name, type) => {
-   try {
+   if (type == TYPE.STOCK) {
+      try {
+         const rawChart = await Chart.findOne({name, type}, 'data').lean();
+         const rawChartData = rawChart.data;
 
-      const rawChart = await Chart.findOne({name, type}, 'data').lean();
-      const rawChartData = rawChart.data;
+         console.log('rawChartData keys = ', Object.keys(rawChartData) );
 
-      console.log('rawChartData keys = ', Object.keys(rawChartData) );
+         const chartData = {};
+         for (const key in rawChartData) {
+            // console.log('key = ', key)
+            chartData[key] = { times: [], prices: []};
+            // console.log('chartData[key] = ', chartData[key])
+            // console.log('cD has own property = ', chartData[key].hasOwnProperty('times'));
+            // console.log(chartData[key][])
 
-      const chartData = {};
-      for (const key in rawChartData) {
-         // console.log('key = ', key)
-         chartData[key] = { times: [], prices: []};
-         // console.log('chartData[key] = ', chartData[key])
-         // console.log('cD has own property = ', chartData[key].hasOwnProperty('times'));
-         // console.log(chartData[key][])
+            _.forEach(rawChartData[key], (timeClose) => {
+               // console.log('timeClose = ', timeClose);
+               const {time, close} = timeClose;
+               chartData[key].times.push(time);
+               chartData[key].prices.push(close);
+            });
+         }
+         return chartData;
 
-         _.forEach(rawChartData[key], (timeClose) => {
-            // console.log('timeClose = ', timeClose);
-            const {time, close} = timeClose;
-            chartData[key].times.push(time);
-            chartData[key].prices.push(close);
-         });
+      } catch(err) {
+         console.log('findChartData err');
+         console.log(err);
       }
-      return chartData;
-
-   } catch(err) {
-      console.log('findChartData err');
-      console.log(err);
    }
-
-
+   
 }
 module.exports = app => {
 
