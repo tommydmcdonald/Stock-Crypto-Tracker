@@ -60,9 +60,18 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
 const addChartToCharts = async (newChart = {name: '', type: ''}) => {
 
   const { name, type } = newChart;
+  const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
+  
+  let stockURLs = [
+     /*day*/ `${BASE_URL.STOCK}/stock/${name}/chart/1d`,
+     /*month*/ `${BASE_URL.STOCK}/stock/${name}/chart/1m`,
+     /*threeMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/3m`,
+     /*sixMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/6m`,
+     /*year*/ `${BASE_URL.STOCK}/stock/${name}/chart/1y`,
+  ];
 
   if(type == TYPE.STOCK) {
-    const URL = `${BASE_URL}/stock/${name}/chart/1d`;
+    const URL = `${BASE_URL.STOCK}/stock/${name}/chart/1d`;
     const { data } = await axios.get(URL);
 
     if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
@@ -92,7 +101,6 @@ const findCurrentPrice = (ticker) => {
 const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
    const { name, type } = newTicker;
-   if (type == TYPE.STOCK) {
       try {
 
          const NAME_TO = `fsym=${name}&tsym=USD`;
@@ -145,7 +153,6 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
          console.log('aTtC err');
          console.log(err);
       }
-   }
 }
 
 const findChartData = async (name, type) => {

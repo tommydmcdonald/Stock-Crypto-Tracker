@@ -23,17 +23,15 @@ class Chart extends Component {
       let times = [0];
 
       if (this.props.selectedChart.name && this.props.chartData) {
-         const { name, type } = this.props.selectedChart;
-         const { chartData } = this.props;
+         const { name, type } = this.props.selectedChart;
+         const { chartData } = this.props;
+         const { frequency } = this.props.selectedChart;
 
-         if ( chartData[type] && chartData[type][name] ) {
-            const { frequency } = this.props.selectedChart;
-
-            prices = chartData[type][name][frequency].prices;
-            // times = chartData[type][name][frequency].times;
-            times = chartData[type][name][frequency].times.map( time => new Date(time*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) );
-         }
-      }
+         if ( chartData[type] && chartData[type][name] && chartData[type][name][frequency]) {
+            prices = chartData[type][name][frequency].prices;
+            times = chartData[type][name][frequency].times.map( time => new Date(time*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) );
+         }
+      }
 
       return {
         labels: times,
