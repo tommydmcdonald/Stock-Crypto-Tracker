@@ -1,4 +1,4 @@
-import { LOAD_CHART_DATA, FETCH_CHART_DATA, SELECT_CHART } from './types';
+import { LOAD_CHART_DATA, FETCH_CHART_DATA, SELECT_CHART, SELECT_CHART_FREQ } from './types';
 import axios from 'axios';
 
 export const loadChartData = () => async dispatch => { //used to laod initial chart data
@@ -15,4 +15,9 @@ export const fetchChartData = (name, type) => async dispatch => {
 
 export const selectChart = ({ name, type }) => dispatch => {
    dispatch({type: SELECT_CHART, payload: { name, type } });
+}
+
+export const selectChartFreq = ( frequencyObj ) => dispatch => {
+   console.log('freqObj = ', frequencyObj);
+   dispatch({ type: SELECT_CHART_FREQ, payload: frequencyObj });
 }

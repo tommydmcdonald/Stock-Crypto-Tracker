@@ -115,5 +115,6 @@
    padding-right: 1.5em !important;
 }
 
-nav div div {
+#ticker-name {
+   width: 10.667%;
 }

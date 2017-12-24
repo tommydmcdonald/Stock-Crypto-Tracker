@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { loadChartData } from '../actions'
+import { loadChartData, selectChartFreq } from '../actions'
 import {Line} from 'react-chartjs-2';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Tabs, Tab } from 'react-materialize';
 import _ from 'lodash';
 import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
 
@@ -11,35 +11,14 @@ import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
 class Chart extends Component {
    constructor(props) {
       super(props);
+      this.onTabChange = this.onTabChange.bind(this);
    }
 
    componentDidMount() {
       this.props.loadChartData();
    }
 
-   renderLabel() {
-      let priceText = '';
-      if (this.props.selectedChart) {
-         const { name, type } = this.props.selectedChart;
-         if (this.props.priceList && this.props.priceList[type] && this.props.priceList[type][name] ) {
-            const { quantity } = _.find( this.props.tickerList, { name, type} );
-            const price = Number(this.props.priceList[type][name]).toFixed(2);
-            priceText = { price, amtOwned: Number(price*quantity).toFixed(2) };
-         }
-      }
-
-      return (
-         <Row>
-            <div>
-               <Col s={3}><h4 className="white-text">{this.props.selectedChart.name}</h4></Col>
-               <Col s={4}><p className="white-text">price: ${priceText.price} <br />value owned: ${priceText.amtOwned}</p></Col>
-            </div>
-         </Row>
-
-      )
-   }
-
-   render() {
+   formatChartData() {
       let prices = [0];
       let times = [0];
 
@@ -47,14 +26,15 @@ class Chart extends Component {
          const { name, type } = this.props.selectedChart;
          const { chartData } = this.props;
 
-
          if ( chartData[type] && chartData[type][name] ) {
-            prices = chartData[type][name].hour.prices;
-            times = chartData[type][name].hour.times;
+            const { frequency } = this.props.selectedChart;
+
+            prices = chartData[type][name][frequency].prices;
+            times = chartData[type][name][frequency].times.map( time => new Date(time*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) );
          }
       }
 
-      const data = {
+      return {
         labels: times,
         datasets: [
           {
@@ -79,11 +59,60 @@ class Chart extends Component {
             data: prices, // this.props.chartData.prices
           }
         ]
-      };
+     };
+   }
+
+   renderLabel() {
+      let priceText = '';
+      if (this.props.selectedChart) {
+         const { name, type } = this.props.selectedChart;
+         if (this.props.priceList && this.props.priceList[type] && this.props.priceList[type][name] ) {
+            const { quantity } = _.find( this.props.tickerList, { name, type} );
+            const price = Number(this.props.priceList[type][name]).toFixed(2);
+            priceText = { price, amtOwned: Number(price*quantity).toFixed(2) };
+         }
+      }
+
       return (
-         <div id="chartPiece">
-            {this.renderLabel()}
-            <Line data={data} width={600} height={250} options={{maintainAspectRatio: false}} ></Line>
+         <Row>
+            <div>
+               <Col id="ticker-name" s={2}><h4 className="white-text ticker-name">{this.props.selectedChart.name}</h4></Col>
+               <Col s={4}><p className="white-text">price: ${priceText.price} <br />value owned: ${priceText.amtOwned}</p></Col>
+            </div>
+         </Row>
+
+
+
+
+      )
+   }
+
+   onTabChange(newTab) {
+      const index = parseInt(newTab[1]);
+
+      let frequency = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'][index];
+
+      this.props.selectChartFreq({ frequency });
+   }
+
+   render() {
+
+      return (
+         <div>
+            <Tabs onChange={ (num) => {this.onTabChange(num)} }>
+               <Tab title='Hour'></Tab>
+               <Tab title='Day'></Tab>
+               <Tab title='Week'></Tab>
+               <Tab title='Month'></Tab>
+               <Tab title='3 Month'></Tab>
+               <Tab title='6 Month'></Tab>
+               <Tab title='Year'></Tab>
+            </Tabs>
+
+            <div id="chartPiece">
+               {this.renderLabel()}
+               <Line data={this.formatChartData()} width={600} height={250} options={{maintainAspectRatio: false}} ></Line>
+            </div>
          </div>
       );
    }
@@ -95,7 +124,7 @@ function mapStateToProps({ chartData, tickerList, priceList, selectedChart }){
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ loadChartData }, dispatch);
+   return bindActionCreators({ loadChartData, selectChartFreq }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chart);
