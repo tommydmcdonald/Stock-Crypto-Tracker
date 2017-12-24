@@ -96,6 +96,38 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
 
 }
 
+const findChartData = async (name, type) => {
+   try {
+
+      const rawChart = await Chart.findOne({name, type}, 'data').lean();
+      const rawChartData = rawChart.data;
+
+      console.log('rawChartData keys = ', Object.keys(rawChartData) );
+
+      const chartData = {};
+      for (const key in rawChartData) {
+         // console.log('key = ', key)
+         chartData[key] = { times: [], prices: []};
+         // console.log('chartData[key] = ', chartData[key])
+         // console.log('cD has own property = ', chartData[key].hasOwnProperty('times'));
+         // console.log(chartData[key][])
+
+         _.forEach(rawChartData[key], (timeClose) => {
+            // console.log('timeClose = ', timeClose);
+            const {time, close} = timeClose;
+            chartData[key].times.push(time);
+            chartData[key].prices.push(close);
+         });
+      }
+      return chartData;
+
+   } catch(err) {
+      console.log('findChartData err');
+      console.log(err);
+   }
+
+
+}
 module.exports = app => {
 
    app.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
@@ -117,14 +149,16 @@ module.exports = app => {
          }
          //if exists in db or once added, send price back
          const queryTic = await Ticker.findOne( { name, type } );
-
-         //Adding ticker to User's tickerList
-         await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
          if (type == TYPE.CRYPTO) {
-            res.send( { price: queryTic.data } )
+            res.send( { price: queryTic.data } );
+         }
+
+         if (!queryTicker) {
             addTickerToCharts(newTicker);
          }
 
+         //Adding ticker to User's tickerList
+         await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
       } catch(err) {
          res.send(err);
       }
@@ -171,28 +205,24 @@ module.exports = app => {
       res.sendStatus(200);
    });
 
-   app.get('/api/stock_charts', async (req, res) => {
+   app.get('/api/charts', async (req, res) => {
       const { tickerList } = await User.findById( req.user._id, 'tickerList -_id');
       const allChartData = { STOCK: {}, CRYPTO: {} };
 
-      console.log('tickerList = ', tickerList);
-
       for (let i = 0; i < tickerList.length; i++) {
          const { name, type} = tickerList[i];
-         // const chartData = await findChartData(name, type);
-         const chartData = { prices: [], times: [] };
+         const chartData = await findChartData(name, type);
          allChartData[type][name] = chartData;
       }
 
       res.send(allChartData);
    });
 
-   app.get('/api/stock_charts/:type/:name', async (req, res) => {
+   app.get('/api/charts/:type/:name', async (req, res) => {
       const name = req.params.name.toUpperCase();
       const type = req.params.type.toUpperCase();
 
-      // const chartData = await findChartData(name, type);
-      const chartData = { prices: [], times: [] };
+      const chartData = await findChartData(name, type);
       res.send(chartData);
    });
 

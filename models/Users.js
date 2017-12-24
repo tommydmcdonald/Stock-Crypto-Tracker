@@ -14,6 +14,4 @@ const userSchema = new Schema({
   } ]
 });
 
-console.log('user schema bitch');
-
 mongoose.model('user', userSchema);

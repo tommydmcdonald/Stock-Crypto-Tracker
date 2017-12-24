@@ -6,7 +6,6 @@ import {Line} from 'react-chartjs-2';
 import { Row, Col } from 'react-materialize';
 import _ from 'lodash';
 import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
-import { Pie, PieChart } from 'recharts';
 
 
 class Chart extends Component {
@@ -15,7 +14,7 @@ class Chart extends Component {
    }
 
    componentDidMount() {
-      // this.props.loadChartData();
+      this.props.loadChartData();
    }
 
    renderLabel() {
@@ -50,8 +49,8 @@ class Chart extends Component {
 
 
          if ( chartData[type] && chartData[type][name] ) {
-            prices = chartData[type][name]['prices'];
-            times = chartData[type][name]['times'];
+            prices = chartData[type][name].hour.prices;
+            times = chartData[type][name].hour.times;
          }
       }
 

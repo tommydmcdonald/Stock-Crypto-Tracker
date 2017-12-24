@@ -10,7 +10,8 @@ const chartDataSchema = new Schema({
    month: [],
    threeMonth: [],
    sixMonth: [],
-   year: []
+   year: [],
+   _id: false
 });
 
 const chartSchema = new Schema({

@@ -91,9 +91,9 @@ class SideNav extends Component {
          });
 
          return (
-            <li class="collection-item">
+            <li className="collection-item" key={key}>
                <Tracker
-                  key={key} name={name} type={type}
+                  name={name} type={type}
                   currentPrice={currentPrice} quantity={quantity} chartData={chartData}
                   removeTicker={this.props.removeTicker}
                   updateQuantity={this.props.updateQuantity}
@@ -111,8 +111,8 @@ class SideNav extends Component {
    renderTrackerList(renderType) {
       return (
          <div className="black-text">
-            <ul class="collection">
-               <li class="collection-item">
+            <ul className="collection">
+               <li className="collection-item">
                   <Row>
                      <Col s={2}>Ticker</Col>
                      <Col className="price-text" s={3}>
@@ -160,7 +160,7 @@ class SideNav extends Component {
    }
 
    render() {
-      const refreshRateSeconds = 3;
+      const refreshRateSeconds = 15;
       const timeout = refreshRateSeconds * 1000;
 
       const COLORS = ['#8884d8'];

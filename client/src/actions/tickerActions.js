@@ -1,6 +1,7 @@
 import { ADD_TICKER, REMOVE_TICKER, ADD_TICKER_PRICE, SELECT_CHART, FETCH_CHART_DATA,
          LOAD_TICKERS, UPDATE_TICKER_QUANTITY, LOAD_TICKER_PRICES } from './types'
 import axios from 'axios';
+import { fetchChartData } from './chartActions';
 
 export const addTicker = (newTicker, tickerListSize) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    //initial ticker add before checking if it is valid
@@ -22,9 +23,7 @@ export const addTicker = (newTicker, tickerListSize) => async dispatch => { //ad
          // uncomment later
          // dispatch({ type: SELECT_CHART, payload: {name, type} });
       }
-      let resChart = await axios.get(`/api/stock_charts/${type}/${name}`);
-      resChart = { name, type, prices: resChart.data.prices, times: resChart.data.times }
-      // dispatch({ type: FETCH_CHART_DATA, payload: resChart})
+      dispatch(fetchChartData(name, type));
    }
 }
 
