@@ -148,8 +148,8 @@ module.exports = app => {
    app.get('/api/tickers/current_prices', async (req, res) => { //return list of all current prices
       let currentPriceList = { STOCK: {}, CRYPTO: {} };
 
-// Stock try statement    
-        try {
+      //Stock stuff
+      try {
            const { tickerList } = req.user;
            for (let i = 0; i < tickerList.length; i++) {
 
@@ -163,7 +163,7 @@ module.exports = app => {
         } catch(err) {
            return res.status(500).send(err);
         }
-      }
+    ////
 
    });
 
