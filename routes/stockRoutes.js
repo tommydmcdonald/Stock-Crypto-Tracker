@@ -157,8 +157,9 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
 }
 
 const findChartData = async (name, type) => {
-   if (type == TYPE.CRYPTO) {
-      try {
+
+        if (type == TYPE.CRYPTO) {
+
          const rawChart = await Chart.findOne({name, type}, 'data').lean();
          const rawChartData = rawChart.data;
 
@@ -181,34 +182,31 @@ const findChartData = async (name, type) => {
          }
          return chartData;
 
-      } catch(err) {
-         console.log('findChartData err');
-         console.log(err);
+       }
+
+         if(type == TYPE.STOCK) {
+            const queryChart = await Chart.findOne( { name, type } );
+            const timeSeries = queryChart.data.data;
+
+            const chartData = { prices: [], times: [] };
+
+            for (const key in timeSeries) {
+
+               const price = timeSeries[key]['average'];
+               const time = timeSeries[key]['label'];
+               const minute = timeSeries[key]['minute'];
+
+               if(price != 0 && minute[4]%5 == 0) {
+                 chartData.prices.push(price);
+                 chartData.times.push(time);
+               }
+            }
+
+          return chartData;
+          }
       }
-   }
 
-   if(type == TYPE.STOCK) {
-      const queryChart = await Chart.findOne( { name, type } );
-      const timeSeries = queryChart.data.data;
 
-      const chartData = { prices: [], times: [] };
-
-      for (const key in timeSeries) {
-
-         const price = timeSeries[key]['average'];
-         const time = timeSeries[key]['label'];
-         const minute = timeSeries[key]['minute'];
-
-         if(price != 0 && minute[4]%5 == 0) {
-           chartData.prices.push(price);
-           chartData.times.push(time);
-         }
-      }
-
-    return chartData;
-   }
-
-}
 module.exports = app => {
 
    app.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
