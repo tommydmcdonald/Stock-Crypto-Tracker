@@ -44,5 +44,6 @@ export const updateQuantity = ( name, type, quantity ) => async dispatch => { //
 
 export const loadTickerPrices = () => async dispatch => { //used to load initial ticker prices when page is loaded
    const res = await axios.get('/api/tickers/current_prices');
+   console.log('loadtickerprices');
    dispatch({ type: LOAD_TICKER_PRICES, payload: res.data});
 }

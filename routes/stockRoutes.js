@@ -5,7 +5,6 @@ const delay = require('delay');
 const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
 const Chart = mongoose.model('chart');
-const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
 const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
@@ -16,14 +15,13 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
       const { name, type } = newTicker;
       const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
       const { data } = await axios.get(URL);
+      const price = data.close;
 
       if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
         return false;
       }
       else { //valid ticker
-        const dataFormatted = replaceKeys(data);
-
-        const addTicker = new Ticker ({ ...newTicker, data: { data: dataFormatted } });
+        const addTicker = new Ticker ({ ...newTicker, price  });
         await addTicker.save();
         return true;
       }
@@ -42,12 +40,14 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
       const res = await axios.get(PRICE_URL);//.data.USD;
       const price = res.data.USD;
 
+      console.log('price = ', price);
+
       if (res.data.Response == 'Error') {
          return false;
       }
 
       try {
-         const addTicker = new Ticker({ ...newTicker, data: price })
+         const addTicker = new Ticker({ ...newTicker, price })
          await addTicker.save();
       } catch(err) {
          console.log(err)
@@ -70,7 +70,6 @@ const addChartToCharts = async (newChart = {name: '', type: ''}) => {
      /*year*/ `${BASE_URL.STOCK}/stock/${name}/chart/1y`,
   ];
 
-//  if(type == TYPE.STOCK) {
     const URL = `${BASE_URL.STOCK}/stock/${name}/chart/1d`;
     const { data } = await axios.get(URL);
 
@@ -78,24 +77,12 @@ const addChartToCharts = async (newChart = {name: '', type: ''}) => {
        return false;
     }
     else { //valid ticker
-       const dataFormatted = replaceKeys(data);
+       const dataFormatted = data;
 
        const addChart = new Chart ({ ...newChart, data: { data: dataFormatted } });
        await addChart.save();
        return true;
     }
-  //}
-
-}
-
-// Finds current price of only stocks. I want to refactor to pull other information
-// from stock quotes like full company name or market cap
-const findCurrentPrice = (ticker) => {
-
-   const { name, type } = ticker;
-   const currentPrice = ticker.data['data']['latestPrice'];
-
-   return currentPrice;
 }
 
 const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
@@ -167,14 +154,9 @@ const findChartData = async (name, type) => {
 
    const chartData = {};
    for (const key in rawChartData) {
-      // console.log('key = ', key)
       chartData[key] = { times: [], prices: []};
-      // console.log('chartData[key] = ', chartData[key])
-      // console.log('cD has own property = ', chartData[key].hasOwnProperty('times'));
-      // console.log(chartData[key][])
 
       _.forEach(rawChartData[key], (timeClose) => {
-         // console.log('timeClose = ', timeClose);
          const {time, close} = timeClose;
          chartData[key].times.push(time);
          chartData[key].prices.push(close);
@@ -205,7 +187,6 @@ const findChartData = async (name, type) => {
     }
 }
 
-
 module.exports = app => {
 
    app.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
@@ -230,17 +211,12 @@ module.exports = app => {
                res.send( { error: 'Ticker could not be added.'} )
             }
 
-
          }
          //if exists in db or once added, send price back
-         const queryTic = await Ticker.findOne( { name, type } );
-         if (type == TYPE.CRYPTO) {
-            res.send( { price: queryTic.data } );
-         }
-         if (type == TYPE.STOCK) {
-           const price = findCurrentPrice(queryTic);
-           res.send( { price } );
-         }
+         const { price } = await Ticker.findOne( { name, type } );
+
+         res.send( { price } );
+
          if (!queryTicker) {
             addTickerToCharts(newTicker);
          }
@@ -248,7 +224,8 @@ module.exports = app => {
          //Adding ticker to User's tickerList
          await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
       } catch(err) {
-         res.send(err);
+         console.log('try catch post tickers');
+         console.log(err);
       }
 
    });
@@ -274,13 +251,15 @@ module.exports = app => {
            for (let i = 0; i < tickerList.length; i++) {
 
               const { type, name } = tickerList[i];
-              const ticker = await Ticker.findOne( { name, type });
+              const { price } = await Ticker.findOne( { name, type });
 
-              currentPriceList[type][name] = findCurrentPrice(ticker);
+              currentPriceList[type][name] = price;
            }
            res.send(currentPriceList);
 
         } catch(err) {
+           console.log('current_prices err');
+           console.log(err);
            return res.status(500).send(err);
         }
     ////
