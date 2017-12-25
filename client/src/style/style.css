@@ -17,6 +17,10 @@
   padding-right: 20px;
 }
 
+.time-series-tabs {
+  background-color: #212B33;   
+}
+
 .mainApp {
   background-color: #212B33;
 }

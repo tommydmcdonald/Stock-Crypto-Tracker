@@ -88,7 +88,7 @@ class Chart extends Component {
 
    renderTabs() {
       return (
-         <Tabs onChange={ (num) => {this.onTabChange(num)} }>
+         <Tabs className="time-series-tabs" onChange={ (num) => {this.onTabChange(num)} }>
             <Tab title='Hour'></Tab>
             <Tab title='Day'></Tab>
             <Tab title='Week'></Tab>
