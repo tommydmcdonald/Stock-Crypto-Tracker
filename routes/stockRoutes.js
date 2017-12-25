@@ -9,10 +9,10 @@ const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
 const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
-   //CRYPTO
+
    const { name, type } = newTicker;
 
-     if(type == TYPE.STOCK) {
+    if(type == TYPE.STOCK) {
       const { name, type } = newTicker;
       const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
       const { data } = await axios.get(URL);
@@ -61,7 +61,7 @@ const addChartToCharts = async (newChart = {name: '', type: ''}) => {
 
   const { name, type } = newChart;
   const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
-  
+
   let stockURLs = [
      /*day*/ `${BASE_URL.STOCK}/stock/${name}/chart/1d`,
      /*month*/ `${BASE_URL.STOCK}/stock/${name}/chart/1m`,
@@ -70,7 +70,7 @@ const addChartToCharts = async (newChart = {name: '', type: ''}) => {
      /*year*/ `${BASE_URL.STOCK}/stock/${name}/chart/1y`,
   ];
 
-  if(type == TYPE.STOCK) {
+//  if(type == TYPE.STOCK) {
     const URL = `${BASE_URL.STOCK}/stock/${name}/chart/1d`;
     const { data } = await axios.get(URL);
 
@@ -84,7 +84,7 @@ const addChartToCharts = async (newChart = {name: '', type: ''}) => {
        await addChart.save();
        return true;
     }
-  }
+  //}
 
 }
 
@@ -101,6 +101,9 @@ const findCurrentPrice = (ticker) => {
 const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
    const { name, type } = newTicker;
+
+   if (type == TYPE.CRYPTO) {
+
       try {
 
          const NAME_TO = `fsym=${name}&tsym=USD`;
@@ -135,8 +138,6 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
 
          const resolved = await axios.all(requests);
 
-         if (type == TYPE.CRYPTO) {
-
             const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
 
             const chartData = {};
@@ -147,16 +148,16 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
             }
             const addChart = new Chart({ ...newTicker, data: chartData});
             await addChart.save();
-         }
 
       } catch(err) {
          console.log('aTtC err');
          console.log(err);
       }
+    }
 }
 
 const findChartData = async (name, type) => {
-   if (type == TYPE.STOCK) {
+   if (type == TYPE.CRYPTO) {
       try {
          const rawChart = await Chart.findOne({name, type}, 'data').lean();
          const rawChartData = rawChart.data;
@@ -239,7 +240,10 @@ module.exports = app => {
          if (type == TYPE.CRYPTO) {
             res.send( { price: queryTic.data } );
          }
-
+         if (type == TYPE.STOCK) {
+           const price = findCurrentPrice(queryTic);
+           res.send( { price } );
+         }
          if (!queryTicker) {
             addTickerToCharts(newTicker);
          }
