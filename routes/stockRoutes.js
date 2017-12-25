@@ -9,53 +9,62 @@ const { BASE_URL, TYPE } = require('../config/keys');
 
 const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
 
-   const { name, type } = newTicker;
-
-    if(type == TYPE.STOCK) {
+      console.log('aTtT');
       const { name, type } = newTicker;
-      const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
-      const { data } = await axios.get(URL);
-      const price = data.close;
 
-      if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
-        return false;
-      }
-      else { //valid ticker
-        const addTicker = new Ticker ({ ...newTicker, price  });
-        await addTicker.save();
-        return true;
-      }
-    }
+       if(type == TYPE.STOCK) {
+         const { name, type } = newTicker;
+         const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
+         console.log('before axios');
+         const res = await axios.get(URL);
 
-   if (type == TYPE.CRYPTO) {
-      const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
-      let PRICE_URL;
-      if ( _.includes(coinbaseTickers, name) ) {
-         PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD&e=Coinbase`;
-      }
-      else {
-         PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD`;
-      }
+         console.log('res.status = ', res.status);
 
-      const res = await axios.get(PRICE_URL);//.data.USD;
-      const price = res.data.USD;
+         console.log('after axios');
+         console.log('axios.data = ', data);
+         const price = data.close;
 
-      console.log('price = ', price);
+         if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+           return false;
+         }
+         else { //valid ticker
+           const addTicker = new Ticker ({ ...newTicker, price  });
+           await addTicker.save();
+           return true;
+         }
+       }
 
-      if (res.data.Response == 'Error') {
-         return false;
-      }
+      if (type == TYPE.CRYPTO) {
+         const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
+         let PRICE_URL;
+         if ( _.includes(coinbaseTickers, name) ) {
+            PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD&e=Coinbase`;
+         }
+         else {
+            PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD`;
+         }
 
-      try {
-         const addTicker = new Ticker({ ...newTicker, price })
-         await addTicker.save();
-      } catch(err) {
-         console.log(err)
-      }
+         const res = await axios.get(PRICE_URL);//.data.USD;
+         const price = res.data.USD;
 
-      return true;
-    }
-  }
+         console.log('price = ', price);
+
+         if (res.data.Response == 'Error') {
+            return false;
+         }
+
+         try {
+            const addTicker = new Ticker({ ...newTicker, price })
+            await addTicker.save();
+         } catch(err) {
+            console.log(err)
+         }
+
+         return true;
+       }
+
+
+ }
 
 const addChartToCharts = async (newChart = {name: '', type: ''}) => {
 
@@ -224,8 +233,8 @@ module.exports = app => {
          //Adding ticker to User's tickerList
          await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
       } catch(err) {
-         console.log('try catch post tickers');
-         console.log(err);
+         console.log('err in api/post');
+         res.send( { error: 'Ticker could not be added.'} )
       }
 
    });
