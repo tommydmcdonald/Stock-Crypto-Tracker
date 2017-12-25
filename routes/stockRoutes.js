@@ -16,12 +16,8 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
          const { name, type } = newTicker;
          const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
          console.log('before axios');
-         const res = await axios.get(URL);
+         const { data } = await axios.get(URL);
 
-         console.log('res.status = ', res.status);
-
-         console.log('after axios');
-         console.log('axios.data = ', data);
          const price = data.close;
 
          if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
@@ -62,8 +58,6 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
 
          return true;
        }
-
-
  }
 
 const addChartToCharts = async (newChart = {name: '', type: ''}) => {
