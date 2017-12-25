@@ -158,53 +158,52 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
 
 const findChartData = async (name, type) => {
 
-        if (type == TYPE.CRYPTO) {
+  if (type == TYPE.CRYPTO) {
 
-         const rawChart = await Chart.findOne({name, type}, 'data').lean();
-         const rawChartData = rawChart.data;
+   const rawChart = await Chart.findOne({name, type}, 'data').lean();
+   const rawChartData = rawChart.data;
 
-         console.log('rawChartData keys = ', Object.keys(rawChartData) );
+   console.log('rawChartData keys = ', Object.keys(rawChartData) );
 
-         const chartData = {};
-         for (const key in rawChartData) {
-            // console.log('key = ', key)
-            chartData[key] = { times: [], prices: []};
-            // console.log('chartData[key] = ', chartData[key])
-            // console.log('cD has own property = ', chartData[key].hasOwnProperty('times'));
-            // console.log(chartData[key][])
+   const chartData = {};
+   for (const key in rawChartData) {
+      // console.log('key = ', key)
+      chartData[key] = { times: [], prices: []};
+      // console.log('chartData[key] = ', chartData[key])
+      // console.log('cD has own property = ', chartData[key].hasOwnProperty('times'));
+      // console.log(chartData[key][])
 
-            _.forEach(rawChartData[key], (timeClose) => {
-               // console.log('timeClose = ', timeClose);
-               const {time, close} = timeClose;
-               chartData[key].times.push(time);
-               chartData[key].prices.push(close);
-            });
+      _.forEach(rawChartData[key], (timeClose) => {
+         // console.log('timeClose = ', timeClose);
+         const {time, close} = timeClose;
+         chartData[key].times.push(time);
+         chartData[key].prices.push(close);
+      });
+   }
+   return chartData;
+  }
+
+   if(type == TYPE.STOCK) {
+      const queryChart = await Chart.findOne( { name, type } );
+      const timeSeries = queryChart.data.data;
+
+      const chartData = { prices: [], times: [] };
+
+      for (const key in timeSeries) {
+
+         const price = timeSeries[key]['average'];
+         const time = timeSeries[key]['label'];
+         const minute = timeSeries[key]['minute'];
+
+         if(price != 0 && minute[4]%5 == 0) {
+           chartData.prices.push(price);
+           chartData.times.push(time);
          }
-         return chartData;
-
-       }
-
-         if(type == TYPE.STOCK) {
-            const queryChart = await Chart.findOne( { name, type } );
-            const timeSeries = queryChart.data.data;
-
-            const chartData = { prices: [], times: [] };
-
-            for (const key in timeSeries) {
-
-               const price = timeSeries[key]['average'];
-               const time = timeSeries[key]['label'];
-               const minute = timeSeries[key]['minute'];
-
-               if(price != 0 && minute[4]%5 == 0) {
-                 chartData.prices.push(price);
-                 chartData.times.push(time);
-               }
-            }
-
-          return chartData;
-          }
       }
+
+    return chartData;
+    }
+}
 
 
 module.exports = app => {
