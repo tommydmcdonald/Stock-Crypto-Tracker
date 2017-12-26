@@ -1,3 +1,2 @@
 node_modules/
-config/keys
-config/mongoURI
+config/mongoURI.js
