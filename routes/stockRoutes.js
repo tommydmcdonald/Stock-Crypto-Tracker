@@ -12,7 +12,6 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
       const { name, type } = newTicker;
 
        if(type == TYPE.STOCK) {
-         const { name, type } = newTicker;
          const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
          const { data } = await axios.get(URL);
 
@@ -98,9 +97,7 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
    const { name, type } = newTicker;
 
    if (type == TYPE.CRYPTO) {
-
       try {
-
          const NAME_TO = `fsym=${name}&tsym=USD`;
          const HISTO = {
             MIN: 'histominute?',
@@ -129,7 +126,7 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
          const requests = [];
          cryptoURLs.map( url => {
             requests.push(axios.get(url));
-         })
+         });
 
          const resolved = await axios.all(requests);
 
@@ -138,7 +135,10 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
             const chartData = {};
             for (let i = 0; i < resolved.length; i++) {
                const req = resolved[i];
-               const reqData = req.data.Data.map(obj => _.pick(obj, ['close', 'time']));
+               const reqData = req.data.Data.map(obj => {
+                  const selectedProps = _.pick(obj, ['close', 'time'])
+                  return {time: selectedProps.time, price: selectedProps.close};
+               });
                chartData[chartFreq[i]] = reqData;
             }
             const addChart = new Chart({ ...newTicker, data: chartData});
@@ -149,17 +149,58 @@ const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //return
          console.log('aTtC err');
          console.log(err);
       }
-    }
+   }
+   else if (type == TYPE.STOCK) {
+
+      let stockURLs = [
+         /*day*/ `${BASE_URL.STOCK}/stock/${name}/chart/1d`,
+         /*month*/ `${BASE_URL.STOCK}/stock/${name}/chart/1m`,
+         /*threeMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/3m`,
+         /*sixMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/6m`,
+         /*year*/ `${BASE_URL.STOCK}/stock/${name}/chart/1y`,
+      ];
+
+      const requests = [];
+      stockURLs.map( url => {
+         requests.push(axios.get(url));
+      });
+
+      const resolved = await axios.all(requests);
+
+      const chartFreq = ['day', 'month', 'threeMonth', 'sixMonth', 'year'];
+
+      const chartData = {};
+      for (let i = 0; i < resolved.length; i++) {
+         const req = resolved[i];
+
+         const reqRemovePriceZero = req.data.filter(obj => {
+            if ( (obj.close && obj.close != 0) || (obj.average && obj.average != 0)) {
+               return true;
+            }
+            return false;
+
+         });
+
+         const reqData = reqRemovePriceZero.map(obj => {
+            const selectedProps = _.pick(obj, ['date', 'average', 'close'])
+            // console.log('selectedProps = ', selectedProps);
+            const price = selectedProps.close ? selectedProps.close : selectedProps.average;
+            return {time: selectedProps.date, price};
+      });
+         chartData[chartFreq[i]] = reqData;
+      }
+      const addChart = new Chart({...newTicker, data: chartData});
+      await addChart.save();
+   }
 }
 
 const findChartData = async (name, type) => {
    console.log('fcd');
    console.log('name, type = ', name, type);
-  if (type == TYPE.CRYPTO) {
 
    let rawChart = await Chart.findOne({name, type}, 'data').lean();
    let count = 0;
-   while (!rawChart) {
+   while (!rawChart && count < 50) {
       await delay(300);
       console.log(count);
       rawChart = await Chart.findOne({name, type}, 'data').lean();
@@ -174,36 +215,14 @@ const findChartData = async (name, type) => {
          chartData[key] = { times: [], prices: []};
 
          _.forEach(rawChartData[key], (timeClose) => {
-            const {time, close} = timeClose;
+            const {time, price} = timeClose;
             chartData[key].times.push(time);
-            chartData[key].prices.push(close);
+            chartData[key].prices.push(price);
          });
       }
       console.log('end of fCD for crytpo');
       return chartData;
    }
-  }
-
-   if(type == TYPE.STOCK) {
-      const queryChart = await Chart.findOne( { name, type } );
-      const timeSeries = queryChart.data.data;
-
-      const chartData = { prices: [], times: [] };
-
-      for (const key in timeSeries) {
-
-         const price = timeSeries[key]['average'];
-         const time = timeSeries[key]['label'];
-         const minute = timeSeries[key]['minute'];
-
-         if(price != 0 && minute[4]%5 == 0) {
-           chartData.prices.push(price);
-           chartData.times.push(time);
-         }
-      }
-
-    return chartData;
-    }
 }
 
 module.exports = app => {
@@ -236,12 +255,7 @@ module.exports = app => {
          res.send( { price } );
 
          if (!queryTicker) {
-            if ( type == TYPE.CRYPTO) {
-               addTickerToCharts(newTicker);
-            }
-            else if ( type == TYPE.STOCK) {
-               addChartToCharts(newTicker);
-            }
+            addTickerToCharts(newTicker);
          }
 
          //Adding ticker to User's tickerList
@@ -286,7 +300,6 @@ module.exports = app => {
            console.log(err);
            return res.status(500).send(err);
         }
-    ////
 
    });
 
@@ -305,10 +318,8 @@ module.exports = app => {
 
          for (let i = 0; i < tickerList.length; i++) {
             const { name, type} = tickerList[i];
-            if (type == TYPE.CRYPTO) {
-               const chartData = await findChartData(name, type);
-               allChartData[type][name] = chartData;
-            }
+            const chartData = await findChartData(name, type);
+            allChartData[type][name] = chartData;
          }
 
          res.send(allChartData);

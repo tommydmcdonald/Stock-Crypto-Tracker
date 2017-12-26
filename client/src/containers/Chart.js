@@ -5,7 +5,7 @@ import { loadChartData, selectChartFreq } from '../actions'
 import {Line} from 'react-chartjs-2';
 import { Row, Col, Tabs, Tab } from 'react-materialize';
 import _ from 'lodash';
-import { FETCH_CHART_DATA, LOAD_CHART_DATA } from '../actions/types';
+import { FETCH_CHART_DATA, LOAD_CHART_DATA, TYPE } from '../actions/types';
 
 
 class Chart extends Component {
@@ -29,7 +29,13 @@ class Chart extends Component {
 
          if ( chartData[type] && chartData[type][name] && chartData[type][name][frequency]) {
             prices = chartData[type][name][frequency].prices;
-            times = chartData[type][name][frequency].times.map( time => new Date(time*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) );
+            if(type == TYPE.CRYPTO) {
+               times = chartData[type][name][frequency].times.map( time => new Date(time*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) );
+            }
+            else {
+               times = chartData[type][name][frequency].times;
+            }
+            
          }
       }
 
