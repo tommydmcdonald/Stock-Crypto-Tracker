@@ -153,8 +153,6 @@ const findChartData = async (name, type) => {
    const rawChart = await Chart.findOne({name, type}, 'data').lean();
    const rawChartData = rawChart.data;
 
-   console.log('rawChartData keys = ', Object.keys(rawChartData) );
-
    const chartData = {};
    for (const key in rawChartData) {
       chartData[key] = { times: [], prices: []};
@@ -278,16 +276,24 @@ module.exports = app => {
    });
 
    app.get('/api/charts', async (req, res) => {
-      const { tickerList } = await User.findById( req.user._id, 'tickerList -_id');
-      const allChartData = { STOCK: {}, CRYPTO: {} };
+      try {
+         const { tickerList } = await User.findById( req.user._id, 'tickerList -_id');
+         const allChartData = { STOCK: {}, CRYPTO: {} };
 
-      for (let i = 0; i < tickerList.length; i++) {
-         const { name, type} = tickerList[i];
-         const chartData = await findChartData(name, type);
-         allChartData[type][name] = chartData;
+         for (let i = 0; i < tickerList.length; i++) {
+            const { name, type} = tickerList[i];
+            if (type == TYPE.CRYPTO) {
+               const chartData = await findChartData(name, type);
+               allChartData[type][name] = chartData;
+            }
+         }
+
+         res.send(allChartData);
+      } catch (err) {
+         console.log('/api/charts - err');
+         console.log(err);
       }
 
-      res.send(allChartData);
    });
 
    app.get('/api/charts/:type/:name', async (req, res) => {

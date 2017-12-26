@@ -101,9 +101,11 @@ class Chart extends Component {
    }
 
    onTabChange(newTab) {
-      const index = parseInt(newTab[1]);
-
+      console.log('newTab = ', newTab);
+      const index = parseInt(newTab[ newTab.length - 1 ]);
+      console.log('index = ', index);
       let frequency = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'][index];
+      console.log('frequency = ', frequency);
 
       this.props.selectChartFreq({ frequency });
    }
