@@ -7,7 +7,7 @@ export const loadChartData = () => async dispatch => { //used to laod initial ch
 }
 
 export const fetchChartData = (name, type) => async dispatch => {
-   console.log('fetchchartdata');
+   console.log('fetch chart data');
    const res = await axios.get(`/api/charts/${type}/${name}`);
    const newChart = {name, type, data: res.data};
    dispatch({ type: FETCH_CHART_DATA, payload: newChart});
