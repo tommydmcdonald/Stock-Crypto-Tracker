@@ -202,15 +202,14 @@ module.exports = app => {
          if (!queryTicker) {  //if ticker is not in Ticker db, add it
             console.log('!queryTicker');
             const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
-            const chartAddSuccess = await addChartToCharts(newTicker);    // puts chart data into db as well if valid ticker
 
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
                return;
             }
-            if (!chartAddSuccess) { //if ticker is not valid API ticker
-               res.send( { error: 'Ticker could not be added.'} )
-            }
+            // if (!chartAddSuccess) { //if ticker is not valid API ticker
+            //    res.send( { error: 'Ticker could not be added.'} )
+            // }
 
          }
          //if exists in db or once added, send price back
@@ -219,13 +218,19 @@ module.exports = app => {
          res.send( { price } );
 
          if (!queryTicker) {
-            addTickerToCharts(newTicker);
+            if ( type == TYPE.CRYPTO) {
+               addTickerToCharts(newTicker);
+            }
+            else if ( type == TYPE.STOCK) {
+               addChartToCharts(newTicker);
+            }
          }
 
          //Adding ticker to User's tickerList
          await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
       } catch(err) {
          console.log('err in api/post');
+         console.log(err);
          res.send( { error: 'Ticker could not be added.'} )
       }
 
