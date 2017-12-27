@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ReactTestUtils from 'react-dom/test-utils';
 import { bindActionCreators } from 'redux';
 import { loadChartData, selectChartFreq } from '../actions'
 import {Line} from 'react-chartjs-2';
-import { Row, Col, Tabs, Tab } from 'react-materialize';
+import { Row, Col } from 'react-materialize';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import _ from 'lodash';
 import { FETCH_CHART_DATA, LOAD_CHART_DATA, TYPE } from '../actions/types';
 
@@ -18,6 +20,25 @@ class Chart extends Component {
       this.props.loadChartData();
    }
 
+   convertFrequency(freq) {
+      switch (freq) {
+         case 'Hour':
+            return 'hour';
+         case 'Day':
+            return 'day';
+         case 'Week':
+            return 'week';
+         case 'Month':
+            return 'month';
+         case '3 Month':
+            return 'threeMonth';
+         case '6 Month':
+            return 'sixMonth';
+         case 'Year':
+            return 'year';
+      }
+   }
+
    formatChartData() {
       let prices = [0];
       let times = [0];
@@ -25,7 +46,7 @@ class Chart extends Component {
       if (this.props.selectedChart.name && this.props.chartData) {
          const { name, type } = this.props.selectedChart;
          const { chartData } = this.props;
-         const { frequency } = this.props.selectedChart;
+         const frequency = this.convertFrequency(this.props.selectedChart.frequency);
 
          if ( chartData[type] && chartData[type][name] && chartData[type][name][frequency]) {
             prices = chartData[type][name][frequency].prices;
@@ -35,7 +56,6 @@ class Chart extends Component {
             else {
                times = chartData[type][name][frequency].times;
             }
-            
          }
       }
 
@@ -85,35 +105,25 @@ class Chart extends Component {
                <Col s={4}><p className="white-text">price: ${priceText.price} <br />value owned: ${priceText.amtOwned}</p></Col>
             </div>
          </Row>
-
-
-
-
       )
    }
 
    renderTabs() {
-      return (
-         <Tabs className="time-series-tabs" onChange={ (num) => {this.onTabChange(num)} }>
-            <Tab title='Hour'></Tab>
-            <Tab title='Day'></Tab>
-            <Tab title='Week'></Tab>
-            <Tab title='Month'></Tab>
-            <Tab title='3 Month'></Tab>
-            <Tab title='6 Month'></Tab>
-            <Tab title='Year'></Tab>
-         </Tabs>
-      )
-   }
+      if (this.props.selectedChart.type) {
+         const tabTitles = {
+            [TYPE.STOCK]: ['Day', 'Month', '3 Month', '6 Month', 'Year'],
+            [TYPE.CRYPTO]: ['Hour', 'Day', 'Week', 'Month', '3 Month', '6 Month', 'Year']
+         }
 
-   onTabChange(newTab) {
-      console.log('newTab = ', newTab);
-      const index = parseInt(newTab[ newTab.length - 1 ]);
-      console.log('index = ', index);
-      let frequency = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'][index];
-      console.log('frequency = ', frequency);
-
-      this.props.selectChartFreq({ frequency });
+         const { type, frequency } = this.props.selectedChart;
+         return (
+            <div>
+               <Tabs value={frequency} onChange={ (frequency) => this.props.selectChartFreq({ frequency }) }>
+                  { tabTitles[type].map( title => <Tab label={title} value={title}/> ) }
+               </Tabs>
+            </div>
+         );
+      }
    }
 
    render() {

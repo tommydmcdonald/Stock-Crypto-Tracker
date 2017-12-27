@@ -20,8 +20,7 @@ export const addTicker = (newTicker, tickerListSize) => async dispatch => { //ad
    else { //add ticker price and load chart data
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, price } });
       if (tickerListSize == 0) { //if nothing in tickerList, nothing will be graphed. Graph newly added ticker, since it is the only ticker
-         // uncomment later
-         // dispatch({ type: SELECT_CHART, payload: {name, type} });
+         dispatch({ type: SELECT_CHART, payload: {name, type} });
       }
       dispatch(fetchChartData(name, type));
    }

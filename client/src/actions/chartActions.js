@@ -14,6 +14,7 @@ export const fetchChartData = (name, type) => async dispatch => {
 }
 
 export const selectChart = ({ name, type }) => dispatch => {
+   console.log('selectChart');
    dispatch({type: SELECT_CHART, payload: { name, type } });
 }
 
