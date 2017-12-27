@@ -3,10 +3,21 @@ const { Schema } = mongoose;
 
 const TYPE = ['STOCK', 'CRYPTO'];
 
+const chartDataSchema = new Schema({
+   hour: [],
+   day: [],
+   week: [],
+   month: [],
+   threeMonth: [],
+   sixMonth: [],
+   year: [],
+   _id: false
+});
+
 const chartSchema = new Schema({
    name: String,
    type: { type: String, enum: [...TYPE] },
-   data: { data: Schema.Types.Mixed }
+   data: chartDataSchema
 });
 
 mongoose.model('chart', chartSchema);

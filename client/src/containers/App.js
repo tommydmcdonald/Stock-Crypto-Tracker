@@ -7,7 +7,7 @@ import * as actions from '../actions';
 
 import '../style/style.css';
 // import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
-
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Home from '../components/Home';
 import Landing from '../components/Landing'
 import Header from './Header';
@@ -20,6 +20,7 @@ class App extends Component {
    render() {
       return (
          <div>
+            <MuiThemeProvider>
             <BrowserRouter>
                <div>
                   <Header />
@@ -27,6 +28,7 @@ class App extends Component {
                   <Route path="/landing" component={Landing} />
                </div>
             </BrowserRouter>
+            </MuiThemeProvider>
          </div>
       );
    }

@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 require('./routes/authRoutes')(app);
 require('./routes/stockRoutes')(app);
 
-updateTickerData(30 * 1000);
+// updateTickerData(11 * 1000);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);

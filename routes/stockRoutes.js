@@ -5,93 +5,224 @@ const delay = require('delay');
 const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
 const Chart = mongoose.model('chart');
-const { replaceKeys } = require('./index');
 const { BASE_URL, TYPE } = require('../config/keys');
 
-const ONE_DAY = '1d';
-const ONE_MONTH = '1m';
-const THREE_MONTHS = '3m';
-const SIX_MONTHS = '6m';
-const ONE_YEAR = '1y';
+const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
+   try {
+      const { name, type } = newTicker;
 
-const addTickerToTickers = async (newTicker  = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
+       if(type == TYPE.STOCK) {
+         const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
+         const { data } = await axios.get(URL);
 
-  const { name, type } = newTicker;
+         const price = data.close;
 
-  if(type == TYPE.STOCK) {
-    const { name, type } = newTicker;
-    const URL = `${BASE_URL}/stock/${name}/quote`;
-    const { data } = await axios.get(URL);
+         if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+           return false;
+         }
+         else { //valid ticker
+           const addTicker = new Ticker ({ ...newTicker, price  });
+           await addTicker.save();
+           return true;
+         }
+       }
 
-    if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
-      return false;
-    }
-    else { //valid ticker
-      const dataFormatted = replaceKeys(data);
+      if (type == TYPE.CRYPTO) {
+         const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
+         let PRICE_URL;
+         if ( _.includes(coinbaseTickers, name) ) {
+            PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD&e=Coinbase`;
+         }
+         else {
+            PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD`;
+         }
 
-      const addTicker = new Ticker ({ ...newTicker, data: { data: dataFormatted } });
-      await addTicker.save();
-      return true;
-    }
-  }
+         const res = await axios.get(PRICE_URL);//.data.USD;
+         const price = res.data.USD;
 
-}
+         if (res.data.Response == 'Error') {
+            return false;
+         }
+
+         try {
+            const addTicker = new Ticker({ ...newTicker, price })
+            await addTicker.save();
+         } catch(err) {
+            console.log(err)
+         }
+
+         return true;
+       }
+
+   } catch (err) {
+      console.log('aTtT err');
+      console.log(err);
+   }
+ }
 
 const addChartToCharts = async (newChart = {name: '', type: ''}) => {
+   try {
+      const { name, type } = newChart;
+      const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
 
-  const { name, type } = newChart;
+      let stockURLs = [
+         /*day*/ `${BASE_URL.STOCK}/stock/${name}/chart/1d`,
+         /*month*/ `${BASE_URL.STOCK}/stock/${name}/chart/1m`,
+         /*threeMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/3m`,
+         /*sixMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/6m`,
+         /*year*/ `${BASE_URL.STOCK}/stock/${name}/chart/1y`,
+      ];
 
-  if(type == TYPE.STOCK) {
-    const URL = `${BASE_URL}/stock/${name}/chart/1d`;
-    const { data } = await axios.get(URL);
+        const URL = `${BASE_URL.STOCK}/stock/${name}/chart/1d`;
+        const { data } = await axios.get(URL);
 
-    if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
-       return false;
-    }
-    else { //valid ticker
-       const dataFormatted = replaceKeys(data);
+        if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+           return false;
+        }
+        else { //valid ticker
+           const dataFormatted = data;
 
-       const addChart = new Chart ({ ...newChart, data: { data: dataFormatted } });
-       await addChart.save();
-       return true;
-    }
-  }
+           const addChart = new Chart ({ ...newChart, data: { data: dataFormatted } });
+           await addChart.save();
+           return true;
+        }
+   } catch(err) {
+      console.log(err)
+   }
 
 }
 
-// Finds current price of only stocks. I want to refactor to pull other information
-// from stock quotes like full company name or market cap
-const findCurrentPrice = (ticker) => {
+const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
+   console.log('aTtC');
+   const { name, type } = newTicker;
 
-   const { name, type } = ticker;
-   const currentPrice = ticker.data['data']['latestPrice'];
+   if (type == TYPE.CRYPTO) {
+      try {
+         const NAME_TO = `fsym=${name}&tsym=USD`;
+         const HISTO = {
+            MIN: 'histominute?',
+            HOUR: 'histohour?',
+            DAY: 'histoday?'
+         };
 
-   return currentPrice;
+         const URL = BASE_URL.CRYPTO;
+         let cryptoURLs = [
+            /*hour*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=60&aggregate=1`, // 1hr * 60 min = 60 min
+            /*day*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=288&aggregate=5`, // 1 day * 24hrs * 60 min = 1440 min
+            /*week*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=672&aggregate=15`, // 7 day * 24hrs * 60 min = 10,080 min
+            /*month*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=240&aggregate=3`, //30 days * 24hrs = 720 hours
+            /*threeMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=364&aggregate=6`, //91 days * 24hrs = 2,184 hours
+            /*sixMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=364&aggregate=12`, //182 days * 24hrs = 4,368 hours
+            /*year*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1460&aggregate=6` //365 days * 24hrs = 8,760 hours
+         ];
+
+         //if supported by coinbase, use coinbase as exchange
+         const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
+
+         if ( _.includes(coinbaseTickers, name) ) {
+            cryptoURLs = cryptoURLs.filter( url => url += '&e=Coinbase');
+         }
+
+         const requests = [];
+         cryptoURLs.map( url => {
+            requests.push(axios.get(url));
+         });
+
+         const resolved = await axios.all(requests);
+
+            const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
+
+            const chartData = {};
+            for (let i = 0; i < resolved.length; i++) {
+               const req = resolved[i];
+               const reqData = req.data.Data.map(obj => {
+                  const selectedProps = _.pick(obj, ['close', 'time'])
+                  return {time: selectedProps.time, price: selectedProps.close};
+               });
+               chartData[chartFreq[i]] = reqData;
+            }
+            const addChart = new Chart({ ...newTicker, data: chartData});
+            await addChart.save();
+            console.log('addChart save');
+
+      } catch(err) {
+         console.log('aTtC err');
+         console.log(err);
+      }
+   }
+   else if (type == TYPE.STOCK) {
+
+      let stockURLs = [
+         /*day*/ `${BASE_URL.STOCK}/stock/${name}/chart/1d`,
+         /*month*/ `${BASE_URL.STOCK}/stock/${name}/chart/1m`,
+         /*threeMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/3m`,
+         /*sixMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/6m`,
+         /*year*/ `${BASE_URL.STOCK}/stock/${name}/chart/1y`,
+      ];
+
+      const requests = [];
+      stockURLs.map( url => {
+         requests.push(axios.get(url));
+      });
+
+      const resolved = await axios.all(requests);
+
+      const chartFreq = ['day', 'month', 'threeMonth', 'sixMonth', 'year'];
+
+      const chartData = {};
+      for (let i = 0; i < resolved.length; i++) {
+         const req = resolved[i];
+
+         const reqRemovePriceZero = req.data.filter(obj => {
+            if ( (obj.close && obj.close != 0) || (obj.average && obj.average != 0)) {
+               return true;
+            }
+            return false;
+
+         });
+
+         const reqData = reqRemovePriceZero.map(obj => {
+            const selectedProps = _.pick(obj, ['date', 'average', 'close'])
+            // console.log('selectedProps = ', selectedProps);
+            const price = selectedProps.close ? selectedProps.close : selectedProps.average;
+            return {time: selectedProps.date, price};
+      });
+         chartData[chartFreq[i]] = reqData;
+      }
+      const addChart = new Chart({...newTicker, data: chartData});
+      await addChart.save();
+   }
 }
 
 const findChartData = async (name, type) => {
+   console.log('fcd');
+   console.log('name, type = ', name, type);
 
-  if(type == TYPE.STOCK) {
-     const queryChart = await Chart.findOne( { name, type } );
-     const timeSeries = queryChart.data.data;
+   let rawChart = await Chart.findOne({name, type}, 'data').lean();
+   let count = 0;
+   while (!rawChart && count < 50) {
+      await delay(300);
+      console.log(count);
+      rawChart = await Chart.findOne({name, type}, 'data').lean();
+      count++;
+   }
 
-     const chartData = { prices: [], times: [] };
+   if (rawChart) {
+      const rawChartData = rawChart.data;
 
-     for (const key in timeSeries) {
+      const chartData = {};
+      for (const key in rawChartData) {
+         chartData[key] = { times: [], prices: []};
 
-        const price = timeSeries[key]['average'];
-        const time = timeSeries[key]['label'];
-        const minute = timeSeries[key]['minute'];
-
-        if(price != 0 && minute[4]%5 == 0) {
-          chartData.prices.push(price);
-          chartData.times.push(time);
-        }
-     }
-
-   return chartData;
-  }
-
+         _.forEach(rawChartData[key], (timeClose) => {
+            const {time, price} = timeClose;
+            chartData[key].times.push(time);
+            chartData[key].prices.push(price);
+         });
+      }
+      console.log('end of fCD for crytpo');
+      return chartData;
+   }
 }
 
 module.exports = app => {
@@ -108,27 +239,31 @@ module.exports = app => {
          if (!queryTicker) {  //if ticker is not in Ticker db, add it
             console.log('!queryTicker');
             const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
-            const chartAddSuccess = await addChartToCharts(newTicker);    // puts chart data into db as well if valid ticker
 
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
                res.send( { error: 'Ticker could not be added.'} )
+               return;
             }
-            if (!chartAddSuccess) { //if ticker is not valid API ticker
-               res.send( { error: 'Ticker could not be added.'} )
-            }
-
+            // if (!chartAddSuccess) { //if ticker is not valid API ticker
+            //    res.send( { error: 'Ticker could not be added.'} )
+            // }
 
          }
          //if exists in db or once added, send price back
-         const queryTic = await Ticker.findOne( {'name': newTicker.name, 'type': newTicker.type } );
-         const price = findCurrentPrice(queryTic);
+         const { price } = await Ticker.findOne( { name, type } );
+
          res.send( { price } );
+
+         if (!queryTicker) {
+            addTickerToCharts(newTicker);
+         }
 
          //Adding ticker to User's tickerList
          await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
-
       } catch(err) {
-         res.send(err);
+         console.log('err in api/post');
+         console.log(err);
+         res.send( { error: 'Ticker could not be added.'} )
       }
 
    });
@@ -154,16 +289,17 @@ module.exports = app => {
            for (let i = 0; i < tickerList.length; i++) {
 
               const { type, name } = tickerList[i];
-              const ticker = await Ticker.findOne( { name, type });
+              const { price } = await Ticker.findOne( { name, type });
 
-              currentPriceList[type][name] = findCurrentPrice(ticker);
+              currentPriceList[type][name] = price;
            }
            res.send(currentPriceList);
 
         } catch(err) {
+           console.log('current_prices err');
+           console.log(err);
            return res.status(500).send(err);
         }
-    ////
 
    });
 
@@ -175,27 +311,38 @@ module.exports = app => {
       res.sendStatus(200);
    });
 
-   app.get('/api/stock_charts', async (req, res) => {
-      const { tickerList } = await User.findById( req.user._id, 'tickerList -_id');
-      const allChartData = { STOCK: {}, CRYPTO: {} };
+   app.get('/api/charts', async (req, res) => {
+      try {
+         const { tickerList } = await User.findById( req.user._id, 'tickerList -_id');
+         const allChartData = { STOCK: {}, CRYPTO: {} };
 
-      console.log('tickerList = ', tickerList);
+         for (let i = 0; i < tickerList.length; i++) {
+            const { name, type} = tickerList[i];
+            const chartData = await findChartData(name, type);
+            allChartData[type][name] = chartData;
+         }
 
-      for (let i = 0; i < tickerList.length; i++) {
-         const { name, type} = tickerList[i];
-         const chartData = await findChartData(name, type);
-         allChartData[type][name] = chartData;
+         res.send(allChartData);
+      } catch (err) {
+         console.log('/api/charts - err');
+         console.log(err);
       }
 
-      res.send(allChartData);
    });
 
-   app.get('/api/stock_charts/:type/:name', async (req, res) => {
-      const name = req.params.name.toUpperCase();
-      const type = req.params.type.toUpperCase();
+   app.get('/api/charts/:type/:name', async (req, res) => {
+      try {
+         const name = req.params.name.toUpperCase();
+         const type = req.params.type.toUpperCase();
 
-      const chartData = await findChartData(name, type);
-      res.send(chartData);
+         const chartData = await findChartData(name, type);
+
+         res.send(chartData);
+      } catch (err) {
+         console.log('/api/charts/:type/:name err');
+         console.log(err);
+      }
+
    });
 
    app.get('/api/tickers/suggestions', async (req, res) => {

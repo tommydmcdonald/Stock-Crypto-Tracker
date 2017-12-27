@@ -9,7 +9,9 @@ module.exports = {
    FETCH_TICKER_PRICE: 'fetch_ticker_price',
    TYPE: {STOCK: 'STOCK', CRYPTO: 'CRYPTO'},
    FETCH_CHART_DATA: 'fetch_chart_data',
-   LOAD_CHART_DATA: 'load_chart_data'
+   LOAD_CHART_DATA: 'load_chart_data',
+   SELECT_CHART: 'select_chart',
+   SELECT_CHART_FREQ: 'select_chart_freq'
 }
 
 // export const GET_TICKER_DATA = 'get_ticker_data';
