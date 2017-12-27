@@ -21,6 +21,10 @@
   background-color: #212B33;
 }
 
+.portfolio-value {
+  font-size: 21px;
+}
+
 #dropdown {
   z-index:1000;
 }
@@ -66,9 +70,12 @@
 
 .collapsible-body {
   background-color: #3c444c !important;
-  margin: 0px !important;
   padding-left: 10px !important;
+}
 
+.black-text {
+  margin-top: -25px;
+  margin-bottom: -25px;
 }
 
 .header {
@@ -88,7 +95,7 @@
 }
 
 .side-nav {
-   width: 370px;
+   width: 360px;
 }
 
 .quantity {
