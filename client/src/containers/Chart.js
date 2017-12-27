@@ -13,7 +13,6 @@ import { FETCH_CHART_DATA, LOAD_CHART_DATA, TYPE } from '../actions/types';
 class Chart extends Component {
    constructor(props) {
       super(props);
-      this.onTabChange = this.onTabChange.bind(this);
    }
 
    componentDidMount() {
@@ -118,7 +117,7 @@ class Chart extends Component {
          const { type, frequency } = this.props.selectedChart;
          return (
             <div>
-               <Tabs value={frequency} onChange={ (frequency) => this.props.selectChartFreq({ frequency }) }>
+               <Tabs className='time-series-tabs' value={frequency} onChange={ (frequency) => this.props.selectChartFreq({ frequency }) }>
                   { tabTitles[type].map( title => <Tab label={title} value={title}/> ) }
                </Tabs>
             </div>
