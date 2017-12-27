@@ -112,8 +112,7 @@ class SideNav extends Component {
       return (
          <div className="black-text">
             <ul className="collection">
-               <li className="collection-item">
-                  <Row>
+                  <Row className="ticker-price-row">
                      <Col s={2}>Ticker</Col>
                      <Col className="price-text" s={3}>
                         Price
@@ -122,7 +121,6 @@ class SideNav extends Component {
                         <div className="quantity-text">Quantity</div>
                      </Col>
                   </Row>
-               </li>
                {this.props.tickerList.map(ticker =>
                   this.renderTracker(ticker, renderType)
                )}

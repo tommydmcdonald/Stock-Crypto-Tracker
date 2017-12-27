@@ -25,6 +25,10 @@
   z-index:1000;
 }
 
+.ticker-price-row {
+  margin: 0px !important;
+}
+
 .material-icons {
   font-size: 60px;
 }
@@ -61,8 +65,10 @@
 }
 
 .collapsible-body {
-   background-color: #3c444c !important;
-   padding: 0px !important;
+  background-color: #3c444c !important;
+  margin: 0px !important;
+  padding-left: 10px !important;
+
 }
 
 .header {
@@ -102,9 +108,7 @@
    padding-bottom: 10px;
 }
 
-.collapsible-body {
-   padding-left: 10px !important;
-}
+
 
 .quantity-text {
    padding-right: .2em !important;
