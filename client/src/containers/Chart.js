@@ -41,6 +41,7 @@ class Chart extends Component {
    formatChartData() {
       let prices = [0];
       let times = [0];
+      const frequency = this.convertFrequency(this.props.selectedChart.frequency);
 
       if (this.props.selectedChart.name && this.props.chartData) {
          const { name, type } = this.props.selectedChart;
@@ -62,7 +63,7 @@ class Chart extends Component {
         labels: times,
         datasets: [
           {
-            label: '1 Hour',
+            label: frequency,
             fill: false,
             lineTension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.4)',
@@ -126,12 +127,11 @@ class Chart extends Component {
    }
 
    render() {
-
       return (
          <div>
-            {this.renderTabs()}
+           {this.renderLabel()}
             <div id="chartPiece">
-               {this.renderLabel()}
+              {this.renderTabs()}
                <Line data={this.formatChartData()} width={600} height={250} options={{maintainAspectRatio: false}} ></Line>
             </div>
          </div>
