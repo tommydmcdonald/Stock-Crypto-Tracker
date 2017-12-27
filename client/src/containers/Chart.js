@@ -46,7 +46,6 @@ class Chart extends Component {
       if (this.props.selectedChart.name && this.props.chartData) {
          const { name, type } = this.props.selectedChart;
          const { chartData } = this.props;
-         const frequency = this.convertFrequency(this.props.selectedChart.frequency);
 
          if ( chartData[type] && chartData[type][name] && chartData[type][name][frequency]) {
             prices = chartData[type][name][frequency].prices;
@@ -132,7 +131,7 @@ class Chart extends Component {
            {this.renderLabel()}
             <div id="chartPiece">
               {this.renderTabs()}
-               <Line data={this.formatChartData()} width={600} height={250} options={{maintainAspectRatio: false}} ></Line>
+               <Line data={this.formatChartData()}></Line>
             </div>
          </div>
       );
