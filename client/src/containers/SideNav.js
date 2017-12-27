@@ -10,7 +10,7 @@ import { PieChart, Sector, Pie, Cell, ResponsiveContainer, Legend, Tooltip } fro
 import { TYPE } from '../actions/types';
 import Tracker from './Tracker';
 import PortfolioValue from '../components/PortfolioValue';
-import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartData, updateQuantity, selectChart, selectChartFreq } from '../actions/index';
+import { addTicker, loadTickerList, loadTickerPrices, removeTicker, loadChartData, updateQuantity, selectChart } from '../actions/index';
 
 // http://recharts.org/#/en-US/guide/getting-started
 // For dynamic pie chart documentation
@@ -91,9 +91,9 @@ class SideNav extends Component {
          });
 
          return (
-            <li className="collection-item" key={key}>
+            <li class="collection-item">
                <Tracker
-                  name={name} type={type}
+                  key={key} name={name} type={type}
                   currentPrice={currentPrice} quantity={quantity} chartData={chartData}
                   removeTicker={this.props.removeTicker}
                   updateQuantity={this.props.updateQuantity}
@@ -223,7 +223,7 @@ function mapStateToProps({tickerList, priceList, auth, selectedChart}) {
 }
 
 function mapDispatchToProps(dispatch) {
-   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker, updateQuantity, selectChart, selectChartFreq }, dispatch);
+   return bindActionCreators({ loadTickerList, loadTickerPrices, removeTicker, updateQuantity, selectChart }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideNav);
