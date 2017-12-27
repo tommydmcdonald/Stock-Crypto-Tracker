@@ -117,8 +117,8 @@ class Chart extends Component {
          const { type, frequency } = this.props.selectedChart;
          return (
             <div>
-               <Tabs className='time-series-tabs' value={frequency} onChange={ (frequency) => this.props.selectChartFreq({ frequency }) }>
-                  { tabTitles[type].map( title => <Tab label={title} value={title}/> ) }
+               <Tabs value={frequency} onChange={ (frequency) => this.props.selectChartFreq({ frequency }) }>
+                  { tabTitles[type].map( title => <Tab label={title} value={title} className='time-series-tabs'/> ) }
                </Tabs>
             </div>
          );
