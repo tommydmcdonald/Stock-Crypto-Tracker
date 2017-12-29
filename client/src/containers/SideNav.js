@@ -201,7 +201,7 @@ class SideNav extends Component {
                 <text className="portfolio-value" x={175} y={175} dy={8} textAnchor="middle" fill="#FFFFFF">
                   ${this.calculateValue()}
                 </text>
-                 <Pie data={data} cx={170} cy={170} innerRadius={70} outerRadius={80} fill="#8884d8" paddingAngle={6}>
+                 <Pie data={data} cx={170} cy={170} innerRadius={65} outerRadius={80} fill="#8884d8" paddingAngle={6}>
                     {data.map((entry, index) => (
                        <Cell fill={COLORS[index % COLORS.length]} />
                     ))}
