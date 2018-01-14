@@ -11,7 +11,7 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
    try {
       const { name, type } = newTicker;
 
-       if(type == TYPE.STOCK) {
+       if (type == TYPE.STOCK) {
          const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
          const { data } = await axios.get(URL);
 
