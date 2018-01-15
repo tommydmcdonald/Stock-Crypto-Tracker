@@ -65,6 +65,7 @@ class SideNav extends Component {
       this.props.removeTicker(removingTicker);
    }
 
+
    renderTracker(tickerItem, renderType) {
       const { name, type, quantity } = tickerItem;
 
