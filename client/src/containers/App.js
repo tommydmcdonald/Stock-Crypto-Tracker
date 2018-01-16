@@ -23,7 +23,6 @@ class App extends Component {
             <MuiThemeProvider>
             <BrowserRouter>
                <div>
-                  <Header />
                   <Route exact path={"/"} component={this.props.auth ? Home : Landing} />
                   <Route path="/landing" component={Landing} />
                </div>
