@@ -6,19 +6,17 @@ require('./models/Tickers');
 const { TYPE, BASE_URL } = require('./config/keys');
 const mongoose = require('mongoose');
 const Ticker = mongoose.model('ticker');
+const { addTickerToCharts } = require('./routes/routeFunctions');
 
 const updateTickerDataCall = async () => {
    try {
       const tickerList = await Ticker.find({}).select('name type');
-
-      let requestType = [];
 
       const tickersWithUrls = tickerList.map( ticker => {
          const { type, name } = ticker;
          let PRICE_URL;
 
          if (type == TYPE.CRYPTO) {
-            requestType.push(TYPE.CRYPTO);
             const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
 
             if ( _.includes(coinbaseTickers, name) ) {
@@ -29,10 +27,9 @@ const updateTickerDataCall = async () => {
             }
          }
          else if (type == TYPE.STOCK) {
-            requestType.push(TYPE.STOCK);
             PRICE_URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
          }
-
+         console.log('url for ', name, type, 'is ', PRICE_URL);
          return { name, type, url: PRICE_URL}
       });
 
@@ -51,9 +48,10 @@ const updateTickerDataCall = async () => {
             price = resolved[i].data.USD;
          }
          else { //stock
-            price = resolved[i].data.close;
-         const tic = await Ticker.findByIdAndUpdate( _id, { $set: { price } });
+            price = resolved[i].data.latestPrice;
          }
+         console.log('Updating price for ', name, type, price);
+         const tic = await Ticker.findByIdAndUpdate( _id, { $set: { price } });
       }
    } catch(err) {
       console.log('err');
@@ -61,7 +59,25 @@ const updateTickerDataCall = async () => {
    }
 }
 
+const updateChartDataCall = async () => {
+   try {
+      const tickerList = await Ticker.find({}).select('name type');
+      _.forEach(tickerList, ticker => {
+         addTickerToCharts(ticker, 'update');
+      })
+
+   } catch (err) {
+      console.log('caught err');
+      console.log(err);
+   }
+}
+
 exports.updateTickerData = (intervalMS) => {
    updateTickerDataCall();
    setInterval(updateTickerDataCall, intervalMS);
+}
+
+exports.updateChartData = (intervalMS) => {
+   updateChartDataCall();
+   setInterval(updateChartDataCall, intervalMS);
 }

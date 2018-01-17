@@ -4,9 +4,9 @@ const Landing = () => {
    return (
       <div style={{ textAlign: 'center' }}>
          <h1>
-            StockCrypto Tracker
+            cryptofluence
          </h1>
-         Track your stock and cryptocurrency portfolio in one place
+         Your cryptocurrency and stock portfolio seamlessly together
       </div>
    )
 }

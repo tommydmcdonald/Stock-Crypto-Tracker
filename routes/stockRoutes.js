@@ -5,6 +5,7 @@ const delay = require('delay');
 const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
 const Chart = mongoose.model('chart');
+const { addTickerToCharts } = require('./routeFunctions');
 const { BASE_URL, TYPE } = require('../config/keys');
 
 const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
@@ -15,7 +16,7 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
          const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
          const { data } = await axios.get(URL);
 
-         const price = data.close;
+         const price = data.latestPrice;
 
          if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
            return false;
@@ -60,149 +61,12 @@ const addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //retur
    }
  }
 
-const addChartToCharts = async (newChart = {name: '', type: ''}) => {
-   try {
-      const { name, type } = newChart;
-      const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
-
-      let stockURLs = [
-         /*day*/ `${BASE_URL.STOCK}/stock/${name}/chart/1d`,
-         /*month*/ `${BASE_URL.STOCK}/stock/${name}/chart/1m`,
-         /*threeMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/3m`,
-         /*sixMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/6m`,
-         /*year*/ `${BASE_URL.STOCK}/stock/${name}/chart/1y`,
-      ];
-
-        const URL = `${BASE_URL.STOCK}/stock/${name}/chart/1d`;
-        const { data } = await axios.get(URL);
-
-        if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
-           return false;
-        }
-        else { //valid ticker
-           const dataFormatted = data;
-
-           const addChart = new Chart ({ ...newChart, data: { data: dataFormatted } });
-           await addChart.save();
-           return true;
-        }
-   } catch(err) {
-      console.log(err)
-   }
-
-}
-
-const addTickerToCharts = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
-   console.log('aTtC');
-   const { name, type } = newTicker;
-
-   if (type == TYPE.CRYPTO) {
-      try {
-         const NAME_TO = `fsym=${name}&tsym=USD`;
-         const HISTO = {
-            MIN: 'histominute?',
-            HOUR: 'histohour?',
-            DAY: 'histoday?'
-         };
-
-         const URL = BASE_URL.CRYPTO;
-         let cryptoURLs = [
-            /*hour*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=60&aggregate=1`, // 1hr * 60 min = 60 min
-            /*day*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=288&aggregate=5`, // 1 day * 24hrs * 60 min = 1440 min
-            /*week*/ `${URL}${HISTO.MIN}${NAME_TO}&limit=672&aggregate=15`, // 7 day * 24hrs * 60 min = 10,080 min
-            /*month*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=240&aggregate=3`, //30 days * 24hrs = 720 hours
-            /*threeMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=364&aggregate=6`, //91 days * 24hrs = 2,184 hours
-            /*sixMonth*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=364&aggregate=12`, //182 days * 24hrs = 4,368 hours
-            /*year*/ `${URL}${HISTO.HOUR}${NAME_TO}&limit=1460&aggregate=6` //365 days * 24hrs = 8,760 hours
-         ];
-
-         //if supported by coinbase, use coinbase as exchange
-         const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
-
-         if ( _.includes(coinbaseTickers, name) ) {
-            cryptoURLs = cryptoURLs.filter( url => url += '&e=Coinbase');
-         }
-
-         const requests = [];
-         cryptoURLs.map( url => {
-            requests.push(axios.get(url));
-         });
-
-         const resolved = await axios.all(requests);
-
-            const chartFreq = ['hour', 'day', 'week', 'month', 'threeMonth', 'sixMonth', 'year'];
-
-            const chartData = {};
-            for (let i = 0; i < resolved.length; i++) {
-               const req = resolved[i];
-               const reqData = req.data.Data.map(obj => {
-                  const selectedProps = _.pick(obj, ['close', 'time'])
-                  return {time: selectedProps.time, price: selectedProps.close};
-               });
-               chartData[chartFreq[i]] = reqData;
-            }
-            const addChart = new Chart({ ...newTicker, data: chartData});
-            await addChart.save();
-            console.log('addChart save');
-
-      } catch(err) {
-         console.log('aTtC err');
-         console.log(err);
-      }
-   }
-   else if (type == TYPE.STOCK) {
-
-      let stockURLs = [
-         /*day*/ `${BASE_URL.STOCK}/stock/${name}/chart/1d`,
-         /*month*/ `${BASE_URL.STOCK}/stock/${name}/chart/1m`,
-         /*threeMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/3m`,
-         /*sixMonth*/ `${BASE_URL.STOCK}/stock/${name}/chart/6m`,
-         /*year*/ `${BASE_URL.STOCK}/stock/${name}/chart/1y`,
-      ];
-
-      const requests = [];
-      stockURLs.map( url => {
-         requests.push(axios.get(url));
-      });
-
-      const resolved = await axios.all(requests);
-
-      const chartFreq = ['day', 'month', 'threeMonth', 'sixMonth', 'year'];
-
-      const chartData = {};
-      for (let i = 0; i < resolved.length; i++) {
-         const req = resolved[i];
-
-         const reqRemovePriceZero = req.data.filter(obj => {
-            if ( (obj.close && obj.close != 0) || (obj.average && obj.average != 0)) {
-               return true;
-            }
-            return false;
-
-         });
-
-         const reqData = reqRemovePriceZero.map(obj => {
-            const selectedProps = _.pick(obj, ['date', 'average', 'close'])
-            // console.log('selectedProps = ', selectedProps);
-            const price = selectedProps.close ? selectedProps.close : selectedProps.average;
-            return {time: selectedProps.date, price};
-      });
-         chartData[chartFreq[i]] = reqData;
-      }
-      const addChart = new Chart({...newTicker, data: chartData});
-      await addChart.save();
-   }
-}
-
 const findChartData = async (name, type) => {
-   console.log('fcd');
-   console.log('name, type = ', name, type);
 
    let rawChart = await Chart.findOne({name, type}, 'data').lean();
    let count = 0;
    while (!rawChart && count < 50) {
       await delay(300);
-      console.log(count);
       rawChart = await Chart.findOne({name, type}, 'data').lean();
       count++;
    }
@@ -220,7 +84,6 @@ const findChartData = async (name, type) => {
             chartData[key].prices.push(price);
          });
       }
-      console.log('end of fCD for crytpo');
       return chartData;
    }
 }
@@ -237,7 +100,6 @@ module.exports = app => {
          const queryTicker = await Ticker.findOne( { name, type });
 
          if (!queryTicker) {  //if ticker is not in Ticker db, add it
-            console.log('!queryTicker');
             const tickerAddSuccess = await addTickerToTickers(newTicker); //if not found, add to Ticker collection
 
             if (!tickerAddSuccess) { //if ticker is not valid API ticker
@@ -255,7 +117,7 @@ module.exports = app => {
          res.send( { price } );
 
          if (!queryTicker) {
-            addTickerToCharts(newTicker);
+            addTickerToCharts(newTicker, 'new');
          }
 
          //Adding ticker to User's tickerList
@@ -305,7 +167,6 @@ module.exports = app => {
 
    app.delete('/api/tickers/:type/:name', async (req, res) => { //delete a ticker in user's tickerList
       const { type, name } = req.params;
-      console.log('name = ', name, ' type= ', type);
 
       const updatedUser = await User.findByIdAndUpdate( req.user._id, { $pull: { tickerList: { name, type } }}, { new: true } );
       res.sendStatus(200);
