@@ -12,7 +12,7 @@ class Header extends Component {
          case null:
             return;
          case false:
-            return <Col><a href="/auth/google"><img src={require('../images/googlelogin.png')} /></a></Col>
+            return <Col><a href="/auth/google"><img className="googleSignIn" src={require('../img/google.png')} /></a></Col>
          default:
             return <Col><AccountDropDown /></Col>;
       }
