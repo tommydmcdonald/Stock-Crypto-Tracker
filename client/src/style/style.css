@@ -35,6 +35,8 @@
 
 .mainApp {
   background-color: #212B33;
+  height: 100% !important;
+  padding-bottom: 5%;
 }
 
 .portfolio-value {
