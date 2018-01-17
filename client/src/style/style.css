@@ -80,13 +80,20 @@
     background-color: #4A525A;
 }
 
-#collapsible-header {
-  background-color: #4A525A;
+.collection-item{
+  background-color: #dbdbdb !important;
+  width: 90%;
 }
 
 .collapsible-body {
-  background-color: #3c444c !important;
-  padding-left: 10px !important;
+  background-color: #dbdbdb !important;
+  padding-left: 10px;
+}
+
+.collapsible-header {
+  background-color: #4A525A !important;
+  padding-left: 10px;
+
 }
 
 .black-text {
@@ -101,18 +108,16 @@
 }
 
 .side-nav {
-  background-color: #4A525A;
+  background-color: #4A525A !important;
   z-index: 0;
   position: relative;
+  width: 360px;
 }
 
 .navbar-img {
   filter: blur(0px);
 }
 
-.side-nav {
-   width: 360px;
-}
 
 .quantity {
    width: 3.5em !important;
@@ -123,12 +128,12 @@
 
 .tracker-icon {
    padding: 0px !important;
-   height: 35px !important;
-   line-height: 40px !important;
+   height: 10px !important;
+   line-height: 10px !important;
 }
 
 .tracker-row {
-   padding-bottom: 10px;
+   padding-bottom: 5px;
 }
 
 

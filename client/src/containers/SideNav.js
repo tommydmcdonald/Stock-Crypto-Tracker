@@ -209,19 +209,18 @@ class SideNav extends Component {
                  </Pie>
                  <Tooltip />
                </PieChart>
-               <Divider />
-               <Collapsible className="ticker-collasp">
+               <Collapsible popout defaultActiveKey={0} className="collapsible-header">
                   <CollapsibleItem
-                     id="collapsible-header"
-                     className="white-text z-depth-6"
+                     id="collapsible-body"
+                     className="white-text z-depth-10"
                      header="Stocks"
                      icon="trending_up"
                   >
                      {this.renderTrackerList(TYPE.STOCK)}
                   </CollapsibleItem>
                   <CollapsibleItem
-                     id="collapsible-header"
-                     className="white-text z-depth-6"
+                     id="collapsible-body"
+                     className="white-text z-depth-10"
                      header="Crypto Currencies"
                      icon="trending_up"
                   >
