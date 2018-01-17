@@ -12,7 +12,7 @@ const Landing = () => {
              <div className="">
                <h1 className="brand-heading">Cryptofluence</h1>
                <p className="intro-text">A Free, Realtime, Stock and Cryptocurrency Portfolio Tracker.
-                 <br/>Created by Florida Computer Science Students.</p>
+                 <br/>Created by Florida State University Students.</p>
                  <Col><a href="/auth/google"><img className="googleSignInLanding" src={require('../img/google.png')} /></a></Col>
              </div>
            </div>

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import _ from 'lodash';
 import ReactInterval from 'react-interval';
-import { Row, Col, Preloader, Table, Collapsible, CollapsibleItem, Card, CardTitle, Collection, CollectionItem } from 'react-materialize';
+import { Row, Col, Preloader, Table, Collapsible, CollapsibleItem, Collection, CollectionItem } from 'react-materialize';
 import { PieChart, Sector, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import Divider from 'material-ui/Divider';
 
@@ -108,12 +108,14 @@ class SideNav extends Component {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
    }
 
+
+   // Needs to implemented as a table to look proper
    renderTrackerList(renderType) {
       return (
          <div className="black-text">
             <ul className="collection">
                   <Row className="ticker-price-row">
-                     <Col s={2}>Ticker</Col>
+                     <Col s={3}>Ticker</Col>
                      <Col className="price-text" s={3}>
                         Price
                      </Col>
@@ -209,19 +211,18 @@ class SideNav extends Component {
                  </Pie>
                  <Tooltip />
                </PieChart>
-               <Divider />
-               <Collapsible className="ticker-collasp">
+               <Collapsible popout defaultActiveKey={0} className="collapsible-header">
                   <CollapsibleItem
-                     id="collapsible-header"
-                     className="white-text z-depth-6"
+                     id="collapsible-body"
+                     className="white-text z-depth-10"
                      header="Stocks"
                      icon="trending_up"
                   >
                      {this.renderTrackerList(TYPE.STOCK)}
                   </CollapsibleItem>
                   <CollapsibleItem
-                     id="collapsible-header"
-                     className="white-text z-depth-6"
+                     id="collapsible-body"
+                     className="white-text z-depth-10"
                      header="Crypto Currencies"
                      icon="trending_up"
                   >
