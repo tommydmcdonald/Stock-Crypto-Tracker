@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import _ from 'lodash';
 import ReactInterval from 'react-interval';
-import { Row, Col, Preloader, Table, Collapsible, CollapsibleItem, Card, CardTitle, Collection, CollectionItem } from 'react-materialize';
+import { Row, Col, Preloader, Table, Collapsible, CollapsibleItem, Collection, CollectionItem } from 'react-materialize';
 import { PieChart, Sector, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import Divider from 'material-ui/Divider';
 
@@ -108,12 +108,14 @@ class SideNav extends Component {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
    }
 
+
+   // Needs to implemented as a table to look proper
    renderTrackerList(renderType) {
       return (
          <div className="black-text">
             <ul className="collection">
                   <Row className="ticker-price-row">
-                     <Col s={2}>Ticker</Col>
+                     <Col s={3}>Ticker</Col>
                      <Col className="price-text" s={3}>
                         Price
                      </Col>
