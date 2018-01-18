@@ -1,12 +1,11 @@
 const axios = require('axios');
 const _ = require('lodash');
-const { replaceKeys } = require('./routes');
-require('./models/Users');
-require('./models/Tickers');
-const { TYPE, BASE_URL } = require('./config/keys');
+
 const mongoose = require('mongoose');
 const Ticker = mongoose.model('ticker');
-const { addTickerToCharts } = require('./routes/routeFunctions');
+
+const { addTickerToCharts } = require('./tickerDB');
+const { TYPE, BASE_URL } = require('../config/keys');
 
 const updateTickerDataCall = async () => {
    try {

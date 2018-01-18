@@ -5,7 +5,7 @@ require('./models');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser  = require("body-parser");
-const { updateTickerData, updateChartData } = require('./functions');
+const { updateTickerData, updateChartData } = require('./services/dataUpdate');
 const keys = require('./config/keys');
 const { mongoURI } = require('./config/mongoURI');
 const routes = require('./routes');

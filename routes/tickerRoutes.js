@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
 
-const { addTickerToTickers, addTickerToCharts } = require('./routeFunctions');
-const autocompleteLibrary = require('../config/autocompleteLibrary');
+const { addTickerToTickers, addTickerToCharts } = require('../services/tickerDB');
+const autocompleteLibrary = require('../services/autocompleteLibrary');
 
 router.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
    try {

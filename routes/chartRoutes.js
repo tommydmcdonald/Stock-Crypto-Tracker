@@ -4,7 +4,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
 
-const { findChartData } = require('./routeFunctions');
+const { findChartData } = require('../services/tickerDB');
 
 router.get('/api/charts', async (req, res) => {
    try {
