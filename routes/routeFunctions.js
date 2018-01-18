@@ -109,3 +109,83 @@ exports.addTickerToCharts = async (newTicker = {name: '', type: ''}, chartStatus
    }
 
 }
+
+exports.findChartData = async (name, type) => {
+
+   let rawChart = await Chart.findOne({name, type}, 'data').lean();
+   let count = 0;
+   while (!rawChart && count < 50) {
+      await delay(300);
+      rawChart = await Chart.findOne({name, type}, 'data').lean();
+      count++;
+   }
+
+   if (rawChart) {
+      const rawChartData = rawChart.data;
+
+      const chartData = {};
+      for (const key in rawChartData) {
+         chartData[key] = { times: [], prices: []};
+
+         _.forEach(rawChartData[key], (timeClose) => {
+            const {time, price} = timeClose;
+            chartData[key].times.push(time);
+            chartData[key].prices.push(price);
+         });
+      }
+      return chartData;
+   }
+}
+
+exports.addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
+   try {
+      const { name, type } = newTicker;
+
+       if (type == TYPE.STOCK) {
+         const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
+         const { data } = await axios.get(URL);
+
+         const price = data.latestPrice;
+
+         if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
+           return false;
+         }
+         else { //valid ticker
+           const addTicker = new Ticker ({ ...newTicker, price  });
+           await addTicker.save();
+           return true;
+         }
+       }
+
+      if (type == TYPE.CRYPTO) {
+         const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
+         let PRICE_URL;
+         if ( _.includes(coinbaseTickers, name) ) {
+            PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD&e=Coinbase`;
+         }
+         else {
+            PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD`;
+         }
+
+         const res = await axios.get(PRICE_URL);//.data.USD;
+         const price = res.data.USD;
+
+         if (res.data.Response == 'Error') {
+            return false;
+         }
+
+         try {
+            const addTicker = new Ticker({ ...newTicker, price })
+            await addTicker.save();
+         } catch(err) {
+            console.log(err)
+         }
+
+         return true;
+       }
+
+   } catch (err) {
+      console.log('aTtT err');
+      console.log(err);
+   }
+ }

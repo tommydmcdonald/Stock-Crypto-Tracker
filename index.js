@@ -8,6 +8,7 @@ const bodyParser  = require("body-parser");
 const { updateTickerData, updateChartData } = require('./functions');
 const keys = require('./config/keys');
 const { mongoURI } = require('./config/mongoURI');
+const routes = require('./routes');
 
 require('./services/passport');
 
@@ -30,8 +31,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-require('./routes/authRoutes')(app);
-require('./routes/stockRoutes')(app);
+app.use('/', routes);
 
 updateTickerData(11 * 1000);
 updateChartData(60 * 5 * 1000);
