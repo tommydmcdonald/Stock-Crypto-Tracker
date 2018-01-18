@@ -5,7 +5,8 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import ReactInterval from 'react-interval';
 import { Row, Col, Preloader, Table, Collapsible, CollapsibleItem, Collection, CollectionItem } from 'react-materialize';
-import { PieChart, Sector, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import PortfolioChart from './PortfolioChart';
+
 import Divider from 'material-ui/Divider';
 
 import { TYPE } from '../actions/types';
@@ -135,62 +136,9 @@ class SideNav extends Component {
       this.props.loadTickerPrices();
    }
 
-   getPieChartData() {
-      const { priceList, tickerList } = this.props;
-      let pieChartData = new Array();
-
-      for (let i = 0; i < tickerList.length; i++) {
-         if (tickerList && priceList) {
-            if (tickerList[i].name && tickerList[i].type) {
-               const { name, type } = tickerList[i];
-
-               if (tickerList[i] && tickerList[i].quantity) {
-                  const { quantity } = _.find(tickerList, { name, type });
-
-                  if (priceList && priceList[type] && priceList[type][name]) {
-                     const price = Number(priceList[type][name]).toFixed(2);
-                     const valueOwn = Number(price * quantity).toFixed(2);
-                     pieChartData.push({ name: name, value: Number(valueOwn) });
-                  }
-               }
-            }
-         }
-      }
-      return pieChartData;
-   }
-
-   calculateValue() {
-      const { priceList, tickerList } = this.props;
-
-      if(priceList && tickerList) {
-         let currentValue = 0;
-
-         for (let i = 0; i < tickerList.length; i++) {
-            if (tickerList[i]) {
-               const { name, type, quantity } = tickerList[i];
-
-               if (priceList[type] && priceList[type][name]) {
-                  currentValue += priceList[type][name] * quantity;
-               }
-            }
-         }
-         const numberWithCommas = (x) => {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-         }
-         currentValue = Number(currentValue).toFixed(2);
-
-         return currentValue;
-      }
-      return 0;
-   }
-
    render() {
       const refreshRateSeconds = 15;
       const timeout = refreshRateSeconds * 1000;
-
-      const COLORS = ['#ED5281'];
-
-      const data = this.getPieChartData();
 
       return (
          <div>
@@ -200,17 +148,9 @@ class SideNav extends Component {
                callback={this.props.loadTickerPrices}
             />
             <ul id="nav-mobile" className="side-nav fixed z-depth-8">
-              <PieChart width={280} height={280} onMouseEnter={this.onPieEnter}>
-                <text className="portfolio-value" x={175} y={175} dy={8} textAnchor="middle" fill="#FFFFFF">
-                  ${this.calculateValue()}
-                </text>
-                 <Pie data={data} cx={170} cy={170} innerRadius={65} outerRadius={80} fill="#8884d8" paddingAngle={6}>
-                    {data.map((entry, index) => (
-                       <Cell fill={COLORS[index % COLORS.length]} />
-                    ))}
-                 </Pie>
-                 <Tooltip />
-               </PieChart>
+
+               <PortfolioChart />
+
                <Collapsible popout defaultActiveKey={0} className="collapsible-header">
                   <CollapsibleItem
                      id="collapsible-body"
