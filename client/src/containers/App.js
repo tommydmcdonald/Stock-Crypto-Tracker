@@ -19,10 +19,10 @@ class App extends Component {
       this.timeout = refreshRateSeconds * 1000;
    }
 
-   componentDidMount() {
+   async componentDidMount() {
       this.props.fetchUser();
-      this.props.loadTickerList();
       this.props.loadTickerPrices();
+      await this.props.loadTickerList();
 
       if (this.props.tickerList[0]) {
          const { name, type } = this.props.tickerList[0];
