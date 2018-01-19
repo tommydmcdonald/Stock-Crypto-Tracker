@@ -29,7 +29,7 @@ router.get('/api/current_user', (req, res) => {
       return;
    }
 
-   res.send({});
+   res.send(null);
 });
 
 module.exports = router;
