@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser, loadTickerList, loadTickerPrices, selectChart } from '../actions';
@@ -10,7 +10,6 @@ import '../style/style.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Home from '../components/Home';
 import Landing from '../components/Landing'
-import Header from './Header';
 import ReactInterval from 'react-interval';
 
 class App extends Component {

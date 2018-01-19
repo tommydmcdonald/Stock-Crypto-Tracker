@@ -8,10 +8,10 @@ export default function(state = [], action) {
    case REMOVE_TICKER:
       const newState = state.filter( ticker => {
          const { name, type } = action.payload;
-         if (ticker.name != name) {
+         if (ticker.name !== name) {
             return true;
          }
-         else if (ticker.type != action.payload.type) { //if name is same but type is different
+         else if (ticker.type !== type) { //if name is same but type is different
             return true;
          }
          return false;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
-import { Row, Col, Preloader, Table, Collapsible, CollapsibleItem, Collection, CollectionItem } from 'react-materialize';
+import { Row, Col, Preloader, Collapsible, CollapsibleItem } from 'react-materialize';
 
 import { TYPE } from '../actions/types';
 import { removeTicker, updateQuantity, selectChart } from '../actions';
@@ -21,7 +21,7 @@ class PortfolioList extends Component {
             ''
          );
 
-         if (currentPrice != '') {
+         if (currentPrice !== '') {
             currentPrice = Number(currentPrice).toFixed(2);
             currentPrice = '$' + this.numberWithCommas(currentPrice);
          } else {

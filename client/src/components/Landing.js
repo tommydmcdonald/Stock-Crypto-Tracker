@@ -1,7 +1,5 @@
 import React from 'react';
-import Header from '../containers/Header';
-import { Col, Row } from 'react-materialize';
-
+import { Col } from 'react-materialize';
 
 const Landing = () => {
    return ([
@@ -58,11 +56,6 @@ const Landing = () => {
       </footer>
 
    ])
-}
-
-
-function mapStateToProps({ auth }) {
-   return { auth };
 }
 
 export default Landing;

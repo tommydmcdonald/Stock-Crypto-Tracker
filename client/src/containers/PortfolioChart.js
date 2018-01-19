@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { PieChart, Sector, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 
 class PortfolioChart extends Component {
 
@@ -20,10 +20,12 @@ class PortfolioChart extends Component {
                }
             }
          }
+
          const numberWithCommas = (x) => {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
          }
-         currentValue = Number(currentValue).toFixed(2);
+
+         currentValue = numberWithCommas(Number(currentValue).toFixed(2));
 
          return currentValue;
       }
@@ -32,7 +34,7 @@ class PortfolioChart extends Component {
 
    getPieChartData() {
       const { priceList, tickerList } = this.props;
-      let pieChartData = new Array();
+      let pieChartData = [];
 
       for (let i = 0; i < tickerList.length; i++) {
          if (tickerList && priceList) {

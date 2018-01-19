@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactTestUtils from 'react-dom/test-utils';
 import { bindActionCreators } from 'redux';
 import { loadChartData, selectChartFreq } from '../actions'
 import {Line} from 'react-chartjs-2';
 import { Row, Col } from 'react-materialize';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import _ from 'lodash';
-import { FETCH_CHART_DATA, LOAD_CHART_DATA, TYPE } from '../actions/types';
-
+import { TYPE } from '../actions/types';
 
 class Chart extends Component {
-   constructor(props) {
-      super(props);
-   }
-
    componentDidMount() {
       this.props.loadChartData();
    }
@@ -49,7 +43,7 @@ class Chart extends Component {
 
          if ( chartData[type] && chartData[type][name] && chartData[type][name][frequency]) {
             prices = chartData[type][name][frequency].prices;
-            if(type == TYPE.CRYPTO) {
+            if(type === TYPE.CRYPTO) {
                times = chartData[type][name][frequency].times.map( time => new Date(time*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) );
             }
             else {

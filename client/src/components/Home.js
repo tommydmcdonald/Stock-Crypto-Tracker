@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Header from '../containers/Header';
 import Chart from '../containers/Chart';
 import SearchBar from '../containers/SearchBar';

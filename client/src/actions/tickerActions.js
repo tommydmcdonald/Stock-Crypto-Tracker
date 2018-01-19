@@ -1,4 +1,4 @@
-import { ADD_TICKER, REMOVE_TICKER, ADD_TICKER_PRICE, SELECT_CHART, FETCH_CHART_DATA,
+import { ADD_TICKER, REMOVE_TICKER, ADD_TICKER_PRICE, SELECT_CHART,
          LOAD_TICKERS, UPDATE_TICKER_QUANTITY, LOAD_TICKER_PRICES } from './types'
 import axios from 'axios';
 import { fetchChartData } from './chartActions';
@@ -19,7 +19,7 @@ export const addTicker = (newTicker, tickerListSize) => async dispatch => { //ad
    }
    else { //add ticker price and load chart data
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, price } });
-      if (tickerListSize == 0) { //if nothing in tickerList, nothing will be graphed. Graph newly added ticker, since it is the only ticker
+      if (tickerListSize === 0) { //if nothing in tickerList, nothing will be graphed. Graph newly added ticker, since it is the only ticker
          dispatch({ type: SELECT_CHART, payload: {name, type} });
       }
       dispatch(fetchChartData(name, type));
