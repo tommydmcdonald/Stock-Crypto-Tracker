@@ -89,12 +89,6 @@
   z-index: 1;
   position: relative; }
 
-.side-nav {
-  background-color: #4A525A !important;
-  z-index: 0;
-  position: relative;
-  width: 360px; }
-
 .navbar-img {
   filter: blur(0px); }
 

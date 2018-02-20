@@ -23,7 +23,7 @@ class Home extends Component {
 
       if (this.props.tickerList[0]) {
          const { name, type } = this.props.tickerList[0];
-         this.props.selectChart({ name, type });
+         this.props.selectChart( name, type );
       }
    }
 

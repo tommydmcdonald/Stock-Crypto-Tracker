@@ -1,0 +1,9 @@
+.portfolio-list > .collapsible-body, .portfolio-list th, .portfolio-list td {
+  padding: 0px 0px 0px 0px !important; }
+
+.portfolio-list th, .portfolio-list td {
+  padding: 0px 0px 0px 0px !important;
+  text-align: center !important; }
+
+.portfolio-list td {
+  text-align: center !important; }
