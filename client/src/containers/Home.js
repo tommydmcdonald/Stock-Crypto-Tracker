@@ -9,6 +9,7 @@ import SearchBar from './SearchBar';
 import SideNav from '../components/SideNav';
 import { Row, Col } from 'react-materialize';
 import ReactInterval from 'react-interval';
+import NewsList from './NewsList';
 
 class Home extends Component {
    constructor() {
@@ -37,10 +38,10 @@ class Home extends Component {
             />
 
             <Header />
-            <Row> <Col s={9} offset="s3"> <SearchBar /> </Col></Row>
             <Row>
-              <Col s={4}><SideNav s={12}/></Col>
-              <Col s={8}><Chart /></Col>
+              <Col s={2}><SideNav /></Col>
+              <Col s={7}><Chart /></Col>
+              <Col s={3}><NewsList className="NewsListColumn"/></Col>
             </Row>
          </div>
        );

@@ -57,7 +57,7 @@ class Chart extends Component {
         datasets: [
           {
             label: frequency,
-            fill: true,
+            fill: false,
             lineTension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.2)',
             borderColor: 'rgba(95, 202, 157, 1)',
@@ -93,8 +93,8 @@ class Chart extends Component {
 
       return (
          <Row>
-            <div>
-               <Col id="ticker-name" s={2}><h4 className="white-text ticker-name">{this.props.selectedChart.name}</h4></Col>
+            <div className="ticker-row">
+               <Col s={2}><h4 className="white-text ticker-name">{this.props.selectedChart.name}</h4></Col>
                <Col s={4}><p className="white-text">price: ${priceText.price} <br />value owned: ${priceText.amtOwned}</p></Col>
             </div>
          </Row>
@@ -123,9 +123,9 @@ class Chart extends Component {
       return (
          <div>
            {this.renderLabel()}
-            <div id="chartPiece">
+            <div className="chartPiece">
               {this.renderTabs()}
-               <Line data={this.formatChartData()}></Line>
+               <Line className="Graph" data={this.formatChartData()}></Line>
             </div>
          </div>
       );
