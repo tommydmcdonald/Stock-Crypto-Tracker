@@ -25,6 +25,7 @@ exports.addNewsToNews = async (newNews = { headline: '', url: '', summary: ''}) 
 
       }
 
+      // No longer saving news in the data base. Uncomment to put back in database
       /* const addNews = new News{(...newNews, data )};*/
       /*await newsdata.save();*/
 
