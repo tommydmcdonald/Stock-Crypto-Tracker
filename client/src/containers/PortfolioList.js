@@ -17,6 +17,9 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 
+import TextField from 'material-ui/TextField';
+import SearchBar from 'material-ui-search-bar'
+
 import '../style/PortfolioList.css';
 
 class PortfolioList extends Component {
@@ -89,6 +92,20 @@ class PortfolioList extends Component {
       this.props.removeTicker(removingTicker);
    }
 
+   renderHeader(renderType) {
+      let header;
+      if (renderType === TYPE.STOCK) {
+         header = 'Stocks';
+      }
+      else if (renderType === TYPE.CRYPTO) {
+         header = 'Cryptocurrencies';
+      }
+
+      return (
+         <TextField></TextField>
+      );
+   }
+
    numberWithCommas(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
    }
@@ -111,34 +128,32 @@ class PortfolioList extends Component {
       }
 
       return (
-         <CollapsibleItem
-            className="portfolio-list white-text z-depth-10"
-            header={header} >
-            <Table onCellClick={(rowNumber, columnId) => this.handleCellClick(renderType, rowNumber, columnId)}
-               className='portfolio-list'
-            >
-               <TableHeader
-                  displaySelectAll={this.state.showCheckboxes}
-                  adjustForCheckbox={this.state.showCheckboxes}>
-                  <TableRow>
-                    <TableHeaderColumn>Ticker</TableHeaderColumn>
-                    <TableHeaderColumn>Price</TableHeaderColumn>
-                    <TableHeaderColumn>Quantity</TableHeaderColumn>
-                  </TableRow>
-               </TableHeader>
-               <TableBody
-                  displayRowCheckbox={this.state.showCheckboxes}
-                  deselectOnClickaway={this.state.deselectOnClickaway}
+            <CollapsibleItem
+               className="portfolio-list white-text z-depth-10"
+               header={header} >
+               <Table onCellClick={(rowNumber, columnId) => this.handleCellClick(renderType, rowNumber, columnId)}
+                  className='portfolio-list'
                >
-                  {this.renderTrackerList(renderType)}
-               </TableBody>
-            </Table>
-         </CollapsibleItem>
+                  <TableHeader
+                     displaySelectAll={this.state.showCheckboxes}
+                     adjustForCheckbox={this.state.showCheckboxes}>
+                     <TableRow>
+                       <TableHeaderColumn>Ticker</TableHeaderColumn>
+                       <TableHeaderColumn>Price</TableHeaderColumn>
+                       <TableHeaderColumn>Quantity</TableHeaderColumn>
+                     </TableRow>
+                  </TableHeader>
+                  <TableBody
+                     displayRowCheckbox={this.state.showCheckboxes}
+                     deselectOnClickaway={this.state.deselectOnClickaway}
+                  >
+                     {this.renderTrackerList(renderType)}
+                  </TableBody>
+               </Table>
+            </CollapsibleItem>
       )
 
    }
-
-
 
    handleCellClick(renderType, rowNumber, columnId) {
 
@@ -165,14 +180,48 @@ class PortfolioList extends Component {
    }
 
    render() {
+      const style = {
+         margin: '0 auto',
+         height: '40px',
+      }
+
       return (
          <div>
-            <Collapsible popout>
-               { [TYPE.STOCK, TYPE.CRYPTO ].map( type => this.renderList(type)) }
-            </Collapsible>
+            <div className='search-bar row'>
+               <SearchBar
+                  onChange={() => console.log('onChange')}
+                  onRequestSearch={() => console.log('onRequestSearch')}
+                  style={style}
+                  className='search-bar-font'
+                  hintText='Add stock'
+               />
+            </div>
+
+            <div className='row'>
+               <Collapsible popout>
+                  {this.renderList(TYPE.STOCK)}
+               </Collapsible>
+            </div>
+
+            <div className='search-bar row'>
+               <SearchBar
+                  onChange={() => console.log('onChange')}
+                  onRequestSearch={() => console.log('onRequestSearch')}
+                  style={style}
+                  className='search-bar-font'
+                  hintText='Add crypto'
+               />
+            </div>
+
+            <div className='row'>
+               <Collapsible popout>
+                  {this.renderList(TYPE.CRYPTO)}
+               </Collapsible>
+            </div>
          </div>
       );
    }
+
 }
 
 function mapStateToProps({tickerList, priceList, selectedChart}) {
