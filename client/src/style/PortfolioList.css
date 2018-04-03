@@ -1,7 +1,6 @@
 .portfolio-list > .collapsible-body, .portfolio-list th, .portfolio-list td {
   padding: 0px 0px 0px 0px !important; }
 
-
 .portfolio-list th, .portfolio-list td {
   padding: 0px 0px 0px 0px !important;
   text-align: center !important; }
@@ -16,7 +15,7 @@
     height: 40px !important; }
     .search-bar > div > button > div > svg {
       position: relative;
-      bottom: 5px; }
+      bottom: 4px; }
 
 .search-bar-font {
   font-size: 14px !important; }
