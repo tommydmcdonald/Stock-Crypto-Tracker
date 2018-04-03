@@ -59,7 +59,7 @@ class Chart extends Component {
             label: frequency,
             fill: false,
             lineTension: 0.1,
-            backgroundColor: 'rgba(75,192,192,0.2)',
+            backgroundColor: 'rgba(75,192,192,0.5)',
             borderColor: 'rgba(95, 202, 157, 1)',
             borderCapStyle: 'butt',
             borderDash: [],

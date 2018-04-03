@@ -16,33 +16,39 @@ export default class NewsList extends Component {
 
    render() {
       return (
-         <List className="NewsList" zDepth={3}>
-         <Subheader className="news-subheader white-text">News</Subheader>
-            <ListItem
-                      primaryText="Article 1"
-                      secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                     />
-            <ListItem
-                     primaryText="Article 2"
-                     secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                     />
-            <ListItem
-                     primaryText="Article 3"
-                     secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                     />
-            <ListItem
-                      primaryText="Article 4"
-                      secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                     />
-            <ListItem
-                      primaryText="Article 5"
-                      secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                     />
-            <ListItem
-                      primaryText="Article 6"
-                      secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                     />
-         </List>
+         <div className="NewsList">
+            <List zDepth={1}>
+            <Subheader className="News-Subheader black-text">News</Subheader>
+               <ListItem
+                         primaryText="Article 1"
+                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
+                        /><Divider />
+               <ListItem
+                        primaryText="Article 2"
+                        secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
+                        /><Divider />
+               <ListItem
+                        primaryText="Article 3"
+                        secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
+                        /><Divider />
+               <ListItem
+                         primaryText="Article 4"
+                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
+                        /><Divider />
+               <ListItem
+                         primaryText="Article 5"
+                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
+                        /><Divider />
+               <ListItem
+                         primaryText="Article 6"
+                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
+                        /><Divider />
+               <ListItem
+                         primaryText="Article 7"
+                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
+                        /><Divider />
+            </List>
+         </div>
       );
    }
 }

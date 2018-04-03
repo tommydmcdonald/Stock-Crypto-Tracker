@@ -39,9 +39,13 @@ class Home extends Component {
 
             <Header />
             <Row>
-              <Col s={2}><SideNav /></Col>
-              <Col s={7}><Chart /></Col>
-              <Col s={3}><NewsList className="NewsListColumn"/></Col>
+              <Col s={2}><SideNav   /></Col>
+              <Col s={7}><Chart     /></Col>
+              <Col s={3}><NewsList  /></Col>
+            </Row>
+            
+            <Row>
+               <Col s={2}></Col>
             </Row>
          </div>
        );
