@@ -182,27 +182,22 @@ class PortfolioList extends Component {
    render() {
       return (
          <div>
+            <SearchBar type={TYPE.STOCK}/>
+
             <div className='row'>
                <Collapsible popout>
                   {this.renderList(TYPE.STOCK)}
                </Collapsible>
             </div>
 
-            <div className='search-bar row'>
-               {/* <SearchBar
-                  onChange={() => console.log('onChange')}
-                  onRequestSearch={() => console.log('onRequestSearch')}
-                  style={style}
-                  className='search-bar-font'
-                  hintText='Add crypto'
-               /> */}
-            </div>
+            <SearchBar type={TYPE.CRYPTO}/>
 
             <div className='row'>
                <Collapsible popout>
                   {this.renderList(TYPE.CRYPTO)}
                </Collapsible>
             </div>
+
          </div>
       );
    }
