@@ -23,14 +23,13 @@ class NewsList extends Component {
       return (
          <div>
             { this.props.news.map(newsItem => {
+               return(
                   <div>
-                     <ListItem
-                         primaryText = {newsItem.headline}
-                         secondaryText = {newsItem.summary}
-                     /> <Divider />
+                     <ListItem primaryText = {newsItem.headline} secondaryText = {newsItem.summary}/>
+                     <Divider />
                   </div>
-               })
-            }
+               );
+            }) }
          </div>
       );
    }
