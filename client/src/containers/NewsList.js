@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
+import { loadNews } from '../actions/newsActions';
 
 import {List, ListItem} from 'material-ui/List';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
@@ -12,43 +14,61 @@ import Divider from 'material-ui/Divider';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import Subheader from 'material-ui/Subheader';
 
-export default class NewsList extends Component {
+class NewsList extends Component {
+   componentDidMount() {
+      this.props.loadNews();
+   }
+
+   renderNewslist() {
+      return (
+         <div>
+            { this.props.news.map(newsItem => {
+                  <div>
+                     <ListItem
+                         primaryText = {newsItem.headline}
+                         secondaryText = {newsItem.summary}
+                     /> <Divider />
+                  </div>
+               })
+            }
+         </div>
+      );
+   }
+
+   renderOne() {
+      if (this.props.news && this.props.news[0]) {
+         let newsItem = this.props.news[0];
+         return (
+            <div>
+               <ListItem
+                     primaryText = {newsItem.headline}
+                     secondaryText = {newsItem.summary}
+                 /> <Divider />
+            </div>
+         )
+      }
+   }
 
    render() {
       return (
          <div className="NewsList">
             <List zDepth={1}>
             <Subheader className="News-Subheader black-text">News</Subheader>
-               <ListItem
-                         primaryText="Article 1"
-                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                        /><Divider />
-               <ListItem
-                        primaryText="Article 2"
-                        secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                        /><Divider />
-               <ListItem
-                        primaryText="Article 3"
-                        secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                        /><Divider />
-               <ListItem
-                         primaryText="Article 4"
-                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                        /><Divider />
-               <ListItem
-                         primaryText="Article 5"
-                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                        /><Divider />
-               <ListItem
-                         primaryText="Article 6"
-                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                        /><Divider />
-               <ListItem
-                         primaryText="Article 7"
-                         secondaryText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet ipsum id massa tincidunt ullamcorper. Mauris eleifend sed nulla vel interdum. Etiam vitae dictum risus."
-                        /><Divider />
+               {this.renderNewslist()}
+               {/* {this.renderOne()} */}
             </List>
          </div>
+
       );
    }
 }
+
+function mapStateToProps({news}){
+   return {news};
+}
+
+function mapDispatchToProps(dispatch) {
+   return bindActionCreators({ loadNews }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewsList);
