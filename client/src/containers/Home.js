@@ -5,7 +5,6 @@ import { loadTickerList, loadTickerPrices, selectChart } from '../actions';
 
 import Header from './Header';
 import Chart from './Chart';
-import SearchBar from './SearchBar';
 import SideNav from '../components/SideNav';
 import { Row, Col } from 'react-materialize';
 import ReactInterval from 'react-interval';
@@ -37,7 +36,7 @@ class Home extends Component {
             />
 
             <Header />
-            <Row> <Col s={9} offset="s3"> <SearchBar /> </Col></Row>
+            <Row> <Col s={9} offset="s3"></Col></Row>
             <Row>
               <Col s={4}><SideNav s={12}/></Col>
               <Col s={8}><Chart /></Col>

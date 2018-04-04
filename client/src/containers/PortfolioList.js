@@ -7,6 +7,7 @@ import { Row, Col, Preloader, Collapsible, CollapsibleItem } from 'react-materia
 import { TYPE } from '../actions/types';
 import { removeTicker, updateQuantity, selectChart } from '../actions';
 import Tracker from './Tracker';
+import SearchBar from './SearchBar';
 
 import {
   Table,
@@ -18,7 +19,6 @@ import {
 } from 'material-ui/Table';
 
 import TextField from 'material-ui/TextField';
-import SearchBar from 'material-ui-search-bar'
 
 import '../style/PortfolioList.css';
 
@@ -180,23 +180,8 @@ class PortfolioList extends Component {
    }
 
    render() {
-      const style = {
-         margin: '0 auto',
-         height: '40px',
-      }
-
       return (
          <div>
-            <div className='search-bar row'>
-               <SearchBar
-                  onChange={() => console.log('onChange')}
-                  onRequestSearch={() => console.log('onRequestSearch')}
-                  style={style}
-                  className='search-bar-font'
-                  hintText='Add stock'
-               />
-            </div>
-
             <div className='row'>
                <Collapsible popout>
                   {this.renderList(TYPE.STOCK)}
@@ -204,13 +189,13 @@ class PortfolioList extends Component {
             </div>
 
             <div className='search-bar row'>
-               <SearchBar
+               {/* <SearchBar
                   onChange={() => console.log('onChange')}
                   onRequestSearch={() => console.log('onRequestSearch')}
                   style={style}
                   className='search-bar-font'
                   hintText='Add crypto'
-               />
+               /> */}
             </div>
 
             <div className='row'>
