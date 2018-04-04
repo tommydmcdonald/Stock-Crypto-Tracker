@@ -43,7 +43,7 @@ class Home extends Component {
               <Col s={7}><Chart     /></Col>
               <Col s={3}><NewsList  /></Col>
             </Row>
-            
+
             <Row>
                <Col s={2}></Col>
             </Row>

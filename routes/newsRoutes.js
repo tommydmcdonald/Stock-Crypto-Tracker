@@ -20,7 +20,7 @@ router.get('/api/news', async (req, res) => {
          const { data } = await axios.get(URL);
 
          for(let i = 0; i < data.length; i++) {
-            newsList.push(_.pick(data[i], ['headline', 'url', 'summary']));
+            newsList.push(_.pick(data[i], ['headline', 'url', 'summary', 'source']));
          }
 
          res.send(newsList);

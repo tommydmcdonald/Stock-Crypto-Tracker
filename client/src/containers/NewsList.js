@@ -25,7 +25,9 @@ class NewsList extends Component {
             { this.props.news.map(newsItem => {
                return(
                   <div>
-                     <ListItem primaryText = {newsItem.headline} secondaryText = {newsItem.summary}/>
+                     <a href="{newsItem.url}" />
+                     <Divider />
+                     <ListItem hoverColor="#5FCA9D" href={newsItem.url} target = "_blank" primaryText = {newsItem.headline} secondaryText = {newsItem.source} />
                      <Divider />
                   </div>
                );
@@ -34,25 +36,12 @@ class NewsList extends Component {
       );
    }
 
-   renderOne() {
-      if (this.props.news && this.props.news[0]) {
-         let newsItem = this.props.news[0];
-         return (
-            <div>
-               <ListItem
-                     primaryText = {newsItem.headline}
-                     secondaryText = {newsItem.summary}
-                 /> <Divider />
-            </div>
-         )
-      }
-   }
-
    render() {
       return (
          <div className="NewsList">
             <List zDepth={1}>
             <Subheader className="News-Subheader black-text">News</Subheader>
+            <br></br>
                {this.renderNewslist()}
                {/* {this.renderOne()} */}
             </List>
