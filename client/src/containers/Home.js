@@ -9,13 +9,30 @@ import SideNav from '../components/SideNav';
 import { Row, Col } from 'react-materialize';
 import ReactInterval from 'react-interval';
 import NewsList from './NewsList';
+import Snackbar from 'material-ui/Snackbar';
 
 class Home extends Component {
    constructor() {
       super();
       const refreshRateSeconds = 15;
       this.timeout = refreshRateSeconds * 1000;
+
+      this.state = { open: false,
+                     ticker: '',
+                   };
    }
+
+   handleClick = () => {
+     this.setState({
+      open: true,
+     });
+   }
+
+   handleRequestClose = () => {
+        this.setState({
+         open: false,
+        });
+    };
 
    async componentDidMount() {
       this.props.loadTickerPrices();
@@ -25,6 +42,8 @@ class Home extends Component {
          const { name, type } = this.props.tickerList[0];
          this.props.selectChart( name, type );
       }
+
+      // this.handleClick();
    }
 
    render() {
@@ -43,10 +62,18 @@ class Home extends Component {
               <Col s={6}><Chart className="homeChart" /></Col>
               <Col s={3}><NewsList  /></Col>
             </Row>
+            <Snackbar
+               className="snack-bar"
+               open={this.state.open}
+               message="Success"
+               autoHideDuration={4000}
+               onRequestClose={this.handleRequestClose}
+            ></Snackbar>
          </div>
        );
    }
 }
+
 
 function mapStateToProps({tickerList, priceList, selectedChart}) {
    return { tickerList, priceList, selectedChart }

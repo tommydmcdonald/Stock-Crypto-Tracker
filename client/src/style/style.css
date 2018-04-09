@@ -15,6 +15,9 @@
   font-size: 16px;
   padding-right: 20px; }
 
+.snack-bar {
+  text-align: center; }
+
 .copyRight {
   text-align: center; }
 
@@ -121,7 +124,8 @@
   background-color: #4A525A !important;
   /*width: 360px; */
   column-fill: auto;
-  z-index: 0; }
+  z-index: 0;
+  position: relative; }
 
 .navbar-img {
   filter: blur(0px); }
@@ -146,6 +150,9 @@
 
 .price-text {
   padding-right: 1.5em !important; }
+
+.ticker-name {
+  padding-right: 100px; }
 
 .time-series-tabs {
   background-color: #212B33 !important; }
