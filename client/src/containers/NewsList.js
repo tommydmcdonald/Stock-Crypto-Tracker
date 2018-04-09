@@ -14,10 +14,12 @@ import Divider from 'material-ui/Divider';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import Subheader from 'material-ui/Subheader';
 
+
 class NewsList extends Component {
    componentDidMount() {
       this.props.loadNews();
    }
+
 
    renderNewslist() {
       return (
@@ -26,9 +28,7 @@ class NewsList extends Component {
                return(
                   <div>
                      <a href="{newsItem.url}" />
-                     <Divider />
-                     <ListItem hoverColor="#5FCA9D" href={newsItem.url} target = "_blank" primaryText = {newsItem.headline} secondaryText = {newsItem.source} />
-                     <Divider />
+                     <ListItem className="white-text" hoverColor="rgb(139, 229, 184, 50)" href={newsItem.url} target = "_blank" primaryText = {newsItem.headline} secondaryText = {newsItem.source} />
                   </div>
                );
             }) }
@@ -39,9 +39,8 @@ class NewsList extends Component {
    render() {
       return (
          <div className="NewsList">
-            <List zDepth={1}>
-            <Subheader className="News-Subheader black-text">News</Subheader>
-            <br></br>
+            <List>
+            <Subheader><h6 className="News-Subheader white-text">News</h6></Subheader>
                {this.renderNewslist()}
                {/* {this.renderOne()} */}
             </List>

@@ -44,7 +44,7 @@
       "passport-local": "^1.0.0",
       "passport-local-mongoose": "^4.5.0",
       "popper.js": "^1.12.9",
-      "validator": "^9.1.1"
+      "validator": "^9.4.1",
       "react": "^16.2.0",
       "react-animated-number": "^0.4.4",
       "react-chartjs-2": "^2.7.0",
@@ -66,8 +66,7 @@
       "redux-devtools-extension": "^2.13.2",
       "redux-promise": "^0.5.3",
       "redux-thunk": "^2.2.0",
-      "startbootstrap-grayscale": "^4.0.0",
-      "validator": "^9.4.1"
+      "startbootstrap-grayscale": "^4.0.0"
    },
    "repository": {
       "type": "git",

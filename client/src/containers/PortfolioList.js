@@ -32,6 +32,7 @@ class PortfolioList extends Component {
       }
    }
 
+
    renderTracker(tickerItem, renderType) {
       const { name, type, quantity } = tickerItem;
 

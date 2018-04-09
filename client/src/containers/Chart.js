@@ -92,12 +92,18 @@ class Chart extends Component {
       }
 
       return (
-         <Row>
-            <div className="ticker-row">
-               <Col s={2}><h4 className="white-text ticker-name">{this.props.selectedChart.name}</h4></Col>
-               <Col s={4}><p className="white-text">price: ${priceText.price} <br />value owned: ${priceText.amtOwned}</p></Col>
-            </div>
-         </Row>
+               <Row>
+                  <Col s={1} className="ticker-name">
+                     <h5 className="white-text">{this.props.selectedChart.name}:</h5>
+                  </Col>
+                  <Col s={11}>
+                     <h5 className="ticker-price">${priceText.price} </h5>
+                  </Col>
+               <Row>
+                  <Col s={9} className="" ><h6 className="white-text">value owned: ${priceText.amtOwned}</h6></Col>
+               </Row>
+               </Row>
+
       )
    }
 
@@ -123,10 +129,8 @@ class Chart extends Component {
       return (
          <div>
            {this.renderLabel()}
-            <div className="chartPiece">
               {this.renderTabs()}
                <Line className="Graph" data={this.formatChartData()}></Line>
-            </div>
          </div>
       );
    }
