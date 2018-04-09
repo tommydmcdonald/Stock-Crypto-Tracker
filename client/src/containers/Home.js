@@ -12,9 +12,12 @@ import NewsList from './NewsList';
 import Snackbar from 'material-ui/Snackbar';
 
 class Home extends Component {
-   constructor() {
-      super();
+   constructor(props) {
+      super(props);
+      this.handleClick = this.handleClick.bind(this);
+
       const refreshRateSeconds = 15;
+
       this.timeout = refreshRateSeconds * 1000;
 
       this.state = { open: false,
