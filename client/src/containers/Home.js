@@ -43,7 +43,6 @@ class Home extends Component {
          this.props.selectChart( name, type );
       }
 
-      // this.handleClick();
    }
 
    render() {
