@@ -9,33 +9,16 @@ import SideNav from '../components/SideNav';
 import { Row, Col } from 'react-materialize';
 import ReactInterval from 'react-interval';
 import NewsList from './NewsList';
-import Snackbar from 'material-ui/Snackbar';
+import Snackbar from './Snackbar';
 
 class Home extends Component {
    constructor(props) {
       super(props);
-      this.handleClick = this.handleClick.bind(this);
 
       const refreshRateSeconds = 15;
 
       this.timeout = refreshRateSeconds * 1000;
-
-      this.state = { open: false,
-                     ticker: '',
-                   };
    }
-
-   handleClick = () => {
-     this.setState({
-      open: true,
-     });
-   }
-
-   handleRequestClose = () => {
-        this.setState({
-         open: false,
-        });
-    };
 
    async componentDidMount() {
       this.props.loadTickerPrices();
@@ -49,6 +32,7 @@ class Home extends Component {
    }
 
    render() {
+
       return (
          <div className='mainApp'>
             <ReactInterval
@@ -64,21 +48,15 @@ class Home extends Component {
               <Col s={6}><Chart className="homeChart" /></Col>
               <Col s={3}><NewsList  /></Col>
             </Row>
-            <Snackbar
-               className="snack-bar"
-               open={this.state.open}
-               message="Success"
-               autoHideDuration={4000}
-               onRequestClose={this.handleRequestClose}
-            ></Snackbar>
+            <Snackbar />
          </div>
        );
    }
 }
 
 
-function mapStateToProps({tickerList, priceList, selectedChart}) {
-   return { tickerList, priceList, selectedChart }
+function mapStateToProps({tickerList, snackbar}) {
+   return { tickerList, snackbar }
 }
 
 function mapDispatchToProps(dispatch) {

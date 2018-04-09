@@ -6,6 +6,7 @@ import priceReducer from './reducer_price';
 import chartReducer from './reducer_chart_data';
 import selectedChartReducer from './reducer_selected_chart';
 import newsReducer from './reducer_news';
+import snackbarReducer from './reducer_snackbar';
 
 const rootReducer = combineReducers({
    auth: authReducer,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
    priceList: priceReducer,
    chartData: chartReducer,
    selectedChart: selectedChartReducer,
-   news: newsReducer
+   news: newsReducer,
+   snackbar: snackbarReducer,
 });
 
 export default rootReducer;

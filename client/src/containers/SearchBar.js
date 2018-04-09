@@ -42,7 +42,6 @@ class SearchBar extends Component {
 
       if ( newTicker.name !== '' && !_.some(this.props.tickerList, newTicker) ) { //only add if not empty string and ticker doesn't exist in redux tickerList
          this.props.addTicker(newTicker, this.props.tickerList.length);
-         this.props.handleClick();
       }
    }
 
