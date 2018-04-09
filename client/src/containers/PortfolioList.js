@@ -8,6 +8,7 @@ import { TYPE } from '../actions/types';
 import { removeTicker, updateQuantity, selectChart } from '../actions';
 import Tracker from './Tracker';
 import SearchBar from './SearchBar';
+import EditButton from './EditButton';
 
 import {
   Table,
@@ -92,20 +93,6 @@ class PortfolioList extends Component {
       this.props.removeTicker(removingTicker);
    }
 
-   renderHeader(renderType) {
-      let header;
-      if (renderType === TYPE.STOCK) {
-         header = 'Stocks';
-      }
-      else if (renderType === TYPE.CRYPTO) {
-         header = 'Cryptocurrencies';
-      }
-
-      return (
-         <TextField></TextField>
-      );
-   }
-
    numberWithCommas(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
    }
@@ -121,7 +108,11 @@ class PortfolioList extends Component {
    renderList(renderType) {
       let header;
       if (renderType === TYPE.STOCK) {
-         header = 'Stocks';
+         header = (
+            <div>
+               <div>Stocks</div>
+            </div>
+         );
       }
       else if (renderType === TYPE.CRYPTO) {
          header = 'Cryptocurrencies';
@@ -151,7 +142,7 @@ class PortfolioList extends Component {
                   </TableBody>
                </Table>
             </CollapsibleItem>
-      )
+      );
 
    }
 

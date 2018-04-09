@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { addTicker } from '../actions/index';
 import _ from 'lodash';
 
+import EditButton from './EditButton';
+
 import { TYPE } from '../actions/types';
 
 import SearchBarMU from 'material-ui-search-bar'
@@ -42,16 +44,40 @@ class SearchBar extends Component {
 
       const style = {margin: '0 auto', height: '40px'};
 
+      let test = (
+         // <div className='search-bar row'>
+         //    <div className='col s10'>
+               <SearchBarMU
+                  value={this.state.ticker}
+                  onChange={(value) => this.setState({ticker: value.toUpperCase()})}
+                  onRequestSearch={this.onRequestSearch}
+                  style={style}
+                  hintText={this.state.hint}
+                  className='search-bar-font'
+               />
+            // </div>
+            // <div className='col s2'>
+               // <EditButton></EditButton>
+            // </div>
+         // </div>
+      );
+
       return (
          <div className='search-bar row'>
-            <SearchBarMU
-               value={this.state.ticker}
-               onChange={(value) => this.setState({ticker: value.toUpperCase()})}
-               onRequestSearch={this.onRequestSearch}
-               style={style}
-               hintText={this.state.hint}
-               className='search-bar-font'
-            />
+            <div className='col s10'>
+               <SearchBarMU
+                  value={this.state.ticker}
+                  onChange={(value) => this.setState({ticker: value.toUpperCase()})}
+                  onRequestSearch={this.onRequestSearch}
+                  style={style}
+                  hintText={this.state.hint}
+                  className='search-bar-font'
+               />
+            </div>
+
+            <div className='col s2'>
+               <EditButton/>
+            </div>
          </div>
       );
 
