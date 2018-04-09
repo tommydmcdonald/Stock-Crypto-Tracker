@@ -29,6 +29,20 @@
   top: 53%;
   left: 43%; }
 
+.NewsList {
+  background-color: #FFF;
+  margin-top: 15%;
+  border-radius: 3px;
+  width: 100%; }
+
+.News-Subheader {
+  background-color: #FFF;
+  border-radius: 5px 5px 0px 0px; }
+
+.ticker-row {
+  padding-top: 3%;
+  padding-left: 5%; }
+
 .mainApp {
   background-color: #212B33;
   height: 100% !important;
@@ -51,9 +65,14 @@
   font-size: 12px;
   background-color: #5FCA9D; }
 
-#chartPiece {
-  padding-bottom: 0px;
-  padding-right: 100px; }
+.chartPiece {
+  padding-top: -1%;
+  padding-left: 5%;
+  margin: auto;
+  width: 60%; }
+
+.Graph {
+  margin: 20%; }
 
 .valign-wrapper {
   padding-top: 15px;
@@ -91,9 +110,9 @@
 
 .side-nav {
   background-color: #4A525A !important;
-  z-index: 0;
-  position: relative;
-  width: 360px; }
+  /*width: 360px; */
+  column-fill: auto;
+  z-index: 0; }
 
 .navbar-img {
   filter: blur(0px); }
