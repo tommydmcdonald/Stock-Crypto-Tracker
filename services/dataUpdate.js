@@ -28,7 +28,7 @@ const updateTickerDataCall = async () => {
          else if (type == TYPE.STOCK) {
             PRICE_URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
          }
-         console.log('url for ', name, type, 'is ', PRICE_URL);
+         /*console.log('url for ', name, type, 'is ', PRICE_URL);*/
          return { name, type, url: PRICE_URL}
       });
 
@@ -49,7 +49,7 @@ const updateTickerDataCall = async () => {
          else { //stock
             price = resolved[i].data.latestPrice;
          }
-         console.log('Updating price for ', name, type, price);
+         /*console.log('Updating price for ', name, type, price);*/
          const tic = await Ticker.findByIdAndUpdate( _id, { $set: { price } });
       }
    } catch(err) {
