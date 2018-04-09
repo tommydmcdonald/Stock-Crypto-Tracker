@@ -11,6 +11,7 @@ const autocompleteLibrary = require('../services/autocompleteLibrary');
 router.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
    try {
       const newTicker = req.body;
+
       const { name, type } = newTicker;
       const { _id } = req.user;
 
