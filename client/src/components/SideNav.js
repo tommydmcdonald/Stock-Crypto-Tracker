@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import PortfolioChart from '../containers/PortfolioChart';
 import PortfolioList from '../containers/PortfolioList'
 
+import '../style/SideNav.css';
+
 export default class SideNav extends Component {
    render() {
       return (

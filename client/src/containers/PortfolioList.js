@@ -7,8 +7,31 @@ import { Row, Col, Preloader, Collapsible, CollapsibleItem } from 'react-materia
 import { TYPE } from '../actions/types';
 import { removeTicker, updateQuantity, selectChart } from '../actions';
 import Tracker from './Tracker';
+import SearchBar from './SearchBar';
+
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
+
+import TextField from 'material-ui/TextField';
+
+import '../style/PortfolioList.css';
 
 class PortfolioList extends Component {
+   constructor() {
+      super();
+      this.state = {
+         showCheckboxes: false,
+         selectable: true,
+         deselectOnClickaway: false,
+      }
+   }
+
    renderTracker(tickerItem, renderType) {
       const { name, type, quantity } = tickerItem;
 
@@ -36,21 +59,20 @@ class PortfolioList extends Component {
             );
          }
 
-         let chartData = _.get(this.props.chartData, `[${type}][${name}]`, {
-            prices: [0],
-            times: [0]
-         });
+         //selecting row if it is currently selected chart
+         const { selectedChart } = this.props;
+         let selected = false;
+         if (selectedChart.name === name && selectedChart.type === type) {
+            selected = true;
+         }
+
 
          return (
-            <li class="collection-item">
-               <Tracker
-                  key={key} name={name} type={type}
-                  currentPrice={currentPrice} quantity={quantity} chartData={chartData}
-                  removeTicker={this.props.removeTicker}
-                  updateQuantity={this.props.updateQuantity}
-                  checkChartTicker={this.checkChartTicker.bind(this)}
-               />
-            </li>
+            <TableRow selected={selected}>
+               <TableRowColumn>{name}</TableRowColumn>
+               <TableRowColumn>{currentPrice}</TableRowColumn>
+               <TableRowColumn>{quantity}</TableRowColumn>
+            </TableRow>
          );
       }
    }
@@ -70,53 +92,116 @@ class PortfolioList extends Component {
       this.props.removeTicker(removingTicker);
    }
 
+   renderHeader(renderType) {
+      let header;
+      if (renderType === TYPE.STOCK) {
+         header = 'Stocks';
+      }
+      else if (renderType === TYPE.CRYPTO) {
+         header = 'Cryptocurrencies';
+      }
+
+      return (
+         <TextField></TextField>
+      );
+   }
+
    numberWithCommas(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
    }
 
    renderTrackerList(renderType) {
       return (
-         <div className="black-text">
-            <ul className="collection">
-                  <Row className="ticker-price-row">
-                     <Col s={3}>Ticker</Col>
-                     <Col className="price-text" s={3}>
-                        Price
-                     </Col>
-                     <Col s={2}>
-                        <div className="quantity-text">Quantity</div>
-                     </Col>
-                  </Row><hr className="margin: 0px"></hr>
-               {this.props.tickerList.map(ticker =>
-                  this.renderTracker(ticker, renderType)
-               )}
-            </ul>
-         </div>
+         this.props.tickerList.map(ticker =>
+            this.renderTracker(ticker, renderType)
+         )
       );
+   }
+
+   renderList(renderType) {
+      let header;
+      if (renderType === TYPE.STOCK) {
+         header = 'Stocks';
+      }
+      else if (renderType === TYPE.CRYPTO) {
+         header = 'Cryptocurrencies';
+      }
+
+      return (
+            <CollapsibleItem
+               className="portfolio-list white-text z-depth-10"
+               header={header} >
+               <Table onCellClick={(rowNumber, columnId) => this.handleCellClick(renderType, rowNumber, columnId)}
+                  className='portfolio-list'
+               >
+                  <TableHeader
+                     displaySelectAll={this.state.showCheckboxes}
+                     adjustForCheckbox={this.state.showCheckboxes}>
+                     <TableRow>
+                       <TableHeaderColumn>Ticker</TableHeaderColumn>
+                       <TableHeaderColumn>Price</TableHeaderColumn>
+                       <TableHeaderColumn>Quantity</TableHeaderColumn>
+                     </TableRow>
+                  </TableHeader>
+                  <TableBody
+                     displayRowCheckbox={this.state.showCheckboxes}
+                     deselectOnClickaway={this.state.deselectOnClickaway}
+                  >
+                     {this.renderTrackerList(renderType)}
+                  </TableBody>
+               </Table>
+            </CollapsibleItem>
+      )
+
+   }
+
+   handleCellClick(renderType, rowNumber, columnId) {
+
+      let i = 0, foundIndex = -1, found = false;
+      while (this.props.tickerList[i] && !found) {
+         const ticker = this.props.tickerList[i];
+
+         if (ticker.type === renderType) {
+            foundIndex++;
+         }
+
+         if (foundIndex === rowNumber) { //if final index, stop i and exit loop
+            found = true;
+         }
+         else { //if not the final index, move onto next item
+            i++;
+         }
+
+      }
+
+      console.log('i = ' + i + ' tickerfound = ', this.props.tickerList[i]);
+
+      this.props.selectChart(this.props.tickerList[i].name, renderType);
    }
 
    render() {
       return (
-         <Collapsible popout defaultActiveKey={0} className="collapsible-header">
-            <CollapsibleItem
-               id="collapsible-body"
-               className="white-text z-depth-10"
-               header="Stocks"
-               icon="trending_up"
-            >
-               {this.renderTrackerList(TYPE.STOCK)}
-            </CollapsibleItem>
-            <CollapsibleItem
-               id="collapsible-body"
-               className="white-text z-depth-10"
-               header="Crypto Currencies"
-               icon="trending_up"
-            >
-               {this.renderTrackerList(TYPE.CRYPTO)}
-            </CollapsibleItem>
-         </Collapsible>
+         <div>
+            <SearchBar type={TYPE.STOCK}/>
+
+            <div className='row'>
+               <Collapsible popout>
+                  {this.renderList(TYPE.STOCK)}
+               </Collapsible>
+            </div>
+
+            <SearchBar type={TYPE.CRYPTO}/>
+
+            <div className='row'>
+               <Collapsible popout>
+                  {this.renderList(TYPE.CRYPTO)}
+               </Collapsible>
+            </div>
+
+         </div>
       );
    }
+
 }
 
 function mapStateToProps({tickerList, priceList, selectedChart}) {

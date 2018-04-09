@@ -1,0 +1,25 @@
+.portfolio-list > .collapsible-body, .portfolio-list th, .portfolio-list td {
+  padding: 0px 0px 0px 0px !important; }
+
+.portfolio-list th, .portfolio-list td {
+  padding: 0px 0px 0px 0px !important;
+  text-align: center !important; }
+
+.portfolio-list td {
+  text-align: center !important; }
+
+.search-bar {
+  width: 70% !important;
+  line-height: 32px !important; }
+  .search-bar > div > button {
+    height: 40px !important; }
+    .search-bar > div > button > div > svg {
+      position: relative;
+      bottom: 4px; }
+
+.search-bar-font {
+  font-size: 14px !important; }
+  .search-bar-font input, .search-bar-font div {
+    height: 40px !important; }
+  .search-bar-font div {
+    bottom: 0px !important; }
