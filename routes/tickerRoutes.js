@@ -59,18 +59,13 @@ router.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update
 
 router.get('/api/tickers', async (req, res) => { //get list of tickers
 
-   const tickerList = [];
-
-   await req.user.tickerList.map( async ticker => {
-
+   tickerList = await Promise.all(req.user.tickerList.map( async ticker => {
       const { name, type, quantity } = ticker;
-      let logo = await Ticker.findOne( { name, type }).select('logo');
-      logo = logo.logo;
+      const { logo } = await Ticker.findOne( { name, type }).select('logo');
+      return { name, type, quantity, logo };
+   }));
 
-      tickerList.push( { name, type, quantity, logo } );
-      console.log(tickerList);
-   });
-   console.log('after map');
+   console.log(tickerList);
    res.send(tickerList);
 });
 
