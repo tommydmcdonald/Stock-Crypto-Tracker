@@ -57,8 +57,21 @@ router.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update
 
 });
 
-router.get('/api/tickers', (req, res) => { //get list of tickers
-   res.send(req.user.tickerList);
+router.get('/api/tickers', async (req, res) => { //get list of tickers
+
+   const tickerList = [];
+
+   await req.user.tickerList.map( async ticker => {
+
+      const { name, type, quantity } = ticker;
+      let logo = await Ticker.findOne( { name, type }).select('logo');
+      logo = logo.logo;
+
+      tickerList.push( { name, type, quantity, logo } );
+      console.log(tickerList);
+   });
+   console.log('after map');
+   res.send(tickerList);
 });
 
 router.get('/api/tickers/current_prices', async (req, res) => { //return list of all current prices

@@ -152,10 +152,6 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
 
          let logo = (await axios.get(URL_2)).data.url;
 
-         console.log("logo: ", logo);
-
-         // console.log("logo: ", logo);
-
 
          if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
            return false;
