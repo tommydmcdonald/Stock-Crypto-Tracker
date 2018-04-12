@@ -2,8 +2,9 @@ const axios = require('axios');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const Chart = mongoose.model('chart');
-const Ticker = mongoose.model('ticker');  
+const Ticker = mongoose.model('ticker');
 const { BASE_URL, TYPE } = require('../config/keys');
+const delay = require('delay');
 
 exports.addTickerToCharts = async (newTicker = {name: '', type: ''}, chartStatus = '') => { //returns true if stock/crypto successfully added, returns false if not
    const { name, type } = newTicker;
@@ -138,21 +139,29 @@ exports.findChartData = async (name, type) => {
    }
 }
 
-exports.addTickerToTickers = async (newTicker = {name: '', type: ''}) => { //returns true if stock/crypto successfully added, returns false if not
+exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //returns true if stock/crypto successfully added, returns false if not
    try {
       const { name, type } = newTicker;
 
        if (type == TYPE.STOCK) {
          const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
-         const { data } = await axios.get(URL);
+         const URL_2 = `${BASE_URL.STOCK}/stock/${name}/logo`;
 
+         let { data } = await axios.get(URL);
          const price = data.latestPrice;
+
+         let logo = (await axios.get(URL_2)).data.url;
+
+         console.log("logo: ", logo);
+
+         // console.log("logo: ", logo);
+
 
          if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
            return false;
          }
          else { //valid ticker
-           const addTicker = new Ticker ({ ...newTicker, price  });
+           const addTicker = new Ticker ({ ...newTicker, price, logo });
            await addTicker.save();
            return true;
          }
