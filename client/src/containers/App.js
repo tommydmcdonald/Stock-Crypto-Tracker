@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser } from '../actions';
-import * as actions from '../actions';
 
 import '../style/style.css';
 // import materializeCSS from 'materialize-css/dist/css/materialize.min.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Home from '../components/Home';
+import Home from './Home';
 import Landing from '../components/Landing'
-import Header from './Header';
 
 class App extends Component {
    componentDidMount() {
@@ -23,9 +21,8 @@ class App extends Component {
             <MuiThemeProvider>
             <BrowserRouter>
                <div>
-                  <Header />
-                  <Route exact path={"/"} component={this.props.auth ? Home : Landing} />
-                  <Route path="/landing" component={Landing} />
+                  <Route exact path='/' component={this.props.auth ? Home : Landing} />
+                  <Route path='/landing' component={Landing} />
                </div>
             </BrowserRouter>
             </MuiThemeProvider>
@@ -34,8 +31,8 @@ class App extends Component {
    }
 }
 
-function mapStateToProps({ auth }) {
-   return { auth };
+function mapStateToProps({ auth, tickerList }) {
+   return { auth, tickerList };
 }
 
 function mapDispatchToProps(dispatch) {

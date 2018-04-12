@@ -13,10 +13,12 @@
 #AccountDropDown-row {
   font-weight: 300;
   font-size: 16px;
-  padding-right: 20px; }
+  padding-right: 20px;
+}
 
 .snack-bar {
-  text-align: center; }
+   text-align: center;
+}
 
 .copyRight {
   text-align: center; }
@@ -33,27 +35,33 @@
   left: 43%; }
 
 .HomeChart {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px 5px 0px 0px;
-  background-color: #6f7984; }
+   width: 100%;
+   height: 100%;
+   border-radius: 5px 5px 0px 0px;
+   background-color: #6f7984;
+}
 
 .NewsList {
-  background-color: #6f7984;
-  margin-top: 15%;
-  border-radius: 3px;
-  width: 100%; }
+   background-color: #6f7984;
+   margin-top: 15%;
+   //margin-top: 55%;
+   border-radius: 3px;
+   // margin:auto;
+   width: 100%;
+}
 
 .News-Subheader {
-  background-color: #6f7984;
-  padding-top: 8%;
-  margin-bottom: 5%;
-  border-radius: 5px 5px 0px 0px; }
+   background-color: #6f7984;
+   padding-top: 8%;
+   margin-bottom: 5%;
+   border-radius: 5px 5px 0px 0px;
+}
 
 .ticker-row {
-  padding-top: 1%;
-  padding-left: 3%;
-  padding-bottom: 0%; }
+   padding-top: 1%;
+   padding-left: 3%;
+   padding-bottom: 0%;
+}
 
 .mainApp {
   background-color: #212B33;
@@ -81,10 +89,12 @@
   padding-top: -1%;
   padding-left: 5%;
   margin: auto;
-  width: 60%; }
+  width: 60%;
+}
 
 .Graph {
-  overflow: hidden; }
+   overflow:hidden;
+}
 
 .valign-wrapper {
   padding-top: 15px;
@@ -125,7 +135,8 @@
   /*width: 360px; */
   column-fill: auto;
   z-index: 0;
-  position: relative; }
+  position: relative;
+}
 
 .navbar-img {
   filter: blur(0px); }
@@ -152,7 +163,8 @@
   padding-right: 1.5em !important; }
 
 .ticker-name {
-  padding-right: 100px; }
+   padding-right: 100px;
+}
 
 .time-series-tabs {
   background-color: #212B33 !important; }

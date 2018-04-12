@@ -2,92 +2,70 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addTicker } from '../actions/index';
-import { Row, Autocomplete, Button, Col, Input } from 'react-materialize';
-import axios from 'axios';
 import _ from 'lodash';
+import Snackbar from 'material-ui/Snackbar';
+import { Row, Col } from 'react-materialize';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import { TYPE } from '../actions/types';
 
-const API_KEY = 'BIYQYMYZ9KIBXS9V';
+import SearchBarMU from 'material-ui-search-bar'
 
 class SearchBar extends Component {
+
    constructor(props) {
       super(props);
+      this.onRequestSearch = this.onRequestSearch.bind(this);
 
-      this.state = { ticker: '', type: '', switch: TYPE.STOCK, suggestions: {} }
+      console.log('props in SearchBar = ', this.props);
 
-      this.onInputChange = this.onInputChange.bind(this);
-      this.onFormSubmit = this.onFormSubmit.bind(this);
-      this.onButtonClick = this.onButtonClick.bind(this);
-      this.handleEnterOnSearchBar = this.handleEnterOnSearchBar.bind(this);
-      this.onSwitchChange = this.onSwitchChange.bind(this);
-   }
+      this.state = { ticker: '',
+                     hint: '',
+                     open: false,
+                   };
 
-   async componentDidMount() {
-      const res = await axios.get('/api/tickers/suggestions');
-      this.setState( {suggestions: res.data} );
-   }
-
-   onInputChange(event, value) {
-
-      this.setState({ ticker: value.toUpperCase() });
-   }
-
-   onSwitchChange() {
-      if (this.state.switch == TYPE.STOCK) {
-         this.setState( { switch: TYPE.CRYPTO } );
+      if (this.props.type == TYPE.STOCK) {
+         console.log('if this.props.type = ' + TYPE.STOCK);
+         this.state.hint = 'Add stock';
+         console.log(this.state);
       }
-      else {
-         this.setState( { switch: TYPE.STOCK } )
+      else if (this.props.type === TYPE.CRYPTO) {
+         this.state.hint = 'Add crypto';
       }
+
    }
 
-   onFormSubmit() {
-      // Fetch tracker info
-      const newTicker = { name: this.state.ticker.toUpperCase(), type: this.state.type };
+   onRequestSearch() {
+      console.log('Search for ' + this.props.type + '  is = ', this.state.ticker);
+
+      const newTicker = { name: this.state.ticker.toUpperCase(), type: this.props.type };
 
       if ( newTicker.name !== '' && !_.some(this.props.tickerList, newTicker) ) { //only add if not empty string and ticker doesn't exist in redux tickerList
          this.props.addTicker(newTicker, this.props.tickerList.length);
-      } //
-
-      this.setState( { ticker: '', type: ''} ); //sets default state
-   }
-
-   async onButtonClick(event) {
-      const { id } = event.target;
-      await this.setState( { type: id } );
-      this.onFormSubmit();
-   }
-
-   async handleEnterOnSearchBar(event) {
-      if (event.key === 'Enter') {
-         await this.setState( { type: this.state.switch } );
-         this.onFormSubmit();
       }
    }
 
    render() {
+
+      const style = {margin: '0 auto', height: '40px'};
+      const messageEnd = " has been added!"
+
       return (
-         <Row className='valign-wrapper white-text search-bar"'>
-            <Col s={5}>
-               <Autocomplete
-                  s={12}
-                  title='Enter ticker'
-                  value={this.state.ticker}
-                  onChange={this.onInputChange}
-                  onKeyPress={this.handleEnterOnSearchBar}
-                  minLength={2}
-                  data={this.state.suggestions}
-                  limit={3}
-               />
-            </Col>
-            <Col s={2}><Button className="search-button"  id={TYPE.STOCK} onClick={this.onButtonClick} waves='light'>Add Stock</Button></Col>
-            <Col s={2}><Button className="search-button"  id={TYPE.CRYPTO} onClick={this.onButtonClick} waves='light'>Add Crypto</Button></Col>
-            <Col s={2}><div className="switch"><label>Stock<input type="checkbox" onChange={this.onSwitchChange}/><span className="lever"></span>Crypto</label></div></Col>
-          </Row>
+         <div className='search-bar row'>
+            <SearchBarMU
+               value={this.state.ticker}
+               onChange={(value) => this.setState({ticker: value.toUpperCase()})}
+               onRequestSearch={this.onRequestSearch}
+               style={style}
+               action="undo"
+               hintText={this.state.hint}
+               className='search-bar-font'
+            />
+         </div>
       );
 
    }
+
 }
 
 function mapDispatchToProps(dispatch) {

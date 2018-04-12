@@ -1,27 +1,12 @@
-const _ = require('lodash');
+const router = require('express').Router();
+const tickerRoutes = require('./tickerRoutes');
+const chartRoutes = require('./chartRoutes');
+const authRoutes = require('./authRoutes');
+const newsRoutes = require('./newsRoutes');
 
-module.exports = {
-   replaceKeys: (data) => { //removes . from keys of data object. '.' are not valid keys in mongodb
-      data = _.mapKeys(data, (value, key) => {
-         return key.replace('.', '_');
-      })
+router.use('/', newsRoutes);
+router.use('/', tickerRoutes);
+router.use('/', chartRoutes);
+router.use('/', authRoutes);
 
-      for (let key in data) {
-         if ( typeof data[key] == 'object') {
-            for (let subkey in data[key]) {
-               if (typeof data[key][subkey] == 'object') {
-                  data[key][subkey] = _.mapKeys(data[key][subkey], (value, key) => {
-                     return key.replace('.', '_');
-                  })
-               }
-            }
-
-            data[key] = _.mapKeys(data[key], (value, key) => {
-               return key.replace('.', '_');
-            })
-         }
-      }
-
-      return data;
-   }
-}
+module.exports = router;
