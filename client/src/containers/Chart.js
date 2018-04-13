@@ -100,10 +100,10 @@ class Chart extends Component {
 
       return (
                <Row>
-                  <Col s={5} className="ticker-name">
+                  <Col s={2} className="ticker-name">
                      <h5 className="white-text">{this.props.selectedChart.name}:</h5>
                   </Col>
-                  <Col s={7}>
+                  <Col s={10}>
                      <h5 className="ticker-price">${priceText.price} </h5>
                   </Col>
                   <Row>

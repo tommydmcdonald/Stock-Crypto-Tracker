@@ -34,7 +34,11 @@ class PortfolioList extends Component {
 
 
    renderTracker(tickerItem, renderType) {
-      const { name, type, quantity, logo } = tickerItem;
+      let { name, type, quantity, logo } = tickerItem;
+
+      if(type == TYPE.CRYPTO) {
+         logo = require('../img/CryptoImages/' + name.toLowerCase() + '.png');
+      }
 
       if (type === renderType) {
          const key = name + '-' + type;
@@ -185,19 +189,19 @@ class PortfolioList extends Component {
    render() {
       return (
          <div>
-            <SearchBar type={TYPE.STOCK}/>
-
-            <div className='row'>
-               <Collapsible defaultActiveKey={0} popout>
-                  {this.renderList(TYPE.STOCK)}
-               </Collapsible>
-            </div>
-
             <SearchBar type={TYPE.CRYPTO}/>
 
             <div className='row'>
                <Collapsible defaultActiveKey={0} popout>
                   {this.renderList(TYPE.CRYPTO)}
+               </Collapsible>
+            </div>
+
+            <SearchBar type={TYPE.STOCK}/>
+
+            <div className='row'>
+               <Collapsible defaultActiveKey={0} popout>
+                  {this.renderList(TYPE.STOCK)}
                </Collapsible>
             </div>
 

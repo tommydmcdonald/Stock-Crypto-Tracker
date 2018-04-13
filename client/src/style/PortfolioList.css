@@ -7,6 +7,10 @@
 .portfolio-list td {
   text-align: center !important; }
 
+.portfolio-list tr {
+  padding: 0 !important;
+  height: 15px !important; }
+
 .ticker-img {
   border-radius: 3px 3px 3px 3px;
   display: block;
