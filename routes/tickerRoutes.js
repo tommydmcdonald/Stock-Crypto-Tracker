@@ -31,9 +31,9 @@ router.post('/api/tickers/', async (req, res) => { //add new ticker             
 
       }
       //if exists in db or once added, send price back
-      const { price } = await Ticker.findOne( { name, type } );
+      const { price, logo } = await Ticker.findOne( { name, type } );
 
-      res.send( { price } );
+      res.send( { price, logo } );
 
       if (!queryTicker) {
          addTickerToCharts(newTicker, 'new');
@@ -57,8 +57,16 @@ router.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update
 
 });
 
-router.get('/api/tickers', (req, res) => { //get list of tickers
-   res.send(req.user.tickerList);
+router.get('/api/tickers', async (req, res) => { //get list of tickers
+
+   tickerList = await Promise.all(req.user.tickerList.map( async ticker => {
+      const { name, type, quantity } = ticker;
+      const { logo } = await Ticker.findOne( { name, type }).select('logo');
+      return { name, type, quantity, logo };
+   }));
+
+   // console.log(tickerList);
+   res.send(tickerList);
 });
 
 router.get('/api/tickers/current_prices', async (req, res) => { //return list of all current prices

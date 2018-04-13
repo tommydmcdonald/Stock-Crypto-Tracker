@@ -34,7 +34,11 @@ class PortfolioList extends Component {
 
 
    renderTracker(tickerItem, renderType) {
-      const { name, type, quantity } = tickerItem;
+      let { name, type, quantity, logo } = tickerItem;
+
+      if(type == TYPE.CRYPTO) {
+         logo = require('../img/CryptoImages/' + name.toLowerCase() + '.png');
+      }
 
       if (type === renderType) {
          const key = name + '-' + type;
@@ -70,6 +74,7 @@ class PortfolioList extends Component {
 
          return (
             <TableRow selected={selected}>
+               <TableRowColumn><img className="ticker-img" src={logo} height="18" width="18"></img></TableRowColumn>
                <TableRowColumn>{name}</TableRowColumn>
                <TableRowColumn>{currentPrice}</TableRowColumn>
                <TableRowColumn>{quantity}</TableRowColumn>
@@ -129,7 +134,7 @@ class PortfolioList extends Component {
       }
 
       return (
-            <CollapsibleItem
+            <CollapsibleItem defaultActiveKey={0}
                className="portfolio-list white-text z-depth-10"
                header={header} >
                <Table onCellClick={(rowNumber, columnId) => this.handleCellClick(renderType, rowNumber, columnId)}
@@ -139,6 +144,7 @@ class PortfolioList extends Component {
                      displaySelectAll={this.state.showCheckboxes}
                      adjustForCheckbox={this.state.showCheckboxes}>
                      <TableRow>
+                        <TableHeaderColumn>Company</TableHeaderColumn>
                        <TableHeaderColumn>Ticker</TableHeaderColumn>
                        <TableHeaderColumn>Price</TableHeaderColumn>
                        <TableHeaderColumn>Quantity</TableHeaderColumn>
@@ -183,19 +189,19 @@ class PortfolioList extends Component {
    render() {
       return (
          <div>
-            <SearchBar type={TYPE.STOCK}/>
-
-            <div className='row'>
-               <Collapsible popout>
-                  {this.renderList(TYPE.STOCK)}
-               </Collapsible>
-            </div>
-
             <SearchBar type={TYPE.CRYPTO}/>
 
             <div className='row'>
-               <Collapsible popout>
+               <Collapsible defaultActiveKey={0} popout>
                   {this.renderList(TYPE.CRYPTO)}
+               </Collapsible>
+            </div>
+
+            <SearchBar type={TYPE.STOCK}/>
+
+            <div className='row'>
+               <Collapsible defaultActiveKey={0} popout>
+                  {this.renderList(TYPE.STOCK)}
                </Collapsible>
             </div>
 
