@@ -82,26 +82,33 @@ class Chart extends Component {
 
    renderLabel() {
       let priceText = '';
+      let logo_url = '';
       if (this.props.selectedChart) {
          const { name, type } = this.props.selectedChart;
          if (this.props.priceList && this.props.priceList[type] && this.props.priceList[type][name] ) {
-            const { quantity } = _.find( this.props.tickerList, { name, type} );
+
+            const { quantity, logo } = _.find( this.props.tickerList, { name, type } );
+
+            const logo_url = logo;
+            console.log("This is the logo url", logo);
+
             const price = Number(this.props.priceList[type][name]).toFixed(2);
             priceText = { price, amtOwned: Number(price*quantity).toFixed(2) };
+
          }
       }
 
       return (
                <Row>
-                  <Col s={2} className="ticker-name">
+                  <Col s={5} className="ticker-name">
                      <h5 className="white-text">{this.props.selectedChart.name}:</h5>
                   </Col>
-                  <Col s={10}>
+                  <Col s={7}>
                      <h5 className="ticker-price">${priceText.price} </h5>
                   </Col>
-               <Row>
-                  <Col s={9} className="" ><h6 className="white-text">value owned: ${priceText.amtOwned}</h6></Col>
-               </Row>
+                  <Row>
+                     <Col s={9} className="" ><h6 className="white-text">value owned: ${priceText.amtOwned}</h6></Col>
+                  </Row>
                </Row>
 
       )

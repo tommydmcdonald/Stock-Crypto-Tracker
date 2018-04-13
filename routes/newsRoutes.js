@@ -15,7 +15,7 @@ router.get('/api/news', async (req, res) => {
       const newsList = [];
 
       try {
-         const URL = `${BASE_URL.STOCK}/stock/market/news`;
+         const URL = `${BASE_URL.STOCK}/stock/aapl/news/last/10`;
 
          const { data } = await axios.get(URL);
 
@@ -29,13 +29,6 @@ router.get('/api/news', async (req, res) => {
          console.log(err);
       }
 });
-
-/*
-router.get('/api/news', async (req, res) => {
-
-   res.send(addNewsToNews);
-});
-*/
 
 
 module.exports = router;

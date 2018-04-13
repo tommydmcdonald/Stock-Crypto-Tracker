@@ -31,9 +31,9 @@ router.post('/api/tickers/', async (req, res) => { //add new ticker             
 
       }
       //if exists in db or once added, send price back
-      const { price } = await Ticker.findOne( { name, type } );
+      const { price, logo } = await Ticker.findOne( { name, type } );
 
-      res.send( { price } );
+      res.send( { price, logo } );
 
       if (!queryTicker) {
          addTickerToCharts(newTicker, 'new');
@@ -65,7 +65,7 @@ router.get('/api/tickers', async (req, res) => { //get list of tickers
       return { name, type, quantity, logo };
    }));
 
-   console.log(tickerList);
+   // console.log(tickerList);
    res.send(tickerList);
 });
 

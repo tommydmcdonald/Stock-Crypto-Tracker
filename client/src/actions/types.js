@@ -16,6 +16,7 @@ module.exports = {
    FETCH_NEWS_CUSTOM: 'fetch_news_custom',
    OPEN_SNACKBAR: 'open_snackbar',
    CLOSE_SNACKBAR: 'close_snackbar',
+   ADD_TICKER_LOGO: 'add_ticker_logo',
 }
 
 // export const GET_TICKER_DATA = 'get_ticker_data';
