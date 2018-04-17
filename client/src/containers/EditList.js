@@ -13,10 +13,13 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+
 import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
 
 import DropdownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import CloseDropdownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+import AddButton from 'material-ui/svg-icons/content/add';
 
 import { Row, Col, Preloader } from 'react-materialize';
 
@@ -24,12 +27,16 @@ class EditList extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         selected: {name: '', rowNumber: -1},
+         selected: {name: '', rowNumber: -1, addPriceHistory: 0},
+
          showCheckboxes: false,
          dropdownColumnId: 4,
+         addPriceHistoryColumnId: 3,
       };
 
       this.state.tickers = this.props.tickerList.filter( ticker => ticker.type == this.props.type);
+
+      this.handleCellClick = this.handleCellClick.bind(this);
    }
 
    numberWithCommas(x) {
@@ -38,6 +45,17 @@ class EditList extends Component {
 
    renderTrackerList() {
       return this.state.tickers.map(ticker => this.renderTracker(ticker) );
+   }
+
+   renderEditRow() {
+      return (
+         <TableRow>
+            <TableRowColumn>Quantity: <TextField/></TableRowColumn>
+            <TableRowColumn>Cost: <TextField/></TableRowColumn>
+            <TableRowColumn>Date: <DatePicker hintText="Pick date" container="inline" /></TableRowColumn>
+            <TableRowColumn><AddButton/></TableRowColumn>
+         </TableRow>
+      );
    }
 
    renderTracker(ticker) {
@@ -73,15 +91,11 @@ class EditList extends Component {
          selected = true;
       }
 
-      let editRow;
+      let editRow = []
       if (selected) {
-         editRow = (
-            <TableRow selected={selected}>
-               <TableRowColumn>New</TableRowColumn>
-               <TableRowColumn>New</TableRowColumn>
-               <TableRowColumn>New</TableRowColumn>
-            </TableRow>
-         )
+         for (let i = 0; i < this.state.selected.addPriceHistory; i++) {
+            editRow.push( this.renderEditRow() );
+         }
       }
 
       const standardRow = (
@@ -99,37 +113,47 @@ class EditList extends Component {
       return [standardRow, editRow];
    }
 
+   changePHCount(change) {
+
+   }
+
    handleCellClick(rowNumber, columnId) {
-      const { selected } = this.state;
+      let { selected } = this.state;
       const previousSelected = selected.name;
       const sameSelected = (rowNumber == selected.rowNumber) ? true : false
 
-      console.log('sameSelected = ', sameSelected);
+      console.log(`rowNumber = ${rowNumber}, columnId = ${columnId}`);
 
-      if (columnId == this.state.dropdownColumnId) {
-         if (sameSelected) {
-            const selected = {name: '', rowNumber: -1};
+      if (columnId == this.state.addPriceHistoryColumnId && previousSelected &&
+         (rowNumber >= selected.rowNumber+1 && rowNumber <= (selected.rowNumber + selected.addPriceHistory) ) ) { //add button
+         selected = { ...selected };
+
+         selected.addPriceHistory += 1;
+
+         this.setState( {selected} );
+      }
+      else if (columnId == this.state.dropdownColumnId) { //dropdown button
+         if (sameSelected) { //close if already selected
+            selected = {name: '', rowNumber: -1, addPriceHistory: 0};
             this.setState({ selected });
-            console.log('sameselected = ', this.state.selected);
          }
-         else {
-            if (previousSelected && this.state.selected.rowNumber < rowNumber) {
+         else { //new selection
+            if (previousSelected && this.state.selected.rowNumber < rowNumber) { //account for extra row if already selected
                rowNumber--;
             }
-            const selected = {name: this.state.tickers[rowNumber].name, rowNumber };
-            console.log('selected = ', selected, 'columnId = ', columnId);
+            let selected = {name: this.state.tickers[rowNumber].name, rowNumber, addPriceHistory: 1};
             this.setState({ selected })
          }
       }
 
-
+      console.log(this.state.selected);
    }
 
    render() {
       return (
          <div>
             <Table
-               onCellClick={(rowNumber, columnId) => this.handleCellClick(rowNumber, columnId)}
+               onCellClick={this.handleCellClick}
             >
                <TableHeader
                   displaySelectAll={this.state.showCheckboxes}
