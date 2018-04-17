@@ -23,9 +23,9 @@ const cryptoData = {
    week52Low: Number,
    week52High: Number,
    volume: Number,
-   avgVolume: Number,
    marketCap: Number,
    supply: Number,
+   algorithm: String
 };
 
 // data: { type: Schema.Types.Mixed, enum: [stockData, cryptoData] }

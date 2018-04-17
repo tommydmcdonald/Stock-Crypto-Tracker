@@ -1,5 +1,5 @@
 import { ADD_TICKER, REMOVE_TICKER, ADD_TICKER_PRICE, SELECT_CHART,
-         LOAD_TICKERS, UPDATE_TICKER_QUANTITY, LOAD_TICKER_PRICES, OPEN_SNACKBAR, ADD_TICKER_LOGO } from './types'
+         LOAD_TICKERS, UPDATE_TICKER_QUANTITY, LOAD_TICKER_PRICES, OPEN_SNACKBAR, ADD_TICKER_LOGO, ADD_TICKER_STATS } from './types'
 import axios from 'axios';
 import { fetchChartData } from './chartActions';
 
@@ -11,7 +11,7 @@ export const addTicker = (newTicker, tickerListSize) => async dispatch => { //ad
    dispatch({ type: ADD_TICKER, payload: newTicker });
 
    const res = await axios.post('/api/tickers', newTicker);
-   const { price, logo } = res.data;
+   const { price, logo, data } = res.data;
    console.log('res.data = ', res.data);
 
    if ( res.data.hasOwnProperty('error') ) { //if ticker is not valid for API
@@ -20,6 +20,7 @@ export const addTicker = (newTicker, tickerListSize) => async dispatch => { //ad
    else { //add ticker price and load chart data
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, price } });
       dispatch({ type: ADD_TICKER_LOGO, payload: { name, type, logo } });
+      dispatch({ type: ADD_TICKER_LOGO, payload: { name, type, data } });
       dispatch({ type: OPEN_SNACKBAR, payload: { name, type } });
       if (tickerListSize === 0) { //if nothing in tickerList, nothing will be graphed. Graph newly added ticker, since it is the only ticker
          dispatch({ type: SELECT_CHART, payload: {name, type} });

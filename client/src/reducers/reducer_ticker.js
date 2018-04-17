@@ -1,4 +1,4 @@
-import { ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, UPDATE_TICKER_QUANTITY, ADD_TICKER_LOGO } from '../actions/types';
+import { ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, UPDATE_TICKER_QUANTITY, ADD_TICKER_LOGO, ADD_TICKER_STATS } from '../actions/types';
 import _ from 'lodash';
 
 export default function(state = [], action) {
@@ -29,7 +29,11 @@ export default function(state = [], action) {
    case ADD_TICKER_LOGO: {
       const { name, type, logo } = action.payload;
       const newState = [ ...state ];
-      _.find(newState, { name, type }).logo = logo;   }
+      _.find(newState, { name, type }).logo = logo;}
+   case ADD_TICKER_STATS: {
+      const { name, type, data } = action.payload;
+      const newState = [ ...state ];
+      _.find(newState, { name, type }).data = data;}
    default:
       return state;
   }

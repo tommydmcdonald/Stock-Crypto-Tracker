@@ -17,6 +17,7 @@ module.exports = {
    OPEN_SNACKBAR: 'open_snackbar',
    CLOSE_SNACKBAR: 'close_snackbar',
    ADD_TICKER_LOGO: 'add_ticker_logo',
+   ADD_TICKER_STATS: 'add_ticker_stats',
 }
 
 // export const GET_TICKER_DATA = 'get_ticker_data';

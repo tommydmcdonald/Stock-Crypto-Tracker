@@ -145,7 +145,8 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
 
        if (type == TYPE.STOCK) {
          const URL = `${BASE_URL.STOCK}/stock/${name}/quote`;
-         const URL_2 = `${BASE_URL.STOCK}/stock/${name}/logo`;
+         const LOGO_URL = `${BASE_URL.STOCK}/stock/${name}/logo`;
+         // const URL_3 = `${BASE_URL.STOCK}/stock/${name}/dividends`;
 
          let { data } = await axios.get(URL);
 
@@ -164,13 +165,13 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
             sector: data.sector,
          };
 
-         let logo = (await axios.get(URL_2)).data.url;
+         let logo = (await axios.get(LOGO_URL)).data.url;
 
          if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
            return false;
          }
          else { //valid ticker
-           const addTicker = new Ticker ({ ...newTicker, price, data: tickerData, logo });
+           const addTicker = new Ticker ({ ...newTicker, price, logo, data: tickerData });
            await addTicker.save();
            return true;
          }
@@ -182,19 +183,32 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
 
          if ( _.includes(coinbaseTickers, name) ) {
             PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD&e=Coinbase`;
-            STATS_URL = `${BASE_URL.CRYPTO}coin/generalinfo?fsyms=${name}&tsym=USD`;
+            STATS_URL = `${BASE_URL.CRYPTO}generateAvg?fsym=${name}&tsym=USD&e=Coinbase`;
          }
          else {
             PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD`;
-            STATS_URL = `${BASE_URL.CRYPTO}pricemultifull?fsyms=${name}&tsyms=USD`;
+            STATS_URL = `${BASE_URL.CRYPTO}generateAvg?fsym=${name}&tsym=USD&e=Poloniex`;
          }
 
          const res = await axios.get(PRICE_URL);//.data.USD;
          const price = res.data.USD;
 
-         let stats = (await axios.get(STATS_URL)).data.Data;
+         let stats = (await axios.get(STATS_URL)).data.RAW;
 
-         console.log('Crypto stats: ', stats);
+         const tickerData = {
+            open: stats.OPEN24HOUR,
+            high: stats.HIGH24HOUR,
+            low: stats.LOW24HOUR,
+            week52Low: 999,
+            week52High: 999,
+            volume: stats.VOLUME24HOUR,
+            marketCap: 999,
+            supply: 999,
+            algorithm: 999
+         };
+
+
+         console.log('Crypto stats: ', stats );
 
 
          if (res.data.Response == 'Error') {
@@ -202,7 +216,7 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
          }
 
          try {
-            const addTicker = new Ticker({ ...newTicker, price })
+            const addTicker = new Ticker({ ...newTicker, price, data: tickerData });
             await addTicker.save();
          } catch(err) {
             console.log(err)
