@@ -3,20 +3,38 @@ const { Schema } = mongoose;
 
 const TYPE = ['STOCK', 'CRYPTO'];
 
+const stockData = {
+   open: Number,
+   high: Number,
+   low: Number,
+   week52Low: Number,
+   week52High: Number,
+   volume: Number,
+   avgVolume: Number,
+   marketCap: Number,
+   peRatio: Number,
+   sector: String,
+};
+
+const cryptoData = {
+   open: Number,
+   high: Number,
+   low: Number,
+   week52Low: Number,
+   week52High: Number,
+   volume: Number,
+   avgVolume: Number,
+   marketCap: Number,
+   supply: Number,
+};
+
+// data: { type: Schema.Types.Mixed, enum: [stockData, cryptoData] }
+
 const tickerSchema = new Schema({
    name: String,
    type: { type: String, enum: [...TYPE] },
    price: Schema.Types.Mixed,
-   open: Schema.Types.Mixed ,
-   high: Schema.Types.Mixed,
-   low: Schema.Types.Mixed,
-   week52Low: Schema.Types.Mixed,
-   week52High: Schema.Types.Mixed,
-   volume: Schema.Types.Mixed,
-   avgVolume: Schema.Types.Mixed,
-   marketCap: Schema.Types.Mixed,
-   peRatio: Schema.Types.Mixed,
-   sector: String,
+   data: Schema.Types.Mixed,
    logo: String
 });
 

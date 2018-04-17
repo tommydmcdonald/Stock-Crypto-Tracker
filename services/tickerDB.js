@@ -148,18 +148,21 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
          const URL_2 = `${BASE_URL.STOCK}/stock/${name}/logo`;
 
          let { data } = await axios.get(URL);
-         const price = data.latestPrice;
-         const open = data.open;
-         const high = data.high;
-         const low = data.low;
-         const week52High = data.week52High;
-         const week52Low = data.week52Low;
-         const volume = data.low;
-         const avgVolume = data.avgTotalVolume;
-         const marketCap = data.marketCap;
-         const peRatio = data.pwRatio;
-         const sector = data.sector;
 
+         let price = data.latestPrice;
+
+         const tickerData = {
+            open: data.open,
+            high: data.high,
+            low: data.low,
+            week52High: data.week52High,
+            week52Low: data.week52Low,
+            volume: data.low,
+            avgVolume: data.avgTotalVolume,
+            marketCap: data.marketCap,
+            peRatio: data.pwRatio,
+            sector: data.sector,
+         };
 
          let logo = (await axios.get(URL_2)).data.url;
 
@@ -167,7 +170,7 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
            return false;
          }
          else { //valid ticker
-           const addTicker = new Ticker ({ ...newTicker, price, open, high, low, week52Low, week52High, volume, avgVolume, marketCap, peRatio, sector, logo });
+           const addTicker = new Ticker ({ ...newTicker, price, data: tickerData, logo });
            await addTicker.save();
            return true;
          }
@@ -175,16 +178,24 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
 
       if (type == TYPE.CRYPTO) {
          const coinbaseTickers = ['BTC', 'ETH', 'LTC', 'BCH'];
-         let PRICE_URL;
+         let PRICE_URL, STATS_URL;
+
          if ( _.includes(coinbaseTickers, name) ) {
             PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD&e=Coinbase`;
+            STATS_URL = `${BASE_URL.CRYPTO}coin/generalinfo?fsyms=${name}&tsym=USD`;
          }
          else {
             PRICE_URL = `${BASE_URL.CRYPTO}price?fsym=${name}&tsyms=USD`;
+            STATS_URL = `${BASE_URL.CRYPTO}pricemultifull?fsyms=${name}&tsyms=USD`;
          }
 
          const res = await axios.get(PRICE_URL);//.data.USD;
          const price = res.data.USD;
+
+         let stats = (await axios.get(STATS_URL)).data.Data;
+
+         console.log('Crypto stats: ', stats);
+
 
          if (res.data.Response == 'Error') {
             return false;
