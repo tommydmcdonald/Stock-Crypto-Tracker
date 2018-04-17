@@ -56,6 +56,7 @@ export default class EditButton extends Component {
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
+          autoScrollBodyContent={true}
         >
            <EditList type={this.props.type}/>
         </Dialog>
