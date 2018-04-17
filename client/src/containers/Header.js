@@ -22,10 +22,10 @@ class Header extends Component {
       return (
          <div class="navbar-fixed">
             <nav id='header'>
-               <div class="nav-wrapper">
+               <div id="nav-wrapper">
                   <Link
                      to={this.props.auth ? '/' : '/landing'}
-                     className="brand-logo" id="logo">
+                     id="logo">
                      cryptofluence
                   </Link>
                   <ul id="nav-mobile" class="right hide-on-med-and-down">

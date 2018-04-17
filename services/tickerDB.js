@@ -149,15 +149,25 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
 
          let { data } = await axios.get(URL);
          const price = data.latestPrice;
+         const open = data.open;
+         const high = data.high;
+         const low = data.low;
+         const week52High = data.week52High;
+         const week52Low = data.week52Low;
+         const volume = data.low;
+         const avgVolume = data.avgTotalVolume;
+         const marketCap = data.marketCap;
+         const peRatio = data.pwRatio;
+         const sector = data.sector;
+
 
          let logo = (await axios.get(URL_2)).data.url;
-
 
          if ( data.hasOwnProperty('Error Message') ) { //invalid stock or crypto
            return false;
          }
          else { //valid ticker
-           const addTicker = new Ticker ({ ...newTicker, price, logo });
+           const addTicker = new Ticker ({ ...newTicker, price, open, high, low, week52Low, week52High, volume, avgVolume, marketCap, peRatio, sector, logo });
            await addTicker.save();
            return true;
          }

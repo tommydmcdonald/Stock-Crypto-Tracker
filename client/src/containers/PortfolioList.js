@@ -74,7 +74,7 @@ class PortfolioList extends Component {
 
          return (
             <TableRow selected={selected}>
-               <TableRowColumn><img className="ticker-img" src={logo} height="18" width="18"></img></TableRowColumn>
+               <TableRowColumn><img className="ticker-img" src={logo} height="20" width="20"></img></TableRowColumn>
                <TableRowColumn>{name}</TableRowColumn>
                <TableRowColumn>{currentPrice}</TableRowColumn>
                <TableRowColumn>{quantity}</TableRowColumn>
