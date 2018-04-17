@@ -15,9 +15,6 @@
   font-size: 16px;
   padding-right: 20px; }
 
-.snack-bar {
-  text-align: center; }
-
 .copyRight {
   text-align: center; }
 
@@ -32,28 +29,19 @@
   top: 53%;
   left: 43%; }
 
-.HomeChart {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px 5px 0px 0px;
-  background-color: #6f7984; }
-
 .NewsList {
-  background-color: #6f7984;
+  background-color: #FFF;
   margin-top: 15%;
   border-radius: 3px;
   width: 100%; }
 
 .News-Subheader {
-  background-color: #6f7984;
-  padding-top: 8%;
-  margin-bottom: 5%;
+  background-color: #FFF;
   border-radius: 5px 5px 0px 0px; }
 
 .ticker-row {
-  padding-top: 1%;
-  padding-left: 3%;
-  padding-bottom: 0%; }
+  padding-top: 3%;
+  padding-left: 5%; }
 
 .mainApp {
   background-color: #212B33;
@@ -84,7 +72,7 @@
   width: 60%; }
 
 .Graph {
-  overflow: hidden; }
+  margin: 20%; }
 
 .valign-wrapper {
   padding-top: 15px;
@@ -124,8 +112,7 @@
   background-color: #4A525A !important;
   /*width: 360px; */
   column-fill: auto;
-  z-index: 0;
-  position: relative; }
+  z-index: 0; }
 
 .navbar-img {
   filter: blur(0px); }
@@ -151,8 +138,8 @@
 .price-text {
   padding-right: 1.5em !important; }
 
-.ticker-name {
-  padding-right: 100px; }
+#ticker-name {
+  width: 10.667%; }
 
 .time-series-tabs {
   background-color: #212B33 !important; }

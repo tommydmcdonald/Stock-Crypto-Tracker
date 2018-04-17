@@ -20,9 +20,7 @@ class SearchBar extends Component {
       this.state = {ticker: '', hint: ''};
 
       if (this.props.type == TYPE.STOCK) {
-         console.log('if this.props.type = ' + TYPE.STOCK);
          this.state.hint = 'Add stock';
-         console.log(this.state);
       }
       else if (this.props.type === TYPE.CRYPTO) {
          this.state.hint = 'Add crypto';
@@ -31,7 +29,6 @@ class SearchBar extends Component {
    }
 
    onRequestSearch() {
-      console.log('Search for ' + this.props.type + '  is = ', this.state.ticker);
 
       const newTicker = { name: this.state.ticker.toUpperCase(), type: this.props.type };
 
@@ -44,24 +41,6 @@ class SearchBar extends Component {
    render() {
 
       const style = {margin: '0 auto', height: '40px'};
-
-      let test = (
-         // <div className='search-bar row'>
-         //    <div className='col s10'>
-               <SearchBarMU
-                  value={this.state.ticker}
-                  onChange={(value) => this.setState({ticker: value.toUpperCase()})}
-                  onRequestSearch={this.onRequestSearch}
-                  style={style}
-                  hintText={this.state.hint}
-                  className='search-bar-font'
-               />
-            // </div>
-            // <div className='col s2'>
-               // <EditButton></EditButton>
-            // </div>
-         // </div>
-      );
 
       return (
          <div className='search-bar row'>
@@ -77,7 +56,7 @@ class SearchBar extends Component {
             </div>
 
             <div className='col s2'>
-               <EditButton/>
+               <EditButton type={this.props.type}/>
             </div>
          </div>
       );

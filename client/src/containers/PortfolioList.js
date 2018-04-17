@@ -24,58 +24,27 @@ import TextField from 'material-ui/TextField';
 import '../style/PortfolioList.css';
 
 class PortfolioList extends Component {
-   constructor() {
-      super();
+   constructor(props) {
+      super(props);
       this.state = {
          showCheckboxes: false,
          selectable: true,
          deselectOnClickaway: false,
+         stocks: [],
+         cryptos: [],
       }
+
    }
 
-   renderTracker(tickerItem, renderType) {
-      const { name, type, quantity } = tickerItem;
+   componentDidUpdate() {
+      this.state.stocks = this.props.tickerList.filter( ticker => ticker.type == TYPE.STOCK);
+      this.state.cryptos = this.props.tickerList.filter( ticker => ticker.type == TYPE.CRYPTO);
+   }
 
-      if (type === renderType) {
-         const key = name + '-' + type;
+   handleCellClick(renderType, rowNumber, columnId) {
+      const selectedTicker = (renderType == TYPE.STOCK) ? this.state.stocks[rowNumber] : this.state.cryptos[rowNumber];
 
-         let currentPrice = _.get(
-            this.props.priceList,
-            `[${type}][${name}]`,
-            ''
-         );
-
-         if (currentPrice !== '') {
-            currentPrice = Number(currentPrice).toFixed(2);
-            currentPrice = '$' + this.numberWithCommas(currentPrice);
-         } else {
-            currentPrice = (
-               <Row>
-                  {' '}
-                  <Col>
-                     {' '}
-                     <Preloader size="small" />{' '}
-                  </Col>{' '}
-               </Row>
-            );
-         }
-
-         //selecting row if it is currently selected chart
-         const { selectedChart } = this.props;
-         let selected = false;
-         if (selectedChart.name === name && selectedChart.type === type) {
-            selected = true;
-         }
-
-
-         return (
-            <TableRow selected={selected}>
-               <TableRowColumn>{name}</TableRowColumn>
-               <TableRowColumn>{currentPrice}</TableRowColumn>
-               <TableRowColumn>{quantity}</TableRowColumn>
-            </TableRow>
-         );
-      }
+      this.props.selectChart(selectedTicker.name, selectedTicker.type);
    }
 
    checkChartTicker(removingTicker) {
@@ -97,12 +66,52 @@ class PortfolioList extends Component {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
    }
 
-   renderTrackerList(renderType) {
-      return (
-         this.props.tickerList.map(ticker =>
-            this.renderTracker(ticker, renderType)
-         )
+   renderTracker(ticker) {
+      const { name, type, quantity } = ticker;
+
+      const key = name + '-' + type;
+
+      let currentPrice = _.get(
+         this.props.priceList,
+         `[${type}][${name}]`,
+         ''
       );
+
+      if (currentPrice !== '') {
+         currentPrice = Number(currentPrice).toFixed(2);
+         currentPrice = '$' + this.numberWithCommas(currentPrice);
+      } else {
+         currentPrice = (
+            <Row>
+               {' '}
+               <Col>
+                  {' '}
+                  <Preloader size="small" />{' '}
+               </Col>{' '}
+            </Row>
+         );
+      }
+
+      //selecting row if it is currently selected chart
+      const { selectedChart } = this.props;
+      let selected = false;
+      if (selectedChart.name === name && selectedChart.type === type) {
+         selected = true;
+      }
+
+      return (
+         <TableRow selected={selected}>
+            <TableRowColumn>{name}</TableRowColumn>
+            <TableRowColumn>{currentPrice}</TableRowColumn>
+            <TableRowColumn>{quantity}</TableRowColumn>
+         </TableRow>
+      );
+   }
+
+   renderTrackerList(renderType) {
+      const renderList = renderType === TYPE.STOCK ? this.state.stocks : this.state.cryptos;
+
+      return renderList.map( ticker => this.renderTracker(ticker))
    }
 
    renderList(renderType) {
@@ -144,30 +153,6 @@ class PortfolioList extends Component {
             </CollapsibleItem>
       );
 
-   }
-
-   handleCellClick(renderType, rowNumber, columnId) {
-
-      let i = 0, foundIndex = -1, found = false;
-      while (this.props.tickerList[i] && !found) {
-         const ticker = this.props.tickerList[i];
-
-         if (ticker.type === renderType) {
-            foundIndex++;
-         }
-
-         if (foundIndex === rowNumber) { //if final index, stop i and exit loop
-            found = true;
-         }
-         else { //if not the final index, move onto next item
-            i++;
-         }
-
-      }
-
-      console.log('i = ' + i + ' tickerfound = ', this.props.tickerList[i]);
-
-      this.props.selectChart(this.props.tickerList[i].name, renderType);
    }
 
    render() {

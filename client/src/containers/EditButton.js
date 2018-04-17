@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import EditList from './EditList';
+
+import { TYPE } from '../actions/types';
 
 import '../style/PortfolioList.css';
 
@@ -11,10 +14,15 @@ import '../style/PortfolioList.css';
  *
  * You can also close this dialog by clicking outside the dialog, or with the 'Esc' key.
  */
-export default class DialogExampleSimple extends React.Component {
-  state = {
-    open: false,
-  };
+export default class EditButton extends Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+        open: false,
+        title: this.props.type === TYPE.STOCK ? 'Edit Stocks' : 'Edit Cryptocurrencies'
+      };
+   }
+
 
   handleOpen = () => {
     this.setState({open: true});
@@ -32,7 +40,7 @@ export default class DialogExampleSimple extends React.Component {
         onClick={this.handleClose}
       />,
       <FlatButton
-        label="Submit"
+        label="Save"
         primary={true}
         keyboardFocused={true}
         onClick={this.handleClose}
@@ -43,13 +51,13 @@ export default class DialogExampleSimple extends React.Component {
       <div className='edit-button'>
         <RaisedButton label="Edit" onClick={this.handleOpen} />
         <Dialog
-          title="Edit Stocks"
+          title={this.state.title}
           actions={actions}
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
         >
-          The actions in this window were passed in as an array of React objects.
+           <EditList type={this.props.type}/>
         </Dialog>
       </div>
     );

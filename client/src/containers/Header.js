@@ -20,7 +20,7 @@ class Header extends Component {
 
    render() {
       return (
-         <div class="navbar-fixed">
+         <div className="navbar-fixed">
             <nav id='header'>
                <div class="nav-wrapper">
                   <Link
@@ -28,7 +28,7 @@ class Header extends Component {
                      className="brand-logo" id="logo">
                      cryptofluence
                   </Link>
-                  <ul id="nav-mobile" class="right hide-on-med-and-down">
+                  <ul id="nav-mobile" className="right hide-on-med-and-down">
                     <li>{this.renderContent()}</li>
                   </ul>
                </div>
