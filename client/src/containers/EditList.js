@@ -47,12 +47,12 @@ class EditList extends Component {
       return this.state.tickers.map(ticker => this.renderTracker(ticker) );
    }
 
-   renderEditRow() {
+   renderEditRow(history) {
       return (
          <TableRow>
-            <TableRowColumn>Quantity: <TextField/></TableRowColumn>
-            <TableRowColumn>Cost: <TextField/></TableRowColumn>
-            <TableRowColumn>Date: <DatePicker hintText="Pick date" container="inline" /></TableRowColumn>
+            <TableRowColumn>Quantity: <TextField defaultValue={history.quantity}/></TableRowColumn>
+            <TableRowColumn>Cost: <TextField defaultValue={history.price}/></TableRowColumn>
+            <TableRowColumn>Date: <DatePicker hintText="Pick date" container="inline" defaultDate={ new Date(history.date) }/></TableRowColumn>
             <TableRowColumn><AddButton/></TableRowColumn>
          </TableRow>
       );
@@ -87,16 +87,23 @@ class EditList extends Component {
 
       let selected = false;
       if (this.state.selected.name === name) {
-         console.log('selected name = ', name);
          selected = true;
       }
 
       let editRow = []
+      // if (selected) {
+      //    for (let i = 0; i < this.state.selected.addPriceHistory; i++) {
+      //       editRow.push( this.renderEditRow() );
+      //    }
+      // }
+
       if (selected) {
-         for (let i = 0; i < this.state.selected.addPriceHistory; i++) {
-            editRow.push( this.renderEditRow() );
-         }
+
+         editRow = ticker.purchaseHistory.map( history => this.renderEditRow(history));
+
+
       }
+
 
       const standardRow = (
          <TableRow selected={selected}>
