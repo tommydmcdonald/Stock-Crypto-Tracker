@@ -8,7 +8,6 @@ const userSchema = new Schema({
   displayName: String,
   tickerList: [ {
      name: String,
-     quantity: Number,
      type: { type: String, enum: [...TYPE] },
      purchaseHistory: [{
        price: Number,
@@ -19,20 +18,50 @@ const userSchema = new Schema({
   } ]
 });
 
-userSchema.methods.tickerQuantities = async function() {
-   return this.tickerList.map( ticker => {
-      const { name, type, _id } = ticker;
+// userSchema.methods.tickerQuantities = async function() {
+//    return this.tickerList.map( ticker => {
+//       const { name, type, _id } = ticker;
+//
+//       let quantity = 0, price = 0;
+//
+//       ticker.purchaseHistory.forEach( history => {
+//          quantity += history.quantity;
+//          price += history.price;
+//       });
+//
+//       return {name, type, quantity, price, _id};
+//    });
+//
+// }
 
-      let quantity = 0, price = 0;
 
-      ticker.purchaseHistory.forEach( history => {
-         quantity += history.quantity;
-         price += history.price;
-      });
 
-      return {name, type, quantity, price, _id};
-   });
+userSchema.methods.tickerQuantity = async function(name, type) {
+   const ticker = (
+      await this.model('user').aggregate([
+         {$match: {_id: this._id} },
 
+         {$project: {
+            tickerList: {
+               $slice: [
+                  { $filter: {
+                     input: '$tickerList',
+                     as: 'ticker',
+                     cond: { $and: [
+                        { $eq: ['$$ticker.name', name]},
+                        { $eq: ['$$ticker.type', type]},
+                     ]}
+                  }}, 1]
+            }
+         }},
+      ])
+   )[0].tickerList[0];
+
+   let totalQuantity = 0;
+   ticker.purchaseHistory.forEach( history => {
+      totalQuantity += history.quantity;
+   })
+   return totalQuantity;
 }
 
 mongoose.model('user', userSchema);

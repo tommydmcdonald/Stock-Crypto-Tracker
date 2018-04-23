@@ -15,7 +15,7 @@ export default function(state = [], action) {
             return true;
          }
          return false;
-      }); //action.payload = _id
+      });
       return newState;
    }
    case LOAD_TICKERS:

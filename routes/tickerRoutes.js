@@ -10,20 +10,12 @@ const { addTickerToTickers, addTickerToCharts } = require('../services/tickerDB'
 const autocompleteLibrary = require('../services/autocompleteLibrary');
 
 
-// router.get('/api/tickers/purchase_history', async (req, res) => {
-//    const { type } = req.query;
-//
-//    if (type == '') { //default
-//       await User.findById( req.user._id, {})
-//    }
-//    else if (type == 'quantities') {
-//       const user = await User.findById(req.user._id);
-//       const data = await user.tickerQuantities();
-//
-//       res.send(data);
-//    }
-//
-// });
+router.get('/api/tickers/purchase_history', async (req, res) => {
+   const user = await User.findById(req.user._id);
+   const quantity = await user.tickerQuantity('MSFT', 'STOCK');
+
+   res.send( {quantity} );
+});
 
 //add one purchase history
 router.post('/api/tickers/purchase_history', async (req, res) => {
@@ -137,8 +129,24 @@ router.post('/api/tickers/:type/:name/:quantity', async (req, res) => { //update
 
 });
 
-router.get('/api/tickers', (req, res) => { //get list of tickers
-   res.send(req.user.tickerList);
+router.get('/api/tickers', async (req, res) => { //get list of tickers
+   // const modifiedTickers = await Promise.all(req.user.tickerList.map( async ticker => {
+   //    const modTic = { ...ticker };
+   //    modTic.quantity = await req.user.tickerQuantity(ticker.name, ticker.type);
+   //    console.log('tic = ', modTic);
+   //    return modTic;
+   // }));
+
+   const tickers = [];
+
+   for (let ticker of req.user.tickerList) {
+      const newTic = { ...ticker.toObject() };
+      newTic.quantity = await req.user.tickerQuantity(newTic.name, newTic.type);
+      tickers.push(newTic);
+   }
+
+   console.log('tickers = ', tickers);
+   res.send(tickers);
 });
 
 router.get('/api/tickers/current_prices', async (req, res) => { //return list of all current prices
