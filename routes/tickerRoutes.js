@@ -2,11 +2,59 @@ const express = require('express');
 const router = express.Router();
 
 const mongoose = require('mongoose');
+const moment = require('moment');
 const User = mongoose.model('user');
 const Ticker = mongoose.model('ticker');
 
 const { addTickerToTickers, addTickerToCharts } = require('../services/tickerDB');
 const autocompleteLibrary = require('../services/autocompleteLibrary');
+
+
+// router.get('/api/tickers/purchase_history', async (req, res) => {
+//    const { type } = req.query;
+//
+//    if (type == '') { //default
+//       await User.findById( req.user._id, {})
+//    }
+//    else if (type == 'quantities') {
+//       const user = await User.findById(req.user._id);
+//       const data = await user.tickerQuantities();
+//
+//       res.send(data);
+//    }
+//
+// });
+
+//add one purchase history
+router.post('/api/tickers/purchase_history', async (req, res) => {
+   const { ticker, history } = req.body;
+
+   const { name, type } = ticker;
+
+   await User.update( {_id: req.user._id, tickerList: { $elemMatch: { name, type }}},
+      { $push: { 'tickerList.$.purchaseHistory': history } });
+
+   res.send(user);
+});
+
+//delete one purchase history
+router.delete('/api/tickers/purchase_history/:type/:name/:_id', async (req, res) => {
+   const { name, type, _id } = req.params;
+
+   await User.update({_id: req.user._id, tickerList: { $elemMatch: { name, type }}},
+      {$pull: {'tickerList.$.purchaseHistory': { _id }} });
+   res.sendStatus(200);
+});
+
+//update one purchase history
+router.put('/api/tickers/purchase_history', async (req, res) => {
+   const { ticker, history } = req.body;
+
+   await User.update( {_id: req.user._id, tickerList: { $elemMatch: { ...ticker, "purchaseHistory._id": history._id } }},
+      { $set: { 'tickerList.$.purchaseHistory': history } });
+
+   res.sendStatus(200);
+});
 
 router.post('/api/tickers/', async (req, res) => { //add new ticker             //add error checking
    try {
@@ -33,14 +81,46 @@ router.post('/api/tickers/', async (req, res) => { //add new ticker             
       //if exists in db or once added, send price back
       const { price } = await Ticker.findOne( { name, type } );
 
-      res.send( { price } );
+      // res.send( { price } );
 
       if (!queryTicker) {
          addTickerToCharts(newTicker, 'new');
       }
 
+      newTicker.purchaseHistory = [{ price , quantity: 1, date: moment()}];
+
       //Adding ticker to User's tickerList
       await User.findByIdAndUpdate( _id, { $addToSet: { tickerList: newTicker } }, {new: true} ); //$addToSet =  add a value to an array only if the value is not already present
+      // const tickerAdded = await User.findOne( { _id, tickerList: {'$elemMatch': {name, type} } } );
+      const tickerAdded = (
+         await User.aggregate([
+            {$match: {_id} },
+
+            {$project: {
+               tickerList: {
+                  $slice: [
+                     { $filter: {
+                        input: '$tickerList',
+                        as: 'ticker',
+                        cond: { $and: [
+                           { $eq: ['$$ticker.name', name]},
+                           { $eq: ['$$ticker.type', type]},
+                        ]}
+                     }}, 1]
+               }
+            }},
+         ])
+      )[0].tickerList[0];
+
+
+
+      console.log('tickerAdded', tickerAdded);
+
+      const responseData = {
+         ticker: tickerAdded,
+         price
+      };
+      res.send(responseData); //change from sending price back to sending back full ticker
    } catch(err) {
       console.log('err in api/post');
       console.log(err);

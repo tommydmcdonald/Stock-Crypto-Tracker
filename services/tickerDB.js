@@ -2,8 +2,10 @@ const axios = require('axios');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const Chart = mongoose.model('chart');
-const Ticker = mongoose.model('ticker');  
+const Ticker = mongoose.model('ticker');
 const { BASE_URL, TYPE } = require('../config/keys');
+
+const delay = require('delay');
 
 exports.addTickerToCharts = async (newTicker = {name: '', type: ''}, chartStatus = '') => { //returns true if stock/crypto successfully added, returns false if not
    const { name, type } = newTicker;

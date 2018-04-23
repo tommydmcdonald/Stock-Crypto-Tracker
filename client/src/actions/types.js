@@ -13,7 +13,8 @@ module.exports = {
    SELECT_CHART: 'select_chart',
    SELECT_CHART_FREQ: 'select_chart_freq',
    FETCH_NEWS_GENERAL: 'fetch_news_general',
-   FETCH_NEWS_CUSTOM: 'fetch_news_custom'
+   FETCH_NEWS_CUSTOM: 'fetch_news_custom',
+   ADD_TICKER_HISTORY: 'add_ticker_history',
 }
 
 // export const GET_TICKER_DATA = 'get_ticker_data';
