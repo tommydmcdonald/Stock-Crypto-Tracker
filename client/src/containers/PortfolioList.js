@@ -36,8 +36,13 @@ class PortfolioList extends Component {
    renderTracker(tickerItem, renderType) {
       let { name, type, quantity, logo } = tickerItem;
 
-      if(type == TYPE.CRYPTO) {
-         logo = require('../img/CryptoImages/' + name.toLowerCase() + '.png');
+
+
+      if (type == TYPE.CRYPTO) {
+         const cryptoImgs = ['ADA', 'BCH', 'BTC', 'DASH', 'DOGE', 'EOS', 'ETH', 'IOTA', 'LTC', 'NEO', 'XMR'];
+         if (_.includes(cryptoImgs, name)) {
+            logo = require('../img/CryptoImages/' + name.toLowerCase() + '.png');
+         }
       }
 
       if (type === renderType) {
