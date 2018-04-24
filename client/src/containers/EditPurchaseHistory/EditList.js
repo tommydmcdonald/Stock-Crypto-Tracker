@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { TYPE } from '../actions/types';
+import { TYPE } from '../../actions/types';
 
 import _ from 'lodash';
 
@@ -28,13 +28,10 @@ class EditList extends Component {
       super(props);
       this.state = {
          selected: {name: '', rowNumber: -1, addPriceHistory: 0},
-
          showCheckboxes: false,
          dropdownColumnId: 4,
          addPriceHistoryColumnId: 3,
       };
-
-      this.state.tickers = this.props.tickerList.filter( ticker => ticker.type == this.props.type);
 
       this.handleCellClick = this.handleCellClick.bind(this);
    }
@@ -44,14 +41,24 @@ class EditList extends Component {
    }
 
    renderTrackerList() {
-      return this.state.tickers.map(ticker => this.renderTracker(ticker) );
+      return this.props.tickers.map(ticker => this.renderTracker(ticker) );
    }
 
    renderEditRow(history) {
       return (
          <TableRow>
-            <TableRowColumn>Quantity: <TextField defaultValue={history.quantity}/></TableRowColumn>
-            <TableRowColumn>Cost: <TextField defaultValue={history.price}/></TableRowColumn>
+            <TableRowColumn>Quantity:
+               <TextField
+                  defaultValue={history.quantity}
+                  onChange={(e, newValue) => {history.quantity = newValue}}
+               />
+            </TableRowColumn>
+            <TableRowColumn>Cost:
+               <TextField
+                  defaultValue={history.price}
+                  onChange={(e, newValue) => {history.price = newValue}}
+               />
+            </TableRowColumn>
             <TableRowColumn>Date: <DatePicker hintText="Pick date" container="inline" defaultDate={ new Date(history.date) }/></TableRowColumn>
             <TableRowColumn><AddButton/></TableRowColumn>
          </TableRow>
@@ -98,12 +105,8 @@ class EditList extends Component {
       // }
 
       if (selected) {
-
          editRow = ticker.purchaseHistory.map( history => this.renderEditRow(history));
-
-
       }
-
 
       const standardRow = (
          <TableRow selected={selected}>
@@ -148,7 +151,7 @@ class EditList extends Component {
             if (previousSelected && this.state.selected.rowNumber < rowNumber) { //account for extra row if already selected
                rowNumber--;
             }
-            let selected = {name: this.state.tickers[rowNumber].name, rowNumber, addPriceHistory: 1};
+            let selected = {name: this.props.tickers[rowNumber].name, rowNumber, addPriceHistory: 1};
             this.setState({ selected })
          }
       }
@@ -160,6 +163,7 @@ class EditList extends Component {
       return (
          <div>
             <Table
+               height='300px'
                onCellClick={this.handleCellClick}
             >
                <TableHeader
@@ -187,8 +191,8 @@ class EditList extends Component {
    }
 }
 
-function mapStateToProps({tickerList, priceList, selectedChart}) {
-   return { tickerList, priceList, selectedChart }
+function mapStateToProps({ priceList }) {
+   return { priceList }
 }
 
 function mapDispatchToProps(dispatch) {

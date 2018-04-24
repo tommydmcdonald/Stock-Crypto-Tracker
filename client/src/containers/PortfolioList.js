@@ -8,7 +8,6 @@ import { TYPE } from '../actions/types';
 import { removeTicker, updateQuantity, selectChart } from '../actions';
 import Tracker from './Tracker';
 import SearchBar from './SearchBar';
-import EditButton from './EditButton';
 
 import {
   Table,

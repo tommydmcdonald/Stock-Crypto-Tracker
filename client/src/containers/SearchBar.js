@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { addTicker } from '../actions/index';
 import _ from 'lodash';
 
-import EditButton from './EditButton';
+import { EditButton } from './EditPurchaseHistory';
 
 import { TYPE } from '../actions/types';
 
