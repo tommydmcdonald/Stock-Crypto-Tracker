@@ -26,11 +26,13 @@
   margin-top: 5px; }
 
 .googleSignInLanding {
-  height: 50px;
-  position: absolute;
-  /* or absolute */
-  top: 53%;
-  left: 43%; }
+  padding-top: 15px;
+  height: 20%;
+  width: 20%;
+  padding-bottom: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
 
 .HomeChart {
   width: 100%;
@@ -280,7 +282,7 @@ a:focus, a:hover {
 
 .masthead .intro-body .intro-text {
   font-size: 18px;
-  padding-bottom: 38%; }
+  padding-bottom: 0%; }
 
 @media (min-width: 768px) {
   .masthead {

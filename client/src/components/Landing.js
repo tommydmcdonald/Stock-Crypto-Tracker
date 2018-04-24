@@ -9,10 +9,11 @@ const Landing = () => {
            <div className="row">
              <div className="">
                <h1 className="brand-heading">Cryptofluence</h1>
-               <p className="intro-text">A Free, Realtime, Stock and Cryptocurrency Portfolio Tracker.
-                 <br/>Created by Florida State University Students.</p>
-                 <Col><a href="/auth/google"><img className="googleSignInLanding" src={require('../img/google.png')} /></a></Col>
-             </div>
+                  <p className="intro-text">A Free, Realtime, Stock and Cryptocurrency Portfolio Tracker.
+                    <br/>Created by Florida State University Students.<br/>
+                    <a href="/auth/google"><img className="googleSignInLanding" src={require('../img/google.png')} /></a>
+                 </p>
+              </div>
            </div>
          </div>
        </div>
