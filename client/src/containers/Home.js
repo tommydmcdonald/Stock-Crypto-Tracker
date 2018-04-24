@@ -10,6 +10,7 @@ import SideNav from '../components/SideNav';
 import { Row, Col } from 'react-materialize';
 import ReactInterval from 'react-interval';
 import NewsList from './NewsList';
+import Stats from './Stats';
 
 import Snackbar from 'material-ui/Snackbar';
 
@@ -60,11 +61,16 @@ class Home extends Component {
             <Row> <Col s={9} offset="s3"></Col></Row>
             <Row>
               <Col s={3}><SideNav   /></Col>
-              <Col s={6}><Chart className="homeChart" /></Col>
+              <Col s={6}><Chart className="homeChart w3-spin" /></Col>
               <Col s={3}><NewsList  /></Col>
             </Row>
+            <Row>
+            </Row>
 
-            <Snackbar
+            <Snackbar className="snack-bar"
+               bodyStyle={{ backgroundColor: '#5C6BC0', color: 'teal' }}
+               action = 'undo'
+               actionStyle={{backgroundColor: '#FFF'}}
               open={this.props.snackbar.open}
               message={this.snackbarMessage()}
               autoHideDuration={4000}

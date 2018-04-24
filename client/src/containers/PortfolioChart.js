@@ -59,7 +59,7 @@ class PortfolioChart extends Component {
 
    render () {
       const data = this.getPieChartData();
-      const COLORS = ['#79C7A0'];
+      const COLORS = ['#00BFA5', '#5C6BC0', '#FF6D00', '#607D8B', '#6200EA'];
 
       return (
          <ResponsiveContainer height="40%" width="100%">

@@ -59,18 +59,18 @@ class Chart extends Component {
             label: frequency,
             fill: false,
             lineTension: 0.1,
-            backgroundColor: 'rgba(75,192,192,0.5)',
-            borderColor: 'rgba(95, 202, 157, 1)',
+            backgroundColor: 'rgba(94, 108, 186, 0.5)',
+            borderColor: 'rgba(94, 108, 186, 1)',
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBorderColor: 'rgba(94, 108, 186, 1)',
             pointBackgroundColor: '#fff',
-            pointBorderWidth: 1,
-            pointHoverRadius: 7,
-            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointBorderWidth: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(255, 255, 255, 1)',
+            pointHoverBorderColor: 'rgba(94, 108, 186, 1)',
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
@@ -90,7 +90,6 @@ class Chart extends Component {
             const { quantity, logo } = _.find( this.props.tickerList, { name, type } );
 
             const logo_url = logo;
-            console.log("This is the logo url", logo);
 
             const price = Number(this.props.priceList[type][name]).toFixed(2);
             priceText = { price, amtOwned: Number(price*quantity).toFixed(2) };

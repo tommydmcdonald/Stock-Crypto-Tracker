@@ -189,7 +189,7 @@ class PortfolioList extends Component {
    render() {
       return (
          <div>
-            <SearchBar type={TYPE.CRYPTO}/>
+         <SearchBar type={TYPE.CRYPTO}/>
 
             <div className='row'>
                <Collapsible defaultActiveKey={0} popout>
