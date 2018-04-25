@@ -35,9 +35,11 @@ class PortfolioList extends Component {
 
    }
 
-   componentDidUpdate() {
-      this.state.stocks = this.props.tickerList.filter( ticker => ticker.type == TYPE.STOCK);
-      this.state.cryptos = this.props.tickerList.filter( ticker => ticker.type == TYPE.CRYPTO);
+   static getDerivedStateFromProps(nextProps, prevState) {
+      return {
+         stocks: nextProps.tickerList.filter( ticker => ticker.type == TYPE.STOCK),
+         cryptos: nextProps.tickerList.filter( ticker => ticker.type == TYPE.CRYPTO),
+      };
    }
 
    handleCellClick(renderType, rowNumber, columnId) {

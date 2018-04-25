@@ -26,6 +26,9 @@ import { Row, Col, Preloader } from 'react-materialize';
 class EditList extends Component {
    constructor(props) {
       super(props);
+
+      console.log('editList constructor');
+
       this.state = {
          selected: {name: '', rowNumber: -1, addPriceHistory: 0},
          showCheckboxes: false,
@@ -44,22 +47,33 @@ class EditList extends Component {
       return this.props.tickers.map(ticker => this.renderTracker(ticker) );
    }
 
+   // modifyHistory(history, field, newValue) {
+   //    _.assign(history, { [field]: newValue });
+   // }
+
    renderEditRow(history) {
       return (
          <TableRow>
             <TableRowColumn>Quantity:
                <TextField
                   defaultValue={history.quantity}
-                  onChange={(e, newValue) => {history.quantity = newValue}}
+                  onChange={(e, newValue) => this.props.modifyHistory(history, 'quantity', newValue)}
                />
             </TableRowColumn>
             <TableRowColumn>Cost:
                <TextField
                   defaultValue={history.price}
-                  onChange={(e, newValue) => {history.price = newValue}}
+                  onChange={(e, newValue) => this.props.modifyHistory(history, 'price', newValue)}
                />
             </TableRowColumn>
-            <TableRowColumn>Date: <DatePicker hintText="Pick date" container="inline" defaultDate={ new Date(history.date) }/></TableRowColumn>
+            <TableRowColumn>Date:
+               <DatePicker
+                  hintText="Pick date"
+                  container="inline"
+                  defaultDate={ new Date(history.date) }
+                  onChange={(e, newValue) => this.props.modifyHistory(history, 'date', newValue)}
+               />
+            </TableRowColumn>
             <TableRowColumn><AddButton/></TableRowColumn>
          </TableRow>
       );
