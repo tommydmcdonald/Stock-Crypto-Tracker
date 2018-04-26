@@ -1,7 +1,9 @@
 import { ADD_TICKER, REMOVE_TICKER, ADD_TICKER_PRICE, SELECT_CHART,
-         LOAD_TICKERS, UPDATE_TICKER_QUANTITY, LOAD_TICKER_PRICES, ADD_TICKER_HISTORY } from './types'
+         LOAD_TICKERS, UPDATE_TICKER_QUANTITY,
+         LOAD_TICKER_PRICES, ADD_HISTORY, UPDATE_HISTORY } from './types'
 import axios from 'axios';
 import { fetchChartData } from './chartActions';
+import _ from 'lodash';
 
 export const addTicker = (newTicker, tickerListSize) => async dispatch => { //adds new ticker to user's tickerList and add's price to priceList
    //initial ticker add before checking if it is valid
@@ -20,7 +22,7 @@ export const addTicker = (newTicker, tickerListSize) => async dispatch => { //ad
       dispatch({ type: ADD_TICKER_PRICE, payload: { name, type, price } });
 
       console.log('in addticker res.data = ', res.data);
-      dispatch({ type: ADD_TICKER_HISTORY, payload: res.data.ticker}); //***Add in action***
+      dispatch({ type: ADD_HISTORY, payload: res.data.ticker}); //***Add in action***
 
       if (tickerListSize === 0) { //if nothing in tickerList, nothing will be graphed. Graph newly added ticker, since it is the only ticker
          dispatch({ type: SELECT_CHART, payload: {name, type} });
@@ -47,4 +49,21 @@ export const updateQuantity = ( name, type, quantity ) => async dispatch => { //
 export const loadTickerPrices = () => async dispatch => { //used to load initial ticker prices when page is loaded
    const res = await axios.get('/api/tickers/current_prices');
    dispatch({ type: LOAD_TICKER_PRICES, payload: res.data});
+}
+
+export const addHistory = (history) => async dispatch => {
+   const { name, type } = history;
+   const purchaseHistory = [].push(_.omit(history, ['name', 'type']));
+
+   const payload = { name, type, purchaseHistory };
+
+   const body = { history: _.omit(history, ['name', 'type']), ticker: { name, type } };
+
+   axios.post('/api/tickers/purchase_history', body);
+   dispatch({ type: ADD_HISTORY, payload });
+}
+
+export const updateHistory = (history) => async dispatch => {
+   axios.put('/api/tickers/purchase_history', history);
+   dispatch({ type: UPDATE_HISTORY, payload: history });
 }

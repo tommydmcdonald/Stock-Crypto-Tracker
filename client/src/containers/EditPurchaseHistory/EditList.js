@@ -137,10 +137,6 @@ class EditList extends Component {
       return [standardRow, editRow];
    }
 
-   changePHCount(change) {
-
-   }
-
    handleCellClick(rowNumber, columnId) {
       let { selected } = this.state;
       const previousSelected = selected.name;

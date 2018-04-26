@@ -8,6 +8,7 @@ const Ticker = mongoose.model('ticker');
 
 const { addTickerToTickers, addTickerToCharts } = require('../services/tickerDB');
 const autocompleteLibrary = require('../services/autocompleteLibrary');
+const _ = require('lodash');
 
 
 router.get('/api/tickers/purchase_history', async (req, res) => {
@@ -19,14 +20,21 @@ router.get('/api/tickers/purchase_history', async (req, res) => {
 
 //add one purchase history
 router.post('/api/tickers/purchase_history', async (req, res) => {
+   console.log('post ph, body = ', req.body);
    const { ticker, history } = req.body;
 
    const { name, type } = ticker;
+   try {
+      await User.update( {_id: req.user._id, tickerList: { $elemMatch: { name, type }}},
+         { $push: { 'tickerList.$.purchaseHistory': history } });
 
-   await User.update( {_id: req.user._id, tickerList: { $elemMatch: { name, type }}},
-      { $push: { 'tickerList.$.purchaseHistory': history } });
+   } catch (err) {
+      console.log('err in post PH');
+      console.log(err);
+   }
 
-   res.send(user);
+   console.log('end of ph post');
+   res.sendStatus(200);
 });
 
 //delete one purchase history
@@ -40,10 +48,37 @@ router.delete('/api/tickers/purchase_history/:type/:name/:_id', async (req, res)
 
 //update one purchase history
 router.put('/api/tickers/purchase_history', async (req, res) => {
-   const { ticker, history } = req.body;
 
-   await User.update( {_id: req.user._id, tickerList: { $elemMatch: { ...ticker, "purchaseHistory._id": history._id } }},
-      { $set: { 'tickerList.$.purchaseHistory': history } });
+   const history = req.body;
+
+   console.log('update purchase history');
+   console.log('history = ', history);
+
+   try {
+      let index = -1;
+      const user = (await User.find( {_id: req.user._id} ))[0];
+
+      let tickerIndex = 0, historyIndex = 0;
+
+      for (let ticI = 0; ticI < user.tickerList.length; ticI++) {
+         for (let hisI = 0; hisI < user.tickerList[ticI].purchaseHistory.length; hisI++) {
+            const his = user.tickerList[ticI].purchaseHistory[hisI];
+            if (his._id == history._id) {
+               user.tickerList[ticI].purchaseHistory[hisI] = history;
+            }
+         }
+      }
+
+      console.log('user ', user);
+      await user.save();
+      console.log('user ', user);
+   } catch(err) {
+      console.log(err);
+   }
+
+
+   // await User.update( {_id: req.user._id, tickerList: { $elemMatch: { ...ticker, "purchaseHistory._id": history._id } }},
+   //    { $set: { 'tickerList.$.purchaseHistory': history } });
 
    res.sendStatus(200);
 });
@@ -137,6 +172,8 @@ router.get('/api/tickers', async (req, res) => { //get list of tickers
    //    return modTic;
    // }));
 
+   console.log('api');
+
    const tickers = [];
 
    for (let ticker of req.user.tickerList) {
@@ -145,7 +182,7 @@ router.get('/api/tickers', async (req, res) => { //get list of tickers
       tickers.push(newTic);
    }
 
-   console.log('tickers = ', tickers);
+   // console.log('tickers = ', tickers);
    res.send(tickers);
 });
 

@@ -1,4 +1,4 @@
-import { ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, UPDATE_TICKER_QUANTITY, ADD_TICKER_HISTORY } from '../actions/types';
+import { ADD_TICKER, REMOVE_TICKER, LOAD_TICKERS, UPDATE_TICKER_QUANTITY, ADD_HISTORY, UPDATE_HISTORY } from '../actions/types';
 import _ from 'lodash';
 
 export default function(state = [], action) {
@@ -26,12 +26,15 @@ export default function(state = [], action) {
       _.find(newState, { name, type }).quantity = quantity;
       return newState;
    }
-   case ADD_TICKER_HISTORY: {
+   case ADD_HISTORY: {
       const { name, type, purchaseHistory } = action.payload
       const newState = [ ...state ];
       console.log('ATH, action.payload = ', action.payload);
       _.find(newState, { name, type }).purchaseHistory = purchaseHistory;
       return newState;
+   }
+   case UPDATE_HISTORY: {
+      console.log('history = ', history);
    }
    default:
       return state;

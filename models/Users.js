@@ -58,6 +58,8 @@ userSchema.methods.tickerQuantity = async function(name, type) {
    )[0].tickerList[0];
 
    let totalQuantity = 0;
+
+   console.log('quantity', ticker);
    ticker.purchaseHistory.forEach( history => {
       totalQuantity += history.quantity;
    })
