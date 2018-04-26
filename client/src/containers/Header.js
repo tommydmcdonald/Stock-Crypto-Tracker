@@ -24,9 +24,8 @@ class Header extends Component {
             <nav id='header'>
                <div id="nav-wrapper">
                   <Link
-                     to={this.props.auth ? '/' : '/landing'}
-                     id="logo">
-                     <img src={require("../img/logo.png")} height="100"></img>
+                     to={this.props.auth ? '/' : '/landing'}>
+                     <img id="logo" src={require("../img/logo.png")} height="100"></img>
                   </Link>
                   <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li>{this.renderContent()}</li>
