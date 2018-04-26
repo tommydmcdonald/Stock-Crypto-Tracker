@@ -8,6 +8,7 @@
       "npm": "5.6.0"
    },
    "scripts": {
+      "start": "node index.js",
       "sass:build": "node-sass-chokidar client/src/style -o client/src/style",
       "sass:watch": "node-sass-chokidar client/src/style -o client/src/style --watch --recursive",
       "server": "nodemon index.js",
