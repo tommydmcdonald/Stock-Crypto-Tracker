@@ -44,20 +44,27 @@ class Stats extends Component {
          }
       }
 
-      return (
-         <div>
-            <Row>
-               {order.map(key => {
-                  return (
-                     <Col s={3}>
-                        <p className="stat-heading">{headings[key]}</p>
-                        <p className="stat-number">{stats[key]}</p>
-                     </Col>
-                  );
-               })}
-            </Row>
-         </div>
-      );
+      if (stats) {
+         return (
+            <div>
+               <Row>
+                  {order.map(key => {
+                     return (
+                        <Col s={3}>
+                           <p className="stat-heading">{headings[key]}</p>
+                           <p className="stat-number">{stats[key]}</p>
+                        </Col>
+                     );
+                  })}
+               </Row>
+            </div>
+         );
+      }
+      else {
+         return <div>Loading Stats...</div>;
+      }
+
+
 
    }
 
