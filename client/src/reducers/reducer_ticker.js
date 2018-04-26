@@ -34,7 +34,13 @@ export default function(state = [], action) {
       return newState;
    }
    case UPDATE_HISTORY: {
-      console.log('history = ', history);
+      console.log('history = ', action.payload);
+      const newState = [ ...state];
+      const found = _.find(newState, {'purchaseHistory': [ { _id: action.payload._id} ]});
+      const index = _.findIndex(found.purchaseHistory, { _id: action.payload._id});
+      found.purchaseHistory[index] = action.payload;
+      console.log('found', found);
+      console.log(newState);
    }
    default:
       return state;
