@@ -29,11 +29,15 @@ export default function(state = [], action) {
    case ADD_TICKER_LOGO: {
       const { name, type, logo } = action.payload;
       const newState = [ ...state ];
-      _.find(newState, { name, type }).logo = logo;}
+      _.find(newState, { name, type }).logo = logo;
+      return newState;
+   }
    case ADD_TICKER_STATS: {
       const { name, type, data } = action.payload;
       const newState = [ ...state ];
-      _.find(newState, { name, type }).data = data;}
+      _.find(newState, { name, type }).data = data;
+      return newState;
+   }
    default:
       return state;
   }
