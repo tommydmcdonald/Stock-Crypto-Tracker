@@ -22,6 +22,18 @@
    padding-bottom: 15px;
 }
 
+.stat-heading {
+   text-align: left;
+   font-weight: 250;
+   font-size: 16px;
+   margin: 0px;
+}
+
+.stat-number {
+   text-align: left;
+   font-weight: 250;
+}
+
 .copyRight {
   text-align: center; }
 
@@ -41,15 +53,20 @@
    height: 100%;
    border-radius: 5px 5px 0px 0px;
    background-color: #6f7984;
+   align-items: center;
+}
+
+.graph-and-stats {
 }
 
 .NewsList {
+
    background-color: #6f7984;
+   font-weight: 300;
    margin-top: 15%;
    //margin-top: 55%;
    border-radius: 3px;
    // margin:auto;
-   width: 100%;
    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
        -moz-animation: fadein 2s; /* Firefox < 16 */
         -ms-animation: fadein 2s; /* Internet Explorer */

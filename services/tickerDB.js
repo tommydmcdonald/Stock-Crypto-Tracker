@@ -199,12 +199,11 @@ exports.addTickerToTickers = async (newTicker = {name: '', type: '' }) => { //re
             open: stats.OPEN24HOUR,
             high: stats.HIGH24HOUR,
             low: stats.LOW24HOUR,
-            week52Low: 999,
-            week52High: 999,
+            week52Low: 9999,
+            week52High: 9999,
             volume: stats.VOLUME24HOUR,
-            marketCap: 999,
-            supply: 999,
-            algorithm: 999
+            marketCap: 9999,
+            supply: 9999,
          };
 
 

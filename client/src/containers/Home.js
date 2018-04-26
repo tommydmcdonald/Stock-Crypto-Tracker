@@ -61,10 +61,11 @@ class Home extends Component {
             <Row> <Col s={9} offset="s3"></Col></Row>
             <Row>
               <Col s={3}><SideNav   /></Col>
-              <Col s={6}><Chart className="homeChart w3-spin" /></Col>
-              <Col s={3}><NewsList  /></Col>
-            </Row>
-            <Row>
+              <Col className="graph-and-stats" s={7}>
+                  <Chart className="homeChart w3-spin" />
+                  <Stats className="stats-container"/>
+              </Col>
+              <Col s={2}><NewsList  /></Col>
             </Row>
 
             <Snackbar className="snack-bar"
