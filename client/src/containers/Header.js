@@ -26,7 +26,7 @@ class Header extends Component {
                   <Link
                      to={this.props.auth ? '/' : '/landing'}
                      id="logo">
-                     cryptofluence
+                     <img src={require("../img/logo.png")} height="100"></img>
                   </Link>
                   <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li>{this.renderContent()}</li>

@@ -26,7 +26,7 @@ class NewsList extends Component {
          <div>
             { this.props.news.map(newsItem => {
                return(
-                  <div>
+                  <div className="individual-news-item">
                      <a href="{newsItem.url}" />
                      <ListItem className="white-text" hoverColor="rgb(139, 229, 184, 50)" href={newsItem.url} target = "_blank" primaryText = {newsItem.headline} secondaryText = {newsItem.source} />
                   </div>
